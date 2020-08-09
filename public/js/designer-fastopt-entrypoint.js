@@ -1,0 +1,41 @@
+module.exports = {
+  "require": (function(x0) {
+    return {
+      "@uppy/react": require("@uppy/react"),
+      "react-day-picker/lib/style.css": require("react-day-picker/lib/style.css"),
+      "@uppy/core": require("@uppy/core"),
+      "@blueprintjs/datetime": require("@blueprintjs/datetime"),
+      "@blueprintjs/core": require("@blueprintjs/core"),
+      "emoji-mart/css/emoji-mart.css": require("emoji-mart/css/emoji-mart.css"),
+      "react-spreadsheet": require("react-spreadsheet"),
+      "react-syntax-highlighter/styles/hljs": require("react-syntax-highlighter/styles/hljs"),
+      "@projectstorm/react-canvas-core": require("@projectstorm/react-canvas-core"),
+      "react-dom": require("react-dom"),
+      "react-router-dom": require("react-router-dom"),
+      "emoji-mart": require("emoji-mart"),
+      "@projectstorm/react-diagrams-core": require("@projectstorm/react-diagrams-core"),
+      "vertx3-eventbus-client": require("vertx3-eventbus-client"),
+      "history": require("history"),
+      "@blueprintjs/core/lib/css/blueprint.css": require("@blueprintjs/core/lib/css/blueprint.css"),
+      "react-split-pane": require("react-split-pane"),
+      "@uppy/core/dist/style.css": require("@uppy/core/dist/style.css"),
+      "react-color": require("react-color"),
+      "react-syntax-highlighter": require("react-syntax-highlighter"),
+      "react": require("react"),
+      "@projectstorm/react-diagrams": require("@projectstorm/react-diagrams"),
+      "@blueprintjs/icons/lib/css/blueprint-icons.css": require("@blueprintjs/icons/lib/css/blueprint-icons.css"),
+      "@projectstorm/react-diagrams-defaults": require("@projectstorm/react-diagrams-defaults"),
+      "ace-builds/src-noconflict/ace": require("ace-builds/src-noconflict/ace"),
+      "react-gravatar": require("react-gravatar"),
+      "react-helmet": require("react-helmet"),
+      "react-ace": require("react-ace"),
+      "@uppy/dashboard/dist/style.css": require("@uppy/dashboard/dist/style.css"),
+      "react-proxy": require("react-proxy"),
+      "react-select2-wrapper": require("react-select2-wrapper"),
+      "react-input-mask": require("react-input-mask"),
+      "ace-builds/src-noconflict/mode-python": require("ace-builds/src-noconflict/mode-python"),
+      "axui-datagrid/style.css": require("axui-datagrid/style.css"),
+      "react-ion-slider": require("react-ion-slider")
+    }[x0]
+  })
+}
