@@ -17,7 +17,7 @@ public class FileBlocks extends AbstractNode {
 	
 	public FileBlocks(long fd, int fileComponent, CrailNodeType type, int storageClass, int locationClass, boolean enumerable) {
 		super(fd, fileComponent, type, storageClass, locationClass, enumerable);
-		this.blocks = new ArrayList<NameNodeBlockInfo>(CrailConstants.NAMENODE_FILEBLOCKS);
+		this.blocks = new ArrayList<>(CrailConstants.NAMENODE_FILEBLOCKS);
 		this.lock = new ReentrantReadWriteLock();
 		this.readLock = lock.readLock();
 		this.writeLock = lock.writeLock();
@@ -58,9 +58,7 @@ public class FileBlocks extends AbstractNode {
 	public void freeBlocks(BlockStore blockStore) throws Exception {
 		readLock.lock();
 		try {
-			Iterator<NameNodeBlockInfo> iter = blocks.iterator();
-			while (iter.hasNext()){
-				NameNodeBlockInfo blockInfo = iter.next();
+			for (NameNodeBlockInfo blockInfo : blocks) {
 				blockStore.addBlock(blockInfo);
 			}	
 		} finally {

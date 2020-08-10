@@ -1,4 +1,4 @@
-package com.harana.datagrid.namenode.rpc.darpc;
+package com.harana.datagrid.rpc.darpc;
 
 import java.util.concurrent.atomic.AtomicLong;
 import java.io.IOException;
@@ -9,12 +9,14 @@ import com.harana.datagrid.rpc.RpcNameNodeState;
 import com.harana.datagrid.rpc.RpcProtocol;
 import com.harana.datagrid.rpc.RpcRequestMessage;
 import com.harana.datagrid.rpc.RpcResponseMessage;
-import com.harana.datagrid.utils.CrailUtils;
-import org.slf4j.Logger;
-
 import com.harana.datagrid.darpc.DaRPCServerEndpoint;
 import com.harana.datagrid.darpc.DaRPCServerEvent;
 import com.harana.datagrid.darpc.DaRPCService;
+import com.harana.datagrid.rpc.darpc.DaRPCNameNodeProtocol;
+import com.harana.datagrid.rpc.darpc.DaRPCNameNodeRequest;
+import com.harana.datagrid.rpc.darpc.DaRPCNameNodeResponse;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class DaRPCServiceDispatcher extends DaRPCNameNodeProtocol implements DaRPCService<DaRPCNameNodeRequest, DaRPCNameNodeResponse> {
 	private static final Logger logger = LogManager.getLogger();

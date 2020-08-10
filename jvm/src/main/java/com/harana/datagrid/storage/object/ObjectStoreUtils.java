@@ -1,27 +1,9 @@
-/*
- * Copyright (C) 2015-2018, IBM Corporation
- *
- * Licensed to the Apache Software Foundation (ASF) under one or more
- * contributor license agreements.  See the NOTICE file distributed with
- * this work for additional information regarding copyright ownership.
- * The ASF licenses this file to You under the Apache License, Version 2.0
- * (the "License"); you may not use this file except in compliance with
- * the License.  You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
-package com.ibm.crail.storage.object;
+package com.harana.datagrid.storage.object;
 
 import io.netty.buffer.ByteBuf;
 import com.harana.datagrid.CrailBuffer;
-import org.slf4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
@@ -29,16 +11,9 @@ import java.io.InputStream;
 import java.nio.ByteBuffer;
 
 public class ObjectStoreUtils {
-	private static Logger LOG = getLogger();
+	private static Logger logger = LogManager.getLogger();
 
 	private ObjectStoreUtils() {
-	}
-
-	public static synchronized Logger getLogger() {
-		if (LOG == null) {
-			logger = LoggerFactory.getLogger("com.ibm.crail.storage.object");
-		}
-		return LOG;
 	}
 
 	public static int readStreamIntoHeapByteBuffer(InputStream src, ByteBuffer dst)	throws IOException {
@@ -53,8 +28,7 @@ public class ObjectStoreUtils {
 		} catch (IOException e) {
 			// this could happen if the block size is reduced without deleting existing objects
 			logger.error("Got exception while trying to write into ByteBuffer " + dst + ": ", e);
-			logger.error("Buffer start = {}, pos = {}, capacity = {}, written bytes = {}, read bytes = {}",
-					startPos, dst.position(), dst.capacity(), writtenBytes, readBytes);
+			logger.error("Buffer start = {}, pos = {}, capacity = {}, written bytes = {}, read bytes = {}", startPos, dst.position(), dst.capacity(), writtenBytes, readBytes);
 			logger.error("Read truncated to {} bytes", writtenBytes);
 			throw e;
 		}
@@ -63,8 +37,7 @@ public class ObjectStoreUtils {
 		return writtenBytes;
 	}
 
-	public static int readStreamIntoDirectByteBuffer(InputStream src, byte stagingBuffer[], CrailBuffer dst)
-			throws IOException {
+	public static int readStreamIntoDirectByteBuffer(InputStream src, byte stagingBuffer[], CrailBuffer dst) throws IOException {
 		int readBytes, writtenBytes = 0;
 		int startPos = dst.position();
 		long t1 = 0, t2;
@@ -82,7 +55,7 @@ public class ObjectStoreUtils {
 				logger.error("Read truncated to {} bytes", writtenBytes);
 				break;
 			}
-			if (ObjectStoreConstants.PROFILE) {
+			if (com.harana.datagrid.storage.object.ObjectStoreConstants.PROFILE) {
 				t2 = System.nanoTime();
 				logger.debug("Read {} bytes into output ByteBuffer, Latency={} (us)", readBytes, (t2 - t1) / 1000.);
 				t1 = t2;
@@ -105,15 +78,13 @@ public class ObjectStoreUtils {
 		if (buf != null) {
 			logger.debug("DUMP: TID:" + Thread.currentThread().getId() + " NioByteBuffer : " + buf);
 			int min = (buf.limit() - offset);
-			if (min > bytes)
-				min = bytes;
+			if (min > bytes) min = bytes;
 			String str = "DUMP: TID:" + Thread.currentThread().getId() + " DUMP (" + offset + " ,+" + min + ") : ";
 			min += offset;
 			for (int i = offset; i < min; i++) {
 				//str += Character.toHexString();
 				str += Byte.toString(buf.get(i)) + " : ";
-				if (i % 32 == 0)
-					str += "\n";
+				if (i % 32 == 0) str += "\n";
 			}
 			logger.debug(str);
 		} else {
@@ -127,15 +98,13 @@ public class ObjectStoreUtils {
 			int ori_rindex = buf.readerIndex();
 			logger.debug("DUMP: TID:" + Thread.currentThread().getId() + " NettyByteBuf : " + buf);
 			int min = (buf.capacity() - offset);
-			if (min > bytes)
-				min = bytes;
+			if (min > bytes) min = bytes;
 			String str = "DUMP: TID:" + Thread.currentThread().getId() + " DUMP (" + offset + " ,+" + min + ") : ";
 			min += offset;
 			for (int i = offset; i < min; i++) {
 				//str += Character.toHexString();
 				str += Byte.toString(buf.getByte(i)) + " : ";
-				if (i % 32 == 0)
-					str += "\n";
+				if (i % 32 == 0) str += "\n";
 			}
 			logger.debug(str);
 			buf.readerIndex(ori_rindex);
@@ -172,8 +141,7 @@ public class ObjectStoreUtils {
 			int initialPos = buf.position();
 			buf.get(bytes);
 			int finalPos = buf.position();
-			int len = finalPos - initialPos;
-			return len;
+			return finalPos - initialPos;
 		}
 
 		@Override

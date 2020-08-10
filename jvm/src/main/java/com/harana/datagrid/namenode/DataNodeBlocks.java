@@ -1,16 +1,16 @@
 package com.harana.datagrid.namenode;
 
-import java.net.UnknownHostException;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.TimeUnit;
-
 import com.harana.datagrid.conf.CrailConstants;
 import com.harana.datagrid.metadata.BlockInfo;
 import com.harana.datagrid.metadata.DataNodeInfo;
 import com.harana.datagrid.rpc.RpcErrors;
-import com.harana.datagrid.utils.CrailUtils;
-import org.slf4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.net.UnknownHostException;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
 
 public class DataNodeBlocks extends DataNodeInfo {
 	private static final Logger logger = LogManager.getLogger();
@@ -19,15 +19,14 @@ public class DataNodeBlocks extends DataNodeInfo {
 	private LinkedBlockingQueue<NameNodeBlockInfo> freeBlocks;
 	private long token;
 	
-	public static DataNodeBlocks fromDataNodeInfo(DataNodeInfo dnInfo) throws UnknownHostException{
-		DataNodeBlocks dnInfoNn = new DataNodeBlocks(dnInfo.getStorageType(), dnInfo.getStorageClass(), dnInfo.getLocationClass(), dnInfo.getIpAddress(), dnInfo.getPort());
-		return dnInfoNn;
+	public static DataNodeBlocks fromDataNodeInfo(DataNodeInfo dnInfo) {
+		return new DataNodeBlocks(dnInfo.getStorageType(), dnInfo.getStorageClass(), dnInfo.getLocationClass(), dnInfo.getIpAddress(), dnInfo.getPort());
 	}	
 
-	private DataNodeBlocks(int storageType, int getStorageClass, int locationClass, byte[] ipAddress, int port) throws UnknownHostException {
+	private DataNodeBlocks(int storageType, int getStorageClass, int locationClass, byte[] ipAddress, int port) {
 		super(storageType, getStorageClass, locationClass, ipAddress, port);
-		this.regions = new ConcurrentHashMap<Long, BlockInfo>();
-		this.freeBlocks = new LinkedBlockingQueue<NameNodeBlockInfo>();
+		this.regions = new ConcurrentHashMap<>();
+		this.freeBlocks = new LinkedBlockingQueue<>();
 	}
 	
 	public void addFreeBlock(NameNodeBlockInfo nnBlock) {
@@ -35,9 +34,8 @@ public class DataNodeBlocks extends DataNodeInfo {
 		freeBlocks.add(nnBlock);
 	}
 
-	public NameNodeBlockInfo getFreeBlock() throws InterruptedException {
-		NameNodeBlockInfo block = this.freeBlocks.poll();
-		return block;
+	public NameNodeBlockInfo getFreeBlock() {
+		return this.freeBlocks.poll();
 	}
 	
 	public int getBlockCount() {
@@ -45,10 +43,7 @@ public class DataNodeBlocks extends DataNodeInfo {
 	}
 
 	public boolean regionExists(BlockInfo region) {
-		if (regions.containsKey(region.getLba())){
-			return true;
-		} 
-		return false;
+		return regions.containsKey(region.getLba());
 	}
 
 	public short updateRegion(BlockInfo region) {
@@ -62,7 +57,7 @@ public class DataNodeBlocks extends DataNodeInfo {
 	}
 
 	public void touch() {
-		this.token = System.nanoTime() + TimeUnit.SECONDS.toNanos(CrailConstants.STORAGE_KEEPALIVE*8);		
+		this.token = System.nanoTime() + TimeUnit.SECONDS.toNanos(CrailConstants.STORAGE_KEEPALIVE * 8);
 	}
 	
 	public boolean isOnline(){

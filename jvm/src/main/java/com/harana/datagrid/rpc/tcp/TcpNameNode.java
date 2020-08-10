@@ -1,4 +1,4 @@
-package com.harana.datagrid.namenode.rpc.tcp;
+package com.harana.datagrid.rpc.tcp;
 
 import com.harana.datagrid.rpc.RpcBinding;
 import com.harana.datagrid.rpc.RpcNameNodeService;
@@ -14,5 +14,4 @@ public class TcpNameNode extends TcpNameNodeClient implements RpcBinding {
 			return null;
 		}
 	}
-
 }

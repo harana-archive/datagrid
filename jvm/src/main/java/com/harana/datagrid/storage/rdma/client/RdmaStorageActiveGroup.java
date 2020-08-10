@@ -9,9 +9,8 @@ import com.harana.datagrid.storage.StorageEndpoint;
 import com.harana.datagrid.storage.rdma.MrCache;
 import com.harana.datagrid.storage.rdma.RdmaConstants;
 import com.harana.datagrid.storage.rdma.RdmaStorageGroup;
-import com.harana.datagrid.utils.CrailUtils;
-
 import com.harana.datagrid.rdma.*;
+import com.harana.datagrid.utils.CrailUtils;
 
 public class RdmaStorageActiveGroup extends RdmaActiveEndpointGroup<RdmaStorageActiveEndpoint> implements RdmaStorageGroup {
 	private HashMap<InetSocketAddress, RdmaStorageLocalEndpoint> localCache;
@@ -21,7 +20,7 @@ public class RdmaStorageActiveGroup extends RdmaActiveEndpointGroup<RdmaStorageA
 		super(timeout, polling, maxWR, maxSge, cqSize);
 		try {
 			this.mrCache = mrCache;
-			this.localCache = new HashMap<InetSocketAddress, RdmaStorageLocalEndpoint>();
+			this.localCache = new HashMap<>();
 		} catch(Exception e){
 			throw new IOException(e);
 		}

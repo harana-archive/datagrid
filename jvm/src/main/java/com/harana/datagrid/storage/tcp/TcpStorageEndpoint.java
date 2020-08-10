@@ -5,13 +5,12 @@ import java.net.InetSocketAddress;
 
 import com.harana.datagrid.CrailBuffer;
 import com.harana.datagrid.metadata.BlockInfo;
+import com.harana.datagrid.narpc.NaRPCEndpoint;
+import com.harana.datagrid.narpc.NaRPCFuture;
 import com.harana.datagrid.storage.StorageEndpoint;
 import com.harana.datagrid.storage.StorageFuture;
-import com.harana.datagrid.utils.CrailUtils;
-import org.slf4j.Logger;
-
-import com.ibm.narpc.NaRPCEndpoint;
-import com.ibm.narpc.NaRPCFuture;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class TcpStorageEndpoint implements StorageEndpoint {
 	private static final Logger logger = LogManager.getLogger();

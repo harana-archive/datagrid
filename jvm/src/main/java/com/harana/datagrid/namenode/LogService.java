@@ -12,8 +12,8 @@ import com.harana.datagrid.conf.CrailConstants;
 import com.harana.datagrid.rpc.RpcErrors;
 import com.harana.datagrid.rpc.RpcNameNodeService;
 import com.harana.datagrid.rpc.RpcProtocol;
-import com.harana.datagrid.utils.CrailUtils;
-import org.slf4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class LogService {
 	public static final Logger logger = LogManager.getLogger();
@@ -33,7 +33,7 @@ public class LogService {
 		outChannel = outStream.getChannel();
 		header = ByteBuffer.allocate(4);
 		payload = ByteBuffer.allocate(512);
-		tokens = new ConcurrentHashMap<Long, Long>();
+		tokens = new ConcurrentHashMap<>();
 	}
 	
 	public void writeRecord(LogRecord record) throws IOException{

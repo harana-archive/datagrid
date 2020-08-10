@@ -7,8 +7,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import com.harana.datagrid.storage.StorageFuture;
 import com.harana.datagrid.storage.StorageResult;
-import com.harana.datagrid.utils.CrailUtils;
-import org.slf4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class RdmaPassiveFuture implements StorageFuture, StorageResult {
 	private static final Logger logger = LogManager.getLogger();

@@ -1,4 +1,4 @@
-package com.ibm.jnvmf;
+package com.harana.datagrid.storage.nvmf.jvnmf;
 
 public class AsynchronousEventInformation extends EEnum<AsynchronousEventInformation.Value> {
   public class Value extends EEnum.Value {

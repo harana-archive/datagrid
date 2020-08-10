@@ -1,13 +1,13 @@
-package com.harana.datagrid.namenode.rpc.tcp;
+package com.harana.datagrid.rpc.tcp;
 
-import com.ibm.narpc.NaRPCService;
-import com.ibm.narpc.NaRPCServerChannel;
+import com.harana.datagrid.narpc.NaRPCServerChannel;
+import com.harana.datagrid.narpc.NaRPCService;
 
 import com.harana.datagrid.rpc.RpcErrors;
 import com.harana.datagrid.rpc.RpcNameNodeService;
 import com.harana.datagrid.rpc.RpcProtocol;
-import com.harana.datagrid.utils.CrailUtils;
-import org.slf4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class TcpRpcDispatcher implements NaRPCService<TcpNameNodeRequest, TcpNameNodeResponse> {
 	public static final Logger logger = LogManager.getLogger();

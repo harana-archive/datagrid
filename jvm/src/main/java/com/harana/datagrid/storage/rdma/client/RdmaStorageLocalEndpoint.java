@@ -19,11 +19,10 @@ import com.harana.datagrid.storage.StorageEndpoint;
 import com.harana.datagrid.storage.StorageFuture;
 import com.harana.datagrid.storage.StorageUtils;
 import com.harana.datagrid.storage.rdma.RdmaConstants;
-import com.harana.datagrid.utils.CrailUtils;
-import org.slf4j.Logger;
-
 import com.harana.datagrid.rdma.verbs.*;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import sun.misc.Unsafe;
 
 public class RdmaStorageLocalEndpoint implements StorageEndpoint {

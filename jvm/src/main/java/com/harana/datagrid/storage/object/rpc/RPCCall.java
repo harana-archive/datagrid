@@ -1,28 +1,10 @@
-/*
- * Copyright (C) 2015-2018, IBM Corporation
- *
- * Licensed to the Apache Software Foundation (ASF) under one or more
- * contributor license agreements.  See the NOTICE file distributed with
- * this work for additional information regarding copyright ownership.
- * The ASF licenses this file to You under the Apache License, Version 2.0
- * (the "License"); you may not use this file except in compliance with
- * the License.  You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+package com.harana.datagrid.storage.object.rpc;
 
-package com.ibm.crail.storage.object.rpc;
-
-import com.ibm.crail.storage.object.ObjectStoreConstants;
-import com.ibm.crail.storage.object.ObjectStoreUtils;
+import com.harana.datagrid.storage.object.ObjectStoreConstants;
+import com.harana.datagrid.storage.object.ObjectStoreUtils;
 import io.netty.buffer.ByteBuf;
-import org.slf4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public abstract class RPCCall {
 	public static final short SUCCESS = 0;
@@ -31,7 +13,7 @@ public abstract class RPCCall {
 	public static final short INVALID_ARGS = -3;
 	protected static final short RPC_REQ_HEADER_SIZE = 2 + 2 + 8;
 	protected static final short RPC_RESP_HEADER_SIZE = 2 + 2 + 8 + 2;
-	private static final Logger LOG = ObjectStoreUtils.getLogger();
+	private static final Logger logger = LogManager.getLogger();
 	// message size is first 2 bytes
 	private short cmd;   // 2
 	private short status;  // 2
@@ -138,8 +120,7 @@ public abstract class RPCCall {
 		assert rpcCookie == this.cookie;
 		if (ObjectStoreConstants.PROFILE) {
 			endTime = System.nanoTime();
-			logger.debug("Rpc call finished: Command Id={}, Cookie={}, Latency={} (us)", this.getCmd(), this.getCookie(),
-					(endTime - startTime) / 1000.);
+			logger.debug("Rpc call finished: Command Id={}, Cookie={}, Latency={} (us)", this.getCmd(), this.getCookie(), (endTime - startTime) / 1000.);
 		}
 	}
 

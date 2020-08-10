@@ -1,9 +1,9 @@
 package com.harana.datagrid.namenode;
 
-import java.util.concurrent.DelayQueue;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-import com.harana.datagrid.utils.CrailUtils;
-import org.slf4j.Logger;
+import java.util.concurrent.DelayQueue;
 
 public class GCServer implements Runnable {
 	private static final Logger logger = LogManager.getLogger();
@@ -30,5 +30,4 @@ public class GCServer implements Runnable {
 			}
 		}
 	}
-
 }

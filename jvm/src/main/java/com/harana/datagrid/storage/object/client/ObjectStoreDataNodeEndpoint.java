@@ -1,35 +1,17 @@
-/*
- * Copyright (C) 2015-2018, IBM Corporation
- *
- * Licensed to the Apache Software Foundation (ASF) under one or more
- * contributor license agreements.  See the NOTICE file distributed with
- * this work for additional information regarding copyright ownership.
- * The ASF licenses this file to You under the Apache License, Version 2.0
- * (the "License"); you may not use this file except in compliance with
- * the License.  You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+package com.harana.datagrid.storage.object.client;
 
-package com.ibm.crail.storage.object.client;
-
-import com.ibm.crail.storage.object.ObjectStoreConstants;
-import com.ibm.crail.storage.object.ObjectStoreUtils;
-import com.ibm.crail.storage.object.rpc.MappingEntry;
-import com.ibm.crail.storage.object.rpc.ObjectStoreRPC;
-import com.ibm.crail.storage.object.rpc.RPCCall;
+import com.harana.datagrid.storage.object.ObjectStoreConstants;
+import com.harana.datagrid.storage.object.ObjectStoreUtils;
+import com.harana.datagrid.storage.object.rpc.MappingEntry;
+import com.harana.datagrid.storage.object.rpc.ObjectStoreRPC;
+import com.harana.datagrid.storage.object.rpc.RPCCall;
 import com.harana.datagrid.CrailBuffer;
 import com.harana.datagrid.conf.CrailConstants;
 import com.harana.datagrid.metadata.BlockInfo;
 import com.harana.datagrid.storage.StorageEndpoint;
 import com.harana.datagrid.storage.StorageFuture;
-import org.slf4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -40,7 +22,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class ObjectStoreDataNodeEndpoint implements StorageEndpoint {
-	private static final Logger LOG = ObjectStoreUtils.getLogger();
+	private static final Logger logger = LogManager.getLogger();
 
 	private final static AtomicInteger objectSequenceNumber = new AtomicInteger(0);
 	private final ObjectStoreMetadataClient metadataClient;
@@ -59,16 +41,14 @@ public class ObjectStoreDataNodeEndpoint implements StorageEndpoint {
 				+ Integer.toString(Math.abs(rand.nextInt())) + "-";
 	}
 
-	public StorageFuture write(CrailBuffer buffer, BlockInfo blockInfo, long remoteOffset)
-			throws IOException {
+	public StorageFuture write(CrailBuffer buffer, BlockInfo blockInfo, long remoteOffset) {
 		long startTime = 0, endTime;
 		if (ObjectStoreConstants.PROFILE) {
 			startTime = System.nanoTime();
 		}
 		String key = makeUniqueKey(blockInfo);
 		int length = buffer.remaining();
-		logger.debug("Block write: addr = {}, start offset = {}, end offset = {}, key = {}",
-				blockInfo.getAddr(), remoteOffset, (remoteOffset + length), key);
+		logger.debug("Block write: addr = {}, start offset = {}, end offset = {}, key = {}", blockInfo.getAddr(), remoteOffset, (remoteOffset + length), key);
 		objectStoreClient.putObject(key, buffer);
 		if (remoteOffset == 0 && length == ObjectStoreConstants.ALLOCATION_SIZE) {
 			metadataClient.writeBlock(blockInfo, key);
@@ -94,11 +74,9 @@ public class ObjectStoreDataNodeEndpoint implements StorageEndpoint {
 			startTime = System.nanoTime();
 		}
 		int startPos = buffer.position();
-		final long startOffset = remoteOffset;
-		long curOffset = startOffset;
-		final long endOffset = startOffset + buffer.limit();
-		logger.debug("Block read request: Block address = {}, range ({} - {})", blockInfo.getAddr(), startOffset,
-				endOffset);
+		long curOffset = remoteOffset;
+		final long endOffset = remoteOffset + buffer.limit();
+		logger.debug("Block read request: Block address = {}, range ({} - {})", blockInfo.getAddr(), remoteOffset, endOffset);
 		ObjectStoreRPC.TranslateBlock rpc;
 		Future<RPCCall> future = metadataClient.translateBlock(blockInfo);
 		try {
@@ -111,7 +89,7 @@ public class ObjectStoreDataNodeEndpoint implements StorageEndpoint {
 		if (mapping != null) {
 			// A read of a non-written block is theoretically possible
 			for (MappingEntry entry : mapping) {
-				if (startOffset < entry.getEndOffset() && endOffset > entry.getStartOffset()) {
+				if (remoteOffset < entry.getEndOffset() && endOffset > entry.getStartOffset()) {
 					// the current mapping entry overlaps with what we are interested in
 					String key = entry.getKey();
 					long objStartOffset = entry.getObjectOffset();
@@ -123,8 +101,7 @@ public class ObjectStoreDataNodeEndpoint implements StorageEndpoint {
 						curLength -= shift;
 					} else if (curOffset < entry.getStartOffset()) {
 						// we have a read hole (the range was never written)
-						loggerwarn("Reading non-initialized block range ({} - {})",
-								curOffset, entry.getStartOffset());
+						logger.warn("Reading non-initialized block range ({} - {})", curOffset, entry.getStartOffset());
 						ObjectStoreUtils.putZeroes(buffer, (int) (entry.getStartOffset() - curOffset));
 						curOffset = entry.getStartOffset();
 					}
@@ -133,10 +110,8 @@ public class ObjectStoreDataNodeEndpoint implements StorageEndpoint {
 						curLength -= (entry.getEndOffset() - endOffset);
 					}
 					assert curLength > 0;
-					logger.debug("Block range ({} - {}) maps to object key {} range ({} - {})",
-							curOffset, curOffset + curLength, key, objStartOffset, objStartOffset + curLength);
-					InputStream input =
-							this.objectStoreClient.getObject(key, objStartOffset, objStartOffset + curLength);
+					logger.debug("Block range ({} - {}) maps to object key {} range ({} - {})", curOffset, curOffset + curLength, key, objStartOffset, objStartOffset + curLength);
+					InputStream input = this.objectStoreClient.getObject(key, objStartOffset, objStartOffset + curLength);
 					long st = 0, et;
 					if (ObjectStoreConstants.PROFILE) {
 						st = System.nanoTime();
@@ -160,7 +135,7 @@ public class ObjectStoreDataNodeEndpoint implements StorageEndpoint {
 			/* NOTE: Not clear what to do if the buffer is not filled up to limit().
 			 * Padding with zeroes might not be the correct behavior.
 			 */
-			loggerwarn("Trying to read non-initialized block range ({} - {})", endPos, buffer.limit());
+			logger.warn("Trying to read non-initialized block range ({} - {})", endPos, buffer.limit());
 		}
 		if (ObjectStoreConstants.PROFILE) {
 			endTime = System.nanoTime();
@@ -169,7 +144,7 @@ public class ObjectStoreDataNodeEndpoint implements StorageEndpoint {
 		return new ObjectStoreDataFuture(readLength);
 	}
 
-	public void close() throws IOException, InterruptedException {
+	public void close() {
 		if (this.metadataClient != null) {
 			this.metadataClient.close();
 		}

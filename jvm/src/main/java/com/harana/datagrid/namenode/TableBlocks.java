@@ -5,8 +5,7 @@ import com.harana.datagrid.conf.CrailConstants;
 
 public class TableBlocks extends DirectoryBlocks {
 
-	TableBlocks(long fd, int fileComponent, CrailNodeType type,
-			int storageClass, int locationClass, boolean enumerable) {
+	TableBlocks(long fd, int fileComponent, CrailNodeType type, int storageClass, int locationClass, boolean enumerable) {
 		super(fd, fileComponent, type, storageClass, locationClass, enumerable);
 	}
 

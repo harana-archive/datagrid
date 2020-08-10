@@ -1,6 +1,6 @@
-package com.ibm.jnvmf;
+package com.harana.datagrid.storage.nvmf.jvnmf;
 
-import com.ibm.jnvmf.AsynchronousEventType.Value;
+import com.harana.datagrid.storage.nvmf.jvnmf.AsynchronousEventType.Value;
 
 public class AdminAsynchronousEventRequestResponseCqe extends AdminCompletionQueueEntry {
 

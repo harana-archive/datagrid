@@ -500,8 +500,7 @@ public class RpcResponseMessage {
 		}
 		
 		public int write(ByteBuffer buffer) {
-			int written = blockInfo.write(buffer);
-			return written;
+			return blockInfo.write(buffer);
 		}		
 
 		public void update(ByteBuffer buffer) {
@@ -561,16 +560,11 @@ public class RpcResponseMessage {
 		}	
 		
 		public int write(ByteBuffer buffer) {
-			int written = statistics.write(buffer);
-			return written;
+			return statistics.write(buffer);
 		}		
 
 		public void update(ByteBuffer buffer) {
-			try {
-				statistics.update(buffer);
-			} catch (UnknownHostException e) {
-				e.printStackTrace();
-			}
+			statistics.update(buffer);
 		}
 
 		public DataNodeStatistics getStatistics() {

@@ -1,28 +1,9 @@
-/*
- * Copyright (C) 2015-2018, IBM Corporation
- *
- * Licensed to the Apache Software Foundation (ASF) under one or more
- * contributor license agreements.  See the NOTICE file distributed with
- * this work for additional information regarding copyright ownership.
- * The ASF licenses this file to You under the Apache License, Version 2.0
- * (the "License"); you may not use this file except in compliance with
- * the License.  You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+package com.harana.datagrid.storage.object.server;
 
-package com.ibm.crail.storage.object.server;
-
-import com.ibm.crail.storage.object.ObjectStoreConstants;
-import com.ibm.crail.storage.object.ObjectStoreUtils;
-import com.ibm.crail.storage.object.client.S3ObjectStoreClient;
-import com.ibm.crail.storage.object.rpc.*;
+import com.harana.datagrid.storage.object.ObjectStoreConstants;
+import com.harana.datagrid.storage.object.ObjectStoreUtils;
+import com.harana.datagrid.storage.object.client.S3ObjectStoreClient;
+import com.harana.datagrid.storage.object.rpc.*;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -32,7 +13,8 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import com.harana.datagrid.conf.CrailConstants;
-import org.slf4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
@@ -42,7 +24,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import static java.util.Collections.binarySearch;
 
 public class ObjectStoreMetadataServer extends Thread {
-	static private final Logger LOG = ObjectStoreUtils.getLogger();
+	static private final Logger logger = LogManager.getLogger();
 
 	private final ConcurrentHashMap<Long, ArrayList<MappingEntry>> blockToObject;
 
@@ -136,7 +118,7 @@ public class ObjectStoreMetadataServer extends Thread {
 					try {
 						objectStoreClient.deleteObject(object.getKey());
 					} catch (Exception e) {
-						loggerwarn("While deleting object {}, got exception ", object.getKey(), e);
+						logger.warn("While deleting object {}, got exception ", object.getKey(), e);
 					}
 				}
 			}

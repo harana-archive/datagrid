@@ -1,6 +1,6 @@
 package com.harana.datagrid.storage.nvmf.client;
 
-import com.ibm.jnvmf.*;
+import com.harana.datagrid.storage.nvmf.jvnmf.*;
 import com.harana.datagrid.CrailBuffer;
 import com.harana.datagrid.CrailBufferCache;
 import com.harana.datagrid.CrailStatistics;
@@ -10,8 +10,8 @@ import com.harana.datagrid.metadata.DataNodeInfo;
 import com.harana.datagrid.storage.StorageEndpoint;
 import com.harana.datagrid.storage.StorageFuture;
 import com.harana.datagrid.storage.nvmf.NvmfStorageConstants;
-import com.harana.datagrid.utils.CrailUtils;
-import org.slf4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -43,8 +43,7 @@ public class NvmfStorageEndpoint implements StorageEndpoint {
 		InetSocketAddress inetSocketAddress = new InetSocketAddress(
 				InetAddress.getByAddress(info.getIpAddress()), info.getPort());
 		// XXX FIXME: nsid from datanodeinfo
-		NvmfTransportId transportId = new NvmfTransportId(inetSocketAddress,
-				new NvmeQualifiedName(NvmfStorageConstants.NQN.toString()));
+		NvmfTransportId transportId = new NvmfTransportId(inetSocketAddress, new NvmeQualifiedName(NvmfStorageConstants.NQN.toString()));
 		logger.info("Connecting to NVMf target at " + transportId.toString());
 		controller = nvme.connect(transportId);
 		controller.getControllerConfiguration().setEnable(true);
@@ -56,8 +55,7 @@ public class NvmfStorageEndpoint implements StorageEndpoint {
 		}
 		IdentifyControllerData identifyControllerData = controller.getIdentifyControllerData();
 		if (CrailConstants.SLICE_SIZE > identifyControllerData.getMaximumDataTransferSize().toInt()) {
-			throw new IllegalArgumentException(CrailConstants.SLICE_SIZE_KEY + " > max transfer size (" +
-					identifyControllerData.getMaximumDataTransferSize() + ")");
+			throw new IllegalArgumentException(CrailConstants.SLICE_SIZE_KEY + " > max transfer size (" + identifyControllerData.getMaximumDataTransferSize() + ")");
 		}
 		List<Namespace> namespaces = controller.getActiveNamespaces();
 		//TODO: poll nsid in datanodeinfo
@@ -76,12 +74,10 @@ public class NvmfStorageEndpoint implements StorageEndpoint {
 		IdentifyNamespaceData identifyNamespaceData = namespace.getIdentifyNamespaceData();
 		lbaDataSize = identifyNamespaceData.getFormattedLbaSize().getLbaDataSize().toInt();
 		if (CrailConstants.SLICE_SIZE % lbaDataSize != 0) {
-			throw new IllegalArgumentException(CrailConstants.SLICE_SIZE_KEY +
-					" is not a multiple of LBA data size (" + lbaDataSize + ")");
+			throw new IllegalArgumentException(CrailConstants.SLICE_SIZE_KEY + " is not a multiple of LBA data size (" + lbaDataSize + ")");
 		}
 		namespaceCapacity = identifyNamespaceData.getNamespaceCapacity() * lbaDataSize;
-		this.queuePair = controller.createIoQueuePair(NvmfStorageConstants.QUEUE_SIZE, 0, 0,
-				SubmissionQueueEntry.SIZE);
+		this.queuePair = controller.createIoQueuePair(NvmfStorageConstants.QUEUE_SIZE, 0, 0, SubmissionQueueEntry.SIZE);
 
 		this.writeCommands = new ArrayBlockingQueue<>(NvmfStorageConstants.QUEUE_SIZE);
 		this.readCommands = new ArrayBlockingQueue<>(NvmfStorageConstants.QUEUE_SIZE);

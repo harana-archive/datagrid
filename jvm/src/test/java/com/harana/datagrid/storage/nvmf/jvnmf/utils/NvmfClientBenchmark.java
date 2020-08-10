@@ -1,50 +1,33 @@
-/*
- * Copyright (C) 2018, IBM Corporation
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
- */
+package com.harana.datagrid.storage.nvmf.jvnmf.utils;
 
-package com.ibm.jnvmf.utils;
-
-import com.ibm.jnvmf.Command;
-import com.ibm.jnvmf.Controller;
-import com.ibm.jnvmf.ControllerCapabilities;
-import com.ibm.jnvmf.GenericStatusCode;
-import com.ibm.jnvmf.IoQueuePair;
-import com.ibm.jnvmf.IdentifyControllerData;
-import com.ibm.jnvmf.IdentifyNamespaceData;
-import com.ibm.jnvmf.KeyedNativeBuffer;
-import com.ibm.jnvmf.LbaFormat;
-import com.ibm.jnvmf.Namespace;
-import com.ibm.jnvmf.NamespaceIdentifier;
-import com.ibm.jnvmf.NativeBuffer;
-import com.ibm.jnvmf.NvmCompletionQueueEntry;
-import com.ibm.jnvmf.NvmIoCommand;
-import com.ibm.jnvmf.NvmIoCommandCapsule;
-import com.ibm.jnvmf.NvmIoCommandSqe;
-import com.ibm.jnvmf.NvmReadCommand;
-import com.ibm.jnvmf.NvmResponseCapsule;
-import com.ibm.jnvmf.NvmWriteCommand;
-import com.ibm.jnvmf.Nvme;
-import com.ibm.jnvmf.NvmeQualifiedName;
-import com.ibm.jnvmf.NvmfTransportId;
-import com.ibm.jnvmf.OperationCallback;
-import com.ibm.jnvmf.RdmaException;
-import com.ibm.jnvmf.Response;
-import com.ibm.jnvmf.StatusCode;
-import com.ibm.jnvmf.SubmissionQueueEntry;
-import com.ibm.jnvmf.UnsuccessfulComandException;
+import com.harana.datagrid.storage.nvmf.jvnmf.Command;
+import com.harana.datagrid.storage.nvmf.jvnmf.Controller;
+import com.harana.datagrid.storage.nvmf.jvnmf.ControllerCapabilities;
+import com.harana.datagrid.storage.nvmf.jvnmf.GenericStatusCode;
+import com.harana.datagrid.storage.nvmf.jvnmf.IoQueuePair;
+import com.harana.datagrid.storage.nvmf.jvnmf.IdentifyControllerData;
+import com.harana.datagrid.storage.nvmf.jvnmf.IdentifyNamespaceData;
+import com.harana.datagrid.storage.nvmf.jvnmf.KeyedNativeBuffer;
+import com.harana.datagrid.storage.nvmf.jvnmf.LbaFormat;
+import com.harana.datagrid.storage.nvmf.jvnmf.Namespace;
+import com.harana.datagrid.storage.nvmf.jvnmf.NamespaceIdentifier;
+import com.harana.datagrid.storage.nvmf.jvnmf.NativeBuffer;
+import com.harana.datagrid.storage.nvmf.jvnmf.NvmCompletionQueueEntry;
+import com.harana.datagrid.storage.nvmf.jvnmf.NvmIoCommand;
+import com.harana.datagrid.storage.nvmf.jvnmf.NvmIoCommandCapsule;
+import com.harana.datagrid.storage.nvmf.jvnmf.NvmIoCommandSqe;
+import com.harana.datagrid.storage.nvmf.jvnmf.NvmReadCommand;
+import com.harana.datagrid.storage.nvmf.jvnmf.NvmResponseCapsule;
+import com.harana.datagrid.storage.nvmf.jvnmf.NvmWriteCommand;
+import com.harana.datagrid.storage.nvmf.jvnmf.Nvme;
+import com.harana.datagrid.storage.nvmf.jvnmf.NvmeQualifiedName;
+import com.harana.datagrid.storage.nvmf.jvnmf.NvmfTransportId;
+import com.harana.datagrid.storage.nvmf.jvnmf.OperationCallback;
+import com.harana.datagrid.storage.nvmf.jvnmf.RdmaException;
+import com.harana.datagrid.storage.nvmf.jvnmf.Response;
+import com.harana.datagrid.storage.nvmf.jvnmf.StatusCode;
+import com.harana.datagrid.storage.nvmf.jvnmf.SubmissionQueueEntry;
+import com.harana.datagrid.storage.nvmf.jvnmf.UnsuccessfulComandException;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;

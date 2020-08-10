@@ -1,30 +1,11 @@
-/*
- * Copyright (C) 2015-2018, IBM Corporation
- *
- * Licensed to the Apache Software Foundation (ASF) under one or more
- * contributor license agreements.  See the NOTICE file distributed with
- * this work for additional information regarding copyright ownership.
- * The ASF licenses this file to You under the Apache License, Version 2.0
- * (the "License"); you may not use this file except in compliance with
- * the License.  You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+package com.harana.datagrid.storage.object.client;
 
-package com.ibm.crail.storage.object.client;
-
-import com.ibm.crail.storage.object.ObjectStoreConstants;
-import com.ibm.crail.storage.object.ObjectStoreUtils;
-import com.ibm.crail.storage.object.rpc.ObjectStoreResponseDecoder;
-import com.ibm.crail.storage.object.rpc.RPCCall;
-import com.ibm.crail.storage.object.rpc.RPCFuture;
-import com.ibm.crail.storage.object.rpc.RPCRequestEncoder;
+import com.harana.datagrid.storage.object.ObjectStoreConstants;
+import com.harana.datagrid.storage.object.ObjectStoreUtils;
+import com.harana.datagrid.storage.object.rpc.ObjectStoreResponseDecoder;
+import com.harana.datagrid.storage.object.rpc.RPCCall;
+import com.harana.datagrid.storage.object.rpc.RPCFuture;
+import com.harana.datagrid.storage.object.rpc.RPCRequestEncoder;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelInitializer;
@@ -33,7 +14,8 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
-import org.slf4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
@@ -41,7 +23,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class ObjectStoreMetadataClientGroup {
-	private static final Logger LOG = ObjectStoreUtils.getLogger();
+	private static final Logger logger = LogManager.getLogger();
 	private final EventLoopGroup workerGroup;
 	private final Bootstrap boot;
 	private final InetSocketAddress metadataServerAddress;
@@ -66,7 +48,7 @@ public class ObjectStoreMetadataClientGroup {
 				new InetSocketAddress(ObjectStoreConstants.DATANODE, ObjectStoreConstants.DATANODE_PORT);
 		boot.handler(new ChannelInitializer<SocketChannel>() {
 			@Override
-			public void initChannel(SocketChannel ch) throws Exception {
+			public void initChannel(SocketChannel ch) {
 				/* outgoing pipeline */
 				ch.pipeline().addLast(new RPCRequestEncoder());
 				/* incoming pipeline */
@@ -75,8 +57,8 @@ public class ObjectStoreMetadataClientGroup {
 		});
 
 		slot = new AtomicLong(1);
-		inFlightOps = new ConcurrentHashMap<Long, RPCFuture<RPCCall>>();
-		activeClients = new ArrayList<ObjectStoreMetadataClient>();
+		inFlightOps = new ConcurrentHashMap<>();
+		activeClients = new ArrayList<>();
 	}
 
 	public void closeClientGroup() {

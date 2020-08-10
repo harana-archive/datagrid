@@ -12,8 +12,8 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import com.harana.datagrid.conf.CrailConfiguration;
 import com.harana.datagrid.conf.CrailConstants;
-import com.harana.datagrid.utils.CrailUtils;
-import org.slf4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class RdmaConstants {
 	private static final Logger logger = LogManager.getLogger();

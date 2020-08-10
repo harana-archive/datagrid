@@ -1,34 +1,36 @@
-package com.harana.datagrid.namenode.rpc.tcp;
+package com.harana.datagrid.rpc.tcp;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.LinkedList;
 
 import com.harana.datagrid.conf.CrailConfiguration;
+import com.harana.datagrid.narpc.NaRPCClientGroup;
+import com.harana.datagrid.narpc.NaRPCEndpoint;
 import com.harana.datagrid.rpc.RpcClient;
 import com.harana.datagrid.rpc.RpcConnection;
-import org.slf4j.Logger;
+import org.apache.logging.log4j.Logger;
 
-import com.ibm.narpc.NaRPCClientGroup;
-import com.ibm.narpc.NaRPCEndpoint;
+import static com.harana.datagrid.rpc.tcp.TcpRpcConstants.*;
 
 public class TcpNameNodeClient implements RpcClient {
+
 	private NaRPCClientGroup<TcpNameNodeRequest, TcpNameNodeResponse> clientGroup;
 	private LinkedList<TcpRpcConnection> allConnections;
 	
     public void init(CrailConfiguration conf, String[] strings) throws IOException {
     	try {
-    		TcpRpcConstants.updateConstants(conf);
-    		TcpRpcConstants.verify();   		
-    		this.clientGroup = new NaRPCClientGroup<TcpNameNodeRequest, TcpNameNodeResponse>(TcpRpcConstants.NAMENODE_TCP_QUEUEDEPTH, TcpRpcConstants.NAMENODE_TCP_MESSAGESIZE, true);
-    		this.allConnections = new LinkedList<TcpRpcConnection>();
+    		updateConstants(conf);
+    		verify();
+    		this.clientGroup = new NaRPCClientGroup<>(NAMENODE_TCP_QUEUEDEPTH, NAMENODE_TCP_MESSAGESIZE, true);
+    		this.allConnections = new LinkedList<>();
     	} catch(Exception e){
     		throw new IOException(e);
     	}
     }
 
     public void printConf(Logger logger) {
-    	TcpRpcConstants.printConf(logger);
+    	printConf(logger);
     }
 
     /* This function comes from RPCClient interface */
@@ -50,8 +52,6 @@ public class TcpNameNodeClient implements RpcClient {
 			for (TcpRpcConnection connection : allConnections){
 				connection.close();
 			}
-		} catch(Exception e){
-		}
+		} catch(Exception e){}
 	}
-
 }

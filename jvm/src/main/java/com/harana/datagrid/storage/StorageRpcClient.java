@@ -14,7 +14,8 @@ import com.harana.datagrid.rpc.RpcConnection;
 import com.harana.datagrid.rpc.RpcErrors;
 import com.harana.datagrid.rpc.RpcVoid;
 import com.harana.datagrid.utils.CrailUtils;
-import org.slf4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class StorageRpcClient {
 	public static final Logger logger = LogManager.getLogger();

@@ -16,9 +16,9 @@ public class DirectoryBlocks extends AbstractNode {
 	
 	DirectoryBlocks(long fd, int fileComponent, CrailNodeType type, int storageClass, int locationClass, boolean enumerable) {
 		super(fd, fileComponent, type, storageClass, locationClass, enumerable);
-		this.children = new ConcurrentHashMap<Integer, AbstractNode>();
+		this.children = new ConcurrentHashMap<>();
 		this.dirOffsetCounter = new AtomicLong(0);
-		this.blocks = new ConcurrentHashMap<Integer, NameNodeBlockInfo>();
+		this.blocks = new ConcurrentHashMap<>();
 	}
 	
 	public AbstractNode putChild(AbstractNode child) throws Exception {
@@ -53,9 +53,7 @@ public class DirectoryBlocks extends AbstractNode {
 
 	@Override
 	public void freeBlocks(BlockStore blockStore) throws Exception {
-		Iterator<NameNodeBlockInfo> iter = blocks.values().iterator();
-		while (iter.hasNext()){
-			NameNodeBlockInfo blockInfo = iter.next();
+		for (NameNodeBlockInfo blockInfo : blocks.values()) {
 			blockStore.addBlock(blockInfo);
 		}	
 	}
@@ -71,11 +69,7 @@ public class DirectoryBlocks extends AbstractNode {
 
 	@Override
 	public void clearChildren(Queue<AbstractNode> queue) {
-		Iterator<AbstractNode> iter = children.values().iterator();
-		while(iter.hasNext()){
-			AbstractNode child = iter.next();
-			queue.add(child);
-		}		
+		queue.addAll(children.values());
 	}
 
 	@Override

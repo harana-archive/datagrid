@@ -13,16 +13,14 @@ public class RdmaStorageServerEndpoint extends RdmaActiveEndpoint {
 		this.closer = closer;
 	}	
 
-	public void dispatchCqEvent(IbvWC wc) throws IOException {
+	public void dispatchCqEvent(IbvWC wc) {
 
 	}
 	
-	public synchronized void dispatchCmEvent(RdmaCmEvent cmEvent)
-			throws IOException {
+	public synchronized void dispatchCmEvent(RdmaCmEvent cmEvent) throws IOException {
 		super.dispatchCmEvent(cmEvent);
 		int eventType = cmEvent.getEvent();
-		if (eventType == RdmaCmEvent.EventType.RDMA_CM_EVENT_DISCONNECTED
-				.ordinal()) {
+		if (eventType == RdmaCmEvent.EventType.RDMA_CM_EVENT_DISCONNECTED.ordinal()) {
 			closer.close(this);
 		}
 	}

@@ -1,4 +1,4 @@
-package com.ibm.jnvmf;
+package com.harana.datagrid.storage.nvmf.jvnmf;
 
 public class AdminGetLogPageCommandCapsule extends AdminCommandCapsule<AdminGetLogPageCommandSqe> {
 

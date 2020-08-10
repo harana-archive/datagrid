@@ -20,12 +20,12 @@ import com.harana.datagrid.rpc.RpcProtocol;
 import com.harana.datagrid.rpc.RpcRequestMessage;
 import com.harana.datagrid.rpc.RpcResponseMessage;
 import com.harana.datagrid.utils.CrailUtils;
-import org.slf4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class NameNodeService implements RpcNameNodeService, Sequencer {
 	private static final Logger logger = LogManager.getLogger();
 	
-	//data structures for datanodes, blocks, files
 	private long serviceId;
 	private long serviceSize;
 	private AtomicLong sequenceId;
@@ -68,7 +68,7 @@ public class NameNodeService implements RpcNameNodeService, Sequencer {
 		//get params
 		FileName fileHash = request.getFileName();
 		CrailNodeType type = request.getFileType();
-		boolean writeable = type.isDirectory() ? false : true; 
+		boolean writeable = !type.isDirectory();
 		int storageClass = request.getStorageClass();
 		int locationClass = request.getLocationClass();
 		boolean enumerable = request.isEnumerable();
@@ -556,7 +556,7 @@ public class NameNodeService implements RpcNameNodeService, Sequencer {
 	
 	//--------------- helper functions
 	
-	void appendToDeleteQueue(AbstractNode fileInfo) throws Exception {
+	void appendToDeleteQueue(AbstractNode fileInfo) {
 		if (fileInfo != null) {
 			fileInfo.setDelay(CrailConstants.TOKEN_EXPIRATION);
 			deleteQueue.add(fileInfo);			

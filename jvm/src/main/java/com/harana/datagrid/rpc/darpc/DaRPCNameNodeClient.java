@@ -1,14 +1,14 @@
-package com.harana.datagrid.namenode.rpc.darpc;
+package com.harana.datagrid.rpc.darpc;
 
 import java.net.InetSocketAddress;
 import com.harana.datagrid.conf.CrailConfiguration;
 import com.harana.datagrid.rpc.RpcClient;
 import com.harana.datagrid.rpc.RpcConnection;
-import com.harana.datagrid.utils.CrailUtils;
-import org.slf4j.Logger;
-
 import com.harana.datagrid.darpc.DaRPCClientEndpoint;
 import com.harana.datagrid.darpc.DaRPCClientGroup;
+import com.harana.datagrid.rpc.darpc.DaRPCConstants;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class DaRPCNameNodeClient implements RpcClient {
 	private static final Logger logger = LogManager.getLogger();
@@ -37,9 +37,7 @@ public class DaRPCNameNodeClient implements RpcClient {
 	public RpcConnection connect(InetSocketAddress address) throws Exception {
 		DaRPCClientEndpoint<DaRPCNameNodeRequest, DaRPCNameNodeResponse> namenodeEndopoint = namenodeClientGroup.createEndpoint();
 		namenodeEndopoint.connect(address, DaRPCConstants.NAMENODE_DARPC_CONNECTTIMEOUT);
-		DaRPCNameNodeConnection connection = new DaRPCNameNodeConnection(namenodeEndopoint);
-		return connection;
-		
+		return new DaRPCNameNodeConnection(namenodeEndopoint);
 	}
 
 	@Override

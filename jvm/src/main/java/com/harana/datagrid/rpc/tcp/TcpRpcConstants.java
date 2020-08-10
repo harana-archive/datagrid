@@ -1,10 +1,10 @@
-package com.harana.datagrid.namenode.rpc.tcp;
+package com.harana.datagrid.rpc.tcp;
 
 import java.io.IOException;
 
 import com.harana.datagrid.conf.CrailConfiguration;
-import com.harana.datagrid.utils.CrailUtils;
-import org.slf4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class TcpRpcConstants {
 	private static final Logger logger = LogManager.getLogger();

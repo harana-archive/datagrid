@@ -6,7 +6,6 @@ import com.harana.datagrid.storage.StorageTier;
 public class RdmaStorageTier extends RdmaStorageClient implements StorageTier {
 	
 	public StorageServer launchServer () throws Exception {
-		RdmaStorageServer datanodeServer = new RdmaStorageServer();
-		return datanodeServer;
+		return new RdmaStorageServer();
 	}
 }

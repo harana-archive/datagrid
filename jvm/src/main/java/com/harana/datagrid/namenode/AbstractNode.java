@@ -13,28 +13,27 @@ public abstract class AbstractNode extends FileInfo implements Delayed {
 	private int storageClass;
 	private int locationClass;
 	
-	//children manipulation
-	//adds or replaces a child, returns previous value or null if there was no mapping
+	// children manipulation
+	// adds or replaces a child, returns previous value or null if there was no mapping
 	public abstract AbstractNode putChild(AbstractNode child) throws Exception;
-	//get the child with the given component name, returns null if there is no mapping
+	// get the child with the given component name, returns null if there is no mapping
 	public abstract AbstractNode getChild(int component) throws Exception;
-	//remove a child, returns previous value of existing or null otherwise
+	// remove a child, returns previous value of existing or null otherwise
 	public abstract AbstractNode removeChild(int component) throws Exception;
-	//clear all the children (used by GC)
+	// clear all the children (used by GC)
 	public abstract void clearChildren(Queue<AbstractNode> queue) throws Exception;
-//	public abstract AbstractNode updateParent() throws Exception;
+	// public abstract AbstractNode updateParent() throws Exception;
 	
-	//block manipulation
-	//adds a new block at a given index, returns true if succesful, false otherwise
+	// block manipulation
+	// adds a new block at a given index, returns true if succesful, false otherwise
 	public abstract boolean addBlock(int index, NameNodeBlockInfo block) throws Exception;
-	//get block at the given index, returns a valid block or null otherwise
+	// get block at the given index, returns a valid block or null otherwise
 	public abstract NameNodeBlockInfo getBlock(int index) throws Exception;
-	//clear all the blocks (used by GC)
+	// clear all the blocks (used by GC)
 	public abstract void freeBlocks(BlockStore blockStore) throws Exception;	
 	
 	public AbstractNode(long fd, int fileComponent, CrailNodeType type, int storageClass, int locationAffinity, boolean enumerable){
 		super(fd, type, enumerable);
-		
 		this.fileComponent = fileComponent;
 		this.storageClass = storageClass;
 		this.locationClass = locationAffinity;
@@ -42,7 +41,7 @@ public abstract class AbstractNode extends FileInfo implements Delayed {
 		this.setModificationTime(System.currentTimeMillis());
 	}
 	
-	void rename(int newFileComponent) throws Exception {
+	void rename(int newFileComponent) {
 		this.fileComponent = newFileComponent;
 	}	
 
@@ -67,8 +66,7 @@ public abstract class AbstractNode extends FileInfo implements Delayed {
 	@Override
 	public long getDelay(TimeUnit unit) {
 		long diff = delay - System.currentTimeMillis();
-		long _delay = unit.convert(diff, TimeUnit.MILLISECONDS);
-		return _delay;		
+		return unit.convert(diff, TimeUnit.MILLISECONDS);
 	}
 
 	public void setDelay(long delay) {

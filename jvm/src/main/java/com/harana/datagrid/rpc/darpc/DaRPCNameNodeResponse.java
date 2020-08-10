@@ -1,4 +1,4 @@
-package com.harana.datagrid.namenode.rpc.darpc;
+package com.harana.datagrid.rpc.darpc;
 
 import java.nio.ByteBuffer;
 

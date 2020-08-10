@@ -1,8 +1,8 @@
-package com.harana.datagrid.namenode.rpc.darpc;
+package com.harana.datagrid.rpc.darpc;
 
 import com.harana.datagrid.darpc.DaRPCProtocol;
 
-public class DaRPCNameNodeProtocol implements DaRPCProtocol<DaRPCNameNodeRequest, DaRPCNameNodeResponse>{
+public class DaRPCNameNodeProtocol implements DaRPCProtocol<DaRPCNameNodeRequest, DaRPCNameNodeResponse> {
 
 	@Override
 	public DaRPCNameNodeRequest createRequest() {

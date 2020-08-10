@@ -1,11 +1,9 @@
 package com.harana.datagrid.storage.tcp;
 
-import java.io.IOException;
 import java.nio.ByteBuffer;
 
 import com.harana.datagrid.conf.CrailConstants;
-
-import com.ibm.narpc.NaRPCMessage;
+import com.harana.datagrid.narpc.NaRPCMessage;
 
 public class TcpStorageRequest implements NaRPCMessage {
 	public static final int HEADER_SIZE = Integer.BYTES;
@@ -39,7 +37,7 @@ public class TcpStorageRequest implements NaRPCMessage {
 	}
 
 	@Override
-	public void update(ByteBuffer buffer) throws IOException {
+	public void update(ByteBuffer buffer) {
 		type = buffer.getInt();
 		if (type == TcpStorageProtocol.REQ_WRITE){
 			writeRequest.update(buffer);
@@ -49,7 +47,7 @@ public class TcpStorageRequest implements NaRPCMessage {
 	}
 
 	@Override
-	public int write(ByteBuffer buffer) throws IOException {
+	public int write(ByteBuffer buffer) {
 		buffer.putInt(type);
 		int written = HEADER_SIZE;
 		if (type == TcpStorageProtocol.REQ_WRITE){
@@ -100,7 +98,7 @@ public class TcpStorageRequest implements NaRPCMessage {
 			return CSIZE;
 		}
 		
-		public void update(ByteBuffer buffer) throws IOException {
+		public void update(ByteBuffer buffer) {
 			key = buffer.getInt();
 			address = buffer.getLong();
 			length = buffer.getInt();
@@ -111,7 +109,7 @@ public class TcpStorageRequest implements NaRPCMessage {
 			data.flip();
 		}
 
-		public int write(ByteBuffer buffer) throws IOException {
+		public int write(ByteBuffer buffer) {
 			buffer.putInt(key);
 			buffer.putLong(address);
 			buffer.putInt(length);
@@ -155,13 +153,13 @@ public class TcpStorageRequest implements NaRPCMessage {
 			return CSIZE;
 		}
 		
-		public void update(ByteBuffer buffer) throws IOException {
+		public void update(ByteBuffer buffer) {
 			key = buffer.getInt();
 			address = buffer.getLong();
 			length = buffer.getInt();
 		}
 
-		public int write(ByteBuffer buffer) throws IOException {
+		public int write(ByteBuffer buffer) {
 			buffer.putInt(key);
 			buffer.putLong(address);
 			buffer.putInt(length);

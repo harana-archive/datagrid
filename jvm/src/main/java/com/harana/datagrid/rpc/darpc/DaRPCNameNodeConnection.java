@@ -1,4 +1,4 @@
-package com.harana.datagrid.namenode.rpc.darpc;
+package com.harana.datagrid.rpc.darpc;
 
 import java.io.IOException;
 
@@ -22,12 +22,11 @@ import com.harana.datagrid.rpc.RpcRenameFile;
 import com.harana.datagrid.rpc.RpcRequestMessage;
 import com.harana.datagrid.rpc.RpcResponseMessage;
 import com.harana.datagrid.rpc.RpcVoid;
-import com.harana.datagrid.utils.CrailUtils;
-import org.slf4j.Logger;
-
 import com.harana.datagrid.darpc.DaRPCClientEndpoint;
 import com.harana.datagrid.darpc.DaRPCFuture;
 import com.harana.datagrid.darpc.DaRPCStream;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class DaRPCNameNodeConnection implements RpcConnection {
 	private static final Logger logger = LogManager.getLogger();
@@ -54,10 +53,8 @@ public class DaRPCNameNodeConnection implements RpcConnection {
 		DaRPCNameNodeResponse response = new DaRPCNameNodeResponse(fileRes);
 		
 		DaRPCFuture<DaRPCNameNodeRequest, DaRPCNameNodeResponse> future = issueRPC(request, response);
-		
-		DaRPCNameNodeFuture<RpcCreateFile> nameNodeFuture = new DaRPCNameNodeFuture<RpcCreateFile>(future, fileRes);
-		
-		return nameNodeFuture;
+
+		return new DaRPCNameNodeFuture<>(future, fileRes);
 	}
 	
 	@Override
@@ -74,10 +71,8 @@ public class DaRPCNameNodeConnection implements RpcConnection {
 		DaRPCNameNodeResponse response = new DaRPCNameNodeResponse(fileRes);
 		
 		DaRPCFuture<DaRPCNameNodeRequest, DaRPCNameNodeResponse> future = issueRPC(request, response);
-		
-		DaRPCNameNodeFuture<RpcGetFile> nameNodeFuture = new DaRPCNameNodeFuture<RpcGetFile>(future, fileRes);
-		
-		return nameNodeFuture;
+
+		return new DaRPCNameNodeFuture<>(future, fileRes);
 	}
 	
 	@Override
@@ -94,10 +89,8 @@ public class DaRPCNameNodeConnection implements RpcConnection {
 		DaRPCNameNodeResponse response = new DaRPCNameNodeResponse(voidRes);
 		
 		DaRPCFuture<DaRPCNameNodeRequest, DaRPCNameNodeResponse> future = issueRPC(request, response);
-		
-		DaRPCNameNodeFuture<RpcVoid> nameNodeFuture = new DaRPCNameNodeFuture<RpcVoid>(future, voidRes);
-		
-		return nameNodeFuture;		
+
+		return new DaRPCNameNodeFuture<>(future, voidRes);
 	}
 	
 	@Override
@@ -134,10 +127,7 @@ public class DaRPCNameNodeConnection implements RpcConnection {
 		DaRPCNameNodeResponse response = new DaRPCNameNodeResponse(renameRes);
 		
 		DaRPCFuture<DaRPCNameNodeRequest, DaRPCNameNodeResponse> future = issueRPC(request, response);
-		
-		DaRPCNameNodeFuture<RpcRenameFile> nameNodeFuture = new DaRPCNameNodeFuture<RpcRenameFile>(future, renameRes);
-		
-		return nameNodeFuture;	
+		return new DaRPCNameNodeFuture<>(future, renameRes);
 	}
 	
 	@Override
@@ -154,10 +144,7 @@ public class DaRPCNameNodeConnection implements RpcConnection {
 		DaRPCNameNodeResponse response = new DaRPCNameNodeResponse(getBlockRes);
 		
 		DaRPCFuture<DaRPCNameNodeRequest, DaRPCNameNodeResponse> future = issueRPC(request, response);
-		
-		DaRPCNameNodeFuture<RpcGetBlock> nameNodeFuture = new DaRPCNameNodeFuture<RpcGetBlock>(future, getBlockRes);
-		
-		return nameNodeFuture;	
+		return new DaRPCNameNodeFuture<>(future, getBlockRes);
 	}
 	
 	@Override
@@ -174,10 +161,7 @@ public class DaRPCNameNodeConnection implements RpcConnection {
 		DaRPCNameNodeResponse response = new DaRPCNameNodeResponse(getLocationRes);
 		
 		DaRPCFuture<DaRPCNameNodeRequest, DaRPCNameNodeResponse> future = issueRPC(request, response);
-		
-		DaRPCNameNodeFuture<RpcGetLocation> nameNodeFuture = new DaRPCNameNodeFuture<RpcGetLocation>(future, getLocationRes);
-		
-		return nameNodeFuture;			
+		return new DaRPCNameNodeFuture<>(future, getLocationRes);
 	}	
 	
 	@Override
@@ -194,10 +178,7 @@ public class DaRPCNameNodeConnection implements RpcConnection {
 		DaRPCNameNodeResponse response = new DaRPCNameNodeResponse(voidRes);
 		
 		DaRPCFuture<DaRPCNameNodeRequest, DaRPCNameNodeResponse> future = issueRPC(request, response);
-		
-		DaRPCNameNodeFuture<RpcVoid> nameNodeFuture = new DaRPCNameNodeFuture<RpcVoid>(future, voidRes);
-		
-		return nameNodeFuture;	
+		return new DaRPCNameNodeFuture<>(future, voidRes);
 	}
 	
 	@Override
@@ -210,16 +191,13 @@ public class DaRPCNameNodeConnection implements RpcConnection {
 		DaRPCNameNodeResponse response = new DaRPCNameNodeResponse(getDataNodeRes);
 		
 		DaRPCFuture<DaRPCNameNodeRequest, DaRPCNameNodeResponse> future = issueRPC(request, response);
-		
-		DaRPCNameNodeFuture<RpcGetDataNode> nameNodeFuture = new DaRPCNameNodeFuture<RpcGetDataNode>(future, getDataNodeRes);
-		
-		return nameNodeFuture;	
+
+		return new DaRPCNameNodeFuture<>(future, getDataNodeRes);
 	}	
 	
 	@Override
 	public DaRPCNameNodeFuture<RpcVoid> dumpNameNode() throws Exception {
-		
-		
+
 		RpcRequestMessage.DumpNameNodeReq dumpNameNodeReq = new RpcRequestMessage.DumpNameNodeReq();
 		DaRPCNameNodeRequest request = new DaRPCNameNodeRequest(dumpNameNodeReq);
 		request.setCommand(RpcProtocol.CMD_DUMP_NAMENODE);
@@ -228,10 +206,8 @@ public class DaRPCNameNodeConnection implements RpcConnection {
 		DaRPCNameNodeResponse response = new DaRPCNameNodeResponse(voidRes);	
 		
 		DaRPCFuture<DaRPCNameNodeRequest, DaRPCNameNodeResponse> future = issueRPC(request, response);
-		
-		DaRPCNameNodeFuture<RpcVoid> nameNodeFuture = new DaRPCNameNodeFuture<RpcVoid>(future, voidRes);
-		
-		return nameNodeFuture;	
+
+		return new DaRPCNameNodeFuture<>(future, voidRes);
 	}	
 	
 	@Override
@@ -245,10 +221,7 @@ public class DaRPCNameNodeConnection implements RpcConnection {
 		DaRPCNameNodeResponse response = new DaRPCNameNodeResponse(pingRes);
 		
 		DaRPCFuture<DaRPCNameNodeRequest, DaRPCNameNodeResponse> future = issueRPC(request, response);
-		
-		DaRPCNameNodeFuture<RpcPing> nameNodeFuture = new DaRPCNameNodeFuture<RpcPing>(future, pingRes);
-		
-		return nameNodeFuture;	
+		return new DaRPCNameNodeFuture<>(future, pingRes);
 	}
 	
 	@Override
@@ -261,8 +234,7 @@ public class DaRPCNameNodeConnection implements RpcConnection {
 
 	private DaRPCFuture<DaRPCNameNodeRequest, DaRPCNameNodeResponse> issueRPC(DaRPCNameNodeRequest request, DaRPCNameNodeResponse response) throws IOException{
 		try {
-			DaRPCFuture<DaRPCNameNodeRequest, DaRPCNameNodeResponse> future = stream.request(request, response, false);
-			return future;
+			return stream.request(request, response, false);
 		} catch(IOException e){
 			logger.info("ERROR: RPC failed, messagesSend " + rpcEndpoint.getMessagesSent() + ", messagesReceived " + rpcEndpoint.getMessagesReceived() + ", isConnected " + rpcEndpoint.isConnected() + ", qpNum " + rpcEndpoint.getQp().getQp_num());
 			throw e;

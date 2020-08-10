@@ -1,9 +1,9 @@
 package com.harana.datagrid.storage.tcp;
 
-import java.nio.ByteBuffer;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-import com.harana.datagrid.utils.CrailUtils;
-import org.slf4j.Logger;
+import java.nio.ByteBuffer;
 
 public class TcpStorageUtils {
 	private static final Logger logger = LogManager.getLogger();

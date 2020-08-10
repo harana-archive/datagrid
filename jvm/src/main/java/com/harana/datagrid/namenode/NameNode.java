@@ -3,6 +3,7 @@ package com.harana.datagrid.namenode;
 import java.net.URI;
 import java.util.Arrays;
 
+import com.harana.datagrid.utils.CrailUtils;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
@@ -15,8 +16,8 @@ import com.harana.datagrid.conf.CrailConstants;
 import com.harana.datagrid.rpc.RpcBinding;
 import com.harana.datagrid.rpc.RpcNameNodeService;
 import com.harana.datagrid.rpc.RpcServer;
-import com.harana.datagrid.utils.CrailUtils;
-import org.slf4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class NameNode {
 	private static final Logger logger = LogManager.getLogger();
@@ -65,14 +66,14 @@ public class NameNode {
 		CrailConstants.verify();
 		
 		RpcNameNodeService service = RpcNameNodeService.createInstance(CrailConstants.NAMENODE_RPC_SERVICE);
-		if (!CrailConstants.NAMENODE_loggerisEmpty()){
-			LogDispatcher logDispatcher = new LogDispatcher(service);
-			service = logDispatcher;
-		}
+
+		// TODO: Configurable logging
+		service = new LogDispatcher(service);
+
 		RpcBinding rpcBinding = RpcBinding.createInstance(CrailConstants.NAMENODE_RPC_TYPE);
 		RpcServer rpcServer = rpcBinding.launchServer(service);
 		rpcServer.init(conf, null);
-		rpcServer.printConf(LOG);
+		rpcServer.printConf(logger);
 		rpcServer.run();
 		System.exit(0);;
 	}

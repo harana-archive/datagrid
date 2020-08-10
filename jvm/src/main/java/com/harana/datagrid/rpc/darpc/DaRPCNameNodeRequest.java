@@ -1,14 +1,13 @@
-package com.harana.datagrid.namenode.rpc.darpc;
+package com.harana.datagrid.rpc.darpc;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
 import com.harana.datagrid.rpc.RpcProtocol;
 import com.harana.datagrid.rpc.RpcRequestMessage;
-import com.harana.datagrid.utils.CrailUtils;
-import org.slf4j.Logger;
-
 import com.harana.datagrid.darpc.DaRPCMessage;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class DaRPCNameNodeRequest implements DaRPCMessage {
 	public static final Logger logger = LogManager.getLogger();

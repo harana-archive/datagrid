@@ -1,10 +1,10 @@
-package com.harana.datagrid.namenode.rpc.darpc;
+package com.harana.datagrid.rpc.darpc;
 
 import java.io.IOException;
 
 import com.harana.datagrid.conf.CrailConfiguration;
-import com.harana.datagrid.utils.CrailUtils;
-import org.slf4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class DaRPCConstants {
 	private static final Logger logger = LogManager.getLogger();

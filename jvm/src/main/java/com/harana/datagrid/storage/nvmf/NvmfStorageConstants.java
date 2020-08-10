@@ -1,11 +1,11 @@
 package com.harana.datagrid.storage.nvmf;
 
-import com.ibm.jnvmf.NamespaceIdentifier;
-import com.ibm.jnvmf.NvmeQualifiedName;
+import com.harana.datagrid.storage.nvmf.jvnmf.NamespaceIdentifier;
+import com.harana.datagrid.storage.nvmf.jvnmf.NvmeQualifiedName;
 import org.apache.commons.cli.*;
 import com.harana.datagrid.conf.CrailConfiguration;
 import com.harana.datagrid.conf.CrailConstants;
-import org.slf4j.Logger;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -137,8 +137,7 @@ public class NvmfStorageConstants {
 					NvmfStorageConstants.PORT = ((Number) line.getParsedOptionValue(port.getOpt())).intValue();
 				}
 				if (line.hasOption(namespace.getOpt())) {
-					NvmfStorageConstants.NAMESPACE = new
-							NamespaceIdentifier(((Number) line.getParsedOptionValue(namespace.getOpt())).intValue());
+					NvmfStorageConstants.NAMESPACE = new NamespaceIdentifier(((Number) line.getParsedOptionValue(namespace.getOpt())).intValue());
 				}
 			} catch (ParseException e) {
 				System.err.println(e.getMessage());

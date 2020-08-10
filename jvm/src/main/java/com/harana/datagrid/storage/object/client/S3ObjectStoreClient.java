@@ -1,23 +1,4 @@
-/*
- * Copyright (C) 2015-2018, IBM Corporation
- *
- * Licensed to the Apache Software Foundation (ASF) under one or more
- * contributor license agreements.  See the NOTICE file distributed with
- * this work for additional information regarding copyright ownership.
- * The ASF licenses this file to You under the Apache License, Version 2.0
- * (the "License"); you may not use this file except in compliance with
- * the License.  You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
-package com.ibm.crail.storage.object.client;
+package com.harana.datagrid.storage.object.client;
 
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.AmazonServiceException;
@@ -30,11 +11,12 @@ import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.*;
-import com.ibm.crail.storage.object.ObjectStoreConstants;
-import com.ibm.crail.storage.object.ObjectStoreUtils;
+import com.harana.datagrid.storage.object.ObjectStoreConstants;
+import com.harana.datagrid.storage.object.ObjectStoreUtils;
 import com.harana.datagrid.CrailBuffer;
 import com.harana.datagrid.conf.CrailConstants;
-import org.slf4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -43,7 +25,7 @@ import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class S3ObjectStoreClient {
-	private static final Logger LOG = ObjectStoreUtils.getLogger();
+	private static final Logger logger = LogManager.getLogger();
 
 	private final AmazonS3Client[] connections;
 	private final ConcurrentHashMap<Long, ObjectMetadata> objectMetadata;
@@ -126,7 +108,7 @@ public class S3ObjectStoreClient {
 
 	private int getEndpoit(String key) {
 		// select an endpoint based on the block ID
-		return  Integer.valueOf(key.split("-")[4]) % connections.length;
+		return  Integer.parseInt(key.split("-")[4]) % connections.length;
 	}
 
 	public InputStream getObject(String key) throws AmazonClientException {
@@ -141,8 +123,7 @@ public class S3ObjectStoreClient {
 		int endpointID = getEndpoit(key);
 		AmazonS3 connection = connections[endpointID];
 		GetObjectRequest objReq = new GetObjectRequest(ObjectStoreConstants.S3_BUCKET_NAME, key);
-		logger.debug("TID {} : Getting object {}, start offset = {}, end offset = {} ",
-				Thread.currentThread().getId(), key, startOffset, endOffset);
+		logger.debug("TID {} : Getting object {}, start offset = {}, end offset = {} ", Thread.currentThread().getId(), key, startOffset, endOffset);
 		if (startOffset > 0 || endOffset != CrailConstants.BLOCK_SIZE) {
 			// NOTE: start and end offset are inclusive in the S3 API.
 			objReq.withRange(startOffset, endOffset - 1);
@@ -152,8 +133,7 @@ public class S3ObjectStoreClient {
 			long startTime = System.nanoTime();
 			object = connection.getObject(objReq);
 			long endTime = System.nanoTime();
-			logger.debug("TID {} : S3 endpoint {} getObject() initial response took {} usec",
-					Thread.currentThread().getId(), endpointID, (endTime - startTime) / 1000.);
+			logger.debug("TID {} : S3 endpoint {} getObject() initial response took {} usec", Thread.currentThread().getId(), endpointID, (endTime - startTime) / 1000.);
 		} else {
 			object = connection.getObject(objReq);
 		}
@@ -172,8 +152,7 @@ public class S3ObjectStoreClient {
 			long startTime = System.nanoTime();
 			connection.putObject(request);
 			long endTime = System.nanoTime();
-			logger.debug("TID {} : S3 putObject() of {} bytes to endpoint {} took {} usec",
-					Thread.currentThread().getId(), length, endpointID, (endTime - startTime) / 1000.);
+			logger.debug("TID {} : S3 putObject() of {} bytes to endpoint {} took {} usec", Thread.currentThread().getId(), length, endpointID, (endTime - startTime) / 1000.);
 		} else {
 			connection.putObject(request);
 		}
@@ -195,8 +174,7 @@ public class S3ObjectStoreClient {
 			logger.error("Exception: ", ase);
 			return false;
 		} catch (AmazonClientException ace) {
-			logger.error("AmazonClientException (the client encountered an internal error while trying to " +
-					"communicate with the Object Store):");
+			logger.error("AmazonClientException (the client encountered an internal error while trying to " + "communicate with the Object Store):");
 			logger.error("Error Message: " + ace.getMessage());
 			logger.error("Exception: ", ace);
 			return false;
@@ -216,12 +194,11 @@ public class S3ObjectStoreClient {
 				try {
 					bucketLocation = connections[0].getBucketLocation(bucketName);
 				} catch (Exception e) {
-					loggerwarn("Could not get bucket {} location", bucketName, e);
+					logger.warn("Could not get bucket {} location", bucketName, e);
 				}
-				logger.debug("Created new bucket {} in location {} on {}",
-						bucket.getName(), bucketLocation, bucket.getCreationDate());
+				logger.debug("Created new bucket {} in location {} on {}", bucket.getName(), bucketLocation, bucket.getCreationDate());
 			} else {
-				loggerwarn("Bucket {} already exists", bucketName);
+				logger.warn("Bucket {} already exists", bucketName);
 			}
 		} catch (AmazonServiceException ase) {
 			logger.error("AmazonServiceException (the request to the Object Store was rejected with an error message):");
@@ -233,8 +210,7 @@ public class S3ObjectStoreClient {
 			logger.error("Exception: ", ase);
 			return false;
 		} catch (AmazonClientException ace) {
-			logger.error("AmazonClientException (the client encountered an internal error while trying to " +
-					"communicate with the Object Store):");
+			logger.error("AmazonClientException (the client encountered an internal error while trying to " + "communicate with the Object Store):");
 			logger.error("Error Message: " + ace.getMessage());
 			logger.error("Exception: ", ace);
 			return false;
@@ -299,8 +275,7 @@ public class S3ObjectStoreClient {
 			logger.error("Request ID:       " + ase.getRequestId());
 			return false;
 		} catch (AmazonClientException ace) {
-			logger.error("AmazonClientException (the client encountered an internal error while trying to " +
-					"communicate with the Object Store):");
+			logger.error("AmazonClientException (the client encountered an internal error while trying to " + "communicate with the Object Store):");
 			logger.error("Error Message: " + ace.getMessage());
 			return false;
 		} catch (Exception e) {
@@ -327,8 +302,7 @@ public class S3ObjectStoreClient {
 			logger.error("Request ID:       " + ase.getRequestId());
 			return false;
 		} catch (AmazonClientException ace) {
-			logger.error("AmazonClientException (the client encountered an internal error while trying to " +
-					"communicate with the Object Store):");
+			logger.error("AmazonClientException (the client encountered an internal error while trying to " + "communicate with the Object Store):");
 			logger.error("Error Message: " + ace.getMessage());
 			return false;
 		} catch (Exception e) {

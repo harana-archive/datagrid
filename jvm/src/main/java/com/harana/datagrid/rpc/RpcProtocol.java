@@ -1,8 +1,8 @@
 package com.harana.datagrid.rpc;
 
 import com.harana.datagrid.rpc.RpcErrors;
-import com.harana.datagrid.utils.CrailUtils;
-import org.slf4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class RpcProtocol extends RpcErrors {
 	private static final Logger logger = LogManager.getLogger();
@@ -89,7 +89,7 @@ public class RpcProtocol extends RpcErrors {
 		return true;
 	}
 	
-	public static interface NameNodeRpcMessage {
+	public interface NameNodeRpcMessage {
 		short getType();
 	}
 }

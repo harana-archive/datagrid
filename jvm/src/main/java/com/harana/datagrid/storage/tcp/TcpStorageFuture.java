@@ -4,10 +4,9 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+import com.harana.datagrid.narpc.NaRPCFuture;
 import com.harana.datagrid.storage.StorageFuture;
 import com.harana.datagrid.storage.StorageResult;
-
-import com.ibm.narpc.NaRPCFuture;
 
 public class TcpStorageFuture implements StorageFuture, StorageResult {
 	private NaRPCFuture<TcpStorageRequest, TcpStorageResponse> future;

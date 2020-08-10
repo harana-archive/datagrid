@@ -35,8 +35,7 @@ public class LogDispatcher implements RpcNameNodeService {
 	}
 
 	@Override
-	public short createFile(CreateFileReq request, CreateFileRes response,
-			RpcNameNodeState errorState) throws Exception {
+	public short createFile(CreateFileReq request, CreateFileRes response, RpcNameNodeState errorState) throws Exception {
 		LogRecord record = new LogRecord(request);
 		record.setCommand(RpcProtocol.CMD_CREATE_FILE);
 		logService.writeRecord(record);
@@ -44,14 +43,12 @@ public class LogDispatcher implements RpcNameNodeService {
 	}
 
 	@Override
-	public short getFile(GetFileReq request, GetFileRes response,
-			RpcNameNodeState errorState) throws Exception {
+	public short getFile(GetFileReq request, GetFileRes response, RpcNameNodeState errorState) throws Exception {
 		return service.getFile(request, response, errorState);
 	}
 
 	@Override
-	public short setFile(SetFileReq request, VoidRes response,
-			RpcNameNodeState errorState) throws Exception {
+	public short setFile(SetFileReq request, VoidRes response, RpcNameNodeState errorState) throws Exception {
 		LogRecord record = new LogRecord(request);
 		record.setCommand(RpcProtocol.CMD_SET_FILE);
 		logService.writeRecord(record);		
@@ -59,8 +56,7 @@ public class LogDispatcher implements RpcNameNodeService {
 	}
 
 	@Override
-	public short removeFile(RemoveFileReq request, DeleteFileRes response,
-			RpcNameNodeState errorState) throws Exception {
+	public short removeFile(RemoveFileReq request, DeleteFileRes response, RpcNameNodeState errorState) throws Exception {
 		LogRecord record = new LogRecord(request);
 		record.setCommand(RpcProtocol.CMD_REMOVE_FILE);
 		logService.writeRecord(record);		
@@ -68,8 +64,7 @@ public class LogDispatcher implements RpcNameNodeService {
 	}
 
 	@Override
-	public short renameFile(RenameFileReq request, RenameRes response,
-			RpcNameNodeState errorState) throws Exception {
+	public short renameFile(RenameFileReq request, RenameRes response, RpcNameNodeState errorState) throws Exception {
 		LogRecord record = new LogRecord(request);
 		record.setCommand(RpcProtocol.CMD_RENAME_FILE);
 		logService.writeRecord(record);		
@@ -77,8 +72,7 @@ public class LogDispatcher implements RpcNameNodeService {
 	}
 
 	@Override
-	public short getDataNode(GetDataNodeReq request, GetDataNodeRes response,
-			RpcNameNodeState errorState) throws Exception {
+	public short getDataNode(GetDataNodeReq request, GetDataNodeRes response, RpcNameNodeState errorState) throws Exception {
 		return service.getDataNode(request, response, errorState);
 	}
 

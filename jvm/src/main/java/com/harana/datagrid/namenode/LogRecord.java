@@ -5,8 +5,8 @@ import java.nio.ByteBuffer;
 
 import com.harana.datagrid.rpc.RpcProtocol;
 import com.harana.datagrid.rpc.RpcRequestMessage;
-import com.harana.datagrid.utils.CrailUtils;
-import org.slf4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class LogRecord {
 	public static final Logger logger = LogManager.getLogger();
@@ -245,9 +245,8 @@ public class LogRecord {
 	public String toString() {
 		String message = "";
 		switch(type){
-		case RpcProtocol.REQ_CREATE_FILE:
-			message += createFileReq.toString();
-			break;		
+		case RpcProtocol.REQ_CREATE_FILE: message += createFileReq.toString();
+			break;
 		case RpcProtocol.REQ_GET_FILE:
 			message += fileReq.toString();
 			break;

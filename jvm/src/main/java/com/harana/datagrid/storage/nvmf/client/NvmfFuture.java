@@ -1,6 +1,6 @@
 package com.harana.datagrid.storage.nvmf.client;
 
-import com.ibm.jnvmf.*;
+import com.harana.datagrid.storage.nvmf.jvnmf.*;
 import com.harana.datagrid.storage.StorageFuture;
 import com.harana.datagrid.storage.StorageResult;
 

@@ -11,11 +11,10 @@ import com.harana.datagrid.conf.CrailConfiguration;
 import com.harana.datagrid.storage.StorageResource;
 import com.harana.datagrid.storage.StorageServer;
 import com.harana.datagrid.storage.StorageUtils;
-import com.harana.datagrid.utils.CrailUtils;
-import org.slf4j.Logger;
-
 import com.harana.datagrid.rdma.*;
 import com.harana.datagrid.rdma.verbs.IbvMr;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class RdmaStorageServer implements Runnable, StorageServer {
 	private static final Logger logger = LogManager.getLogger();
@@ -46,7 +45,7 @@ public class RdmaStorageServer implements Runnable, StorageServer {
 			logger.info("Configured network interface " + RdmaConstants.STORAGE_RDMA_INTERFACE + " cannot be found..exiting!!!");
 			return;
 		}
-		this.datanodeGroup = new RdmaActiveEndpointGroup<RdmaStorageServerEndpoint>(-1, false, 1, 1, 1);
+		this.datanodeGroup = new RdmaActiveEndpointGroup<>(-1, false, 1, 1, 1);
 		this.datanodeServerEndpoint = datanodeGroup.createServerEndpoint();
 		datanodeGroup.init(new RdmaStorageEndpointFactory(datanodeGroup, this));
 		datanodeServerEndpoint.bind(serverAddr, RdmaConstants.STORAGE_RDMA_BACKLOG);

@@ -1,34 +1,16 @@
-/*
- * Copyright (C) 2015-2018, IBM Corporation
- *
- * Licensed to the Apache Software Foundation (ASF) under one or more
- * contributor license agreements.  See the NOTICE file distributed with
- * this work for additional information regarding copyright ownership.
- * The ASF licenses this file to You under the Apache License, Version 2.0
- * (the "License"); you may not use this file except in compliance with
- * the License.  You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+package com.harana.datagrid.storage.object;
 
-package com.ibm.crail.storage.object;
-
-import org.apache.commons.cli.*;
 import com.harana.datagrid.conf.CrailConfiguration;
 import com.harana.datagrid.conf.CrailConstants;
-import org.slf4j.Logger;
+import org.apache.commons.cli.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
 
 public class ObjectStoreConstants {
-	static private final Logger LOG = ObjectStoreUtils.getLogger();
+	static private final Logger logger = LogManager.getLogger();
 
 	private final static String PREFIX = "crail.storage.object";
 
@@ -94,72 +76,55 @@ public class ObjectStoreConstants {
 
 	public static void updateConstants(CrailConfiguration conf) {
 		String arg = get(conf, S3_ACCESS_KEY);
-		if (arg != null) {
-			S3_ACCESS = arg;
-		}
+		if (arg != null) S3_ACCESS = arg;
+
 		arg = get(conf, S3_SECRET_KEY);
-		if (arg != null) {
-			S3_SECRET = arg;
-		}
+		if (arg != null) S3_SECRET = arg;
+
 		arg = get(conf, S3_REGION_NAME_KEY);
-		if (arg != null) {
-			S3_REGION_NAME = arg;
-		}
+		if (arg != null) S3_REGION_NAME = arg;
+
 		arg = get(conf, S3_BUCKET_NAME_KEY);
-		if (arg != null) {
-			S3_BUCKET_NAME = arg;
-		}
+		if (arg != null) S3_BUCKET_NAME = arg;
+
 		arg = get(conf, S3_ENDPOINT_KEY);
-		if (arg != null) {
-			S3_ENDPOINT = arg;
-		}
+		if (arg != null) S3_ENDPOINT = arg;
+
 		arg = get(conf, S3_PROTOCOL_KEY);
-		if (arg != null) {
-			S3_PROTOCOL = arg.toUpperCase();
-		}
+		if (arg != null) S3_PROTOCOL = arg.toUpperCase();
+
 		arg = get(conf, S3_SIGNER_KEY);
-		if (arg != null) {
-			S3_SIGNER = arg;
-		}
+		if (arg != null) S3_SIGNER = arg;
+
 		arg = get(conf, OBJECT_PREFIX_KEY);
-		if (arg != null) {
-			OBJECT_PREFIX = arg;
-		}
+		if (arg != null) OBJECT_PREFIX = arg;
+
 		arg = get(conf, CLEANUP_ON_EXIT_KEY);
-		if (arg != null) {
-			CLEANUP_ON_EXIT = Boolean.valueOf(arg);
-		}
+		if (arg != null) CLEANUP_ON_EXIT = Boolean.valueOf(arg);
+
 		arg = get(conf, STORAGE_LIMIT_KEY);
-		if (arg != null) {
-			STORAGE_LIMIT = Long.parseLong(arg);
-		}
+		if (arg != null) STORAGE_LIMIT = Long.parseLong(arg);
+
 		arg = get(conf, ALLOCATION_SIZE_KEY);
-		if (arg != null) {
-			ALLOCATION_SIZE = Long.parseLong(arg);
-		}
+		if (arg != null) ALLOCATION_SIZE = Long.parseLong(arg);
+
 		arg = get(conf, DATANODE_KEY);
-		if (arg != null) {
-			DATANODE = arg;
-		}
+		if (arg != null) DATANODE = arg;
+
 		arg = get(conf, DATANODE_PORT_KEY);
-		if (arg != null) {
-			DATANODE_PORT = Integer.parseInt(arg);
-		}
+		if (arg != null) DATANODE_PORT = Integer.parseInt(arg);
+
 		arg = get(conf, PROFILE_KEY);
-		if (arg != null) {
-			PROFILE = Boolean.valueOf(arg);
-		}
+		if (arg != null) PROFILE = Boolean.valueOf(arg);
 	}
 
 	public static void verify() throws IOException {
 		if (ALLOCATION_SIZE % CrailConstants.BLOCK_SIZE != 0) {
-			logger.error("Allocation size ({}) must be a multiple of the crail blocksize ({})",
-					ALLOCATION_SIZE, CrailConstants.BLOCK_SIZE);
+			logger.error("Allocation size ({}) must be a multiple of the crail blocksize ({})", ALLOCATION_SIZE, CrailConstants.BLOCK_SIZE);
 			throw new IOException("Allocation size must be multiple of the Crail blocksize");
 		}
 		if (STORAGE_LIMIT % ALLOCATION_SIZE != 0) {
-			logger.error("Storage limit ({}) must be multiple of the allocation size ({})",
-					STORAGE_LIMIT, ALLOCATION_SIZE);
+			logger.error("Storage limit ({}) must be multiple of the allocation size ({})", STORAGE_LIMIT, ALLOCATION_SIZE);
 			throw new IOException("Storage limit must be multiple of the allocation size");
 		}
 	}
@@ -191,14 +156,12 @@ public class ObjectStoreConstants {
 		String envVal;
 		envVal = System.getenv("S3_ACCESS_KEY");
 		if (envVal != null) {
-			logger.debug("Setting {} from {} to {} environemnt value",
-					fullKey(ObjectStoreConstants.S3_ACCESS_KEY), ObjectStoreConstants.S3_ACCESS, envVal);
+			logger.debug("Setting {} from {} to {} environemnt value", fullKey(ObjectStoreConstants.S3_ACCESS_KEY), ObjectStoreConstants.S3_ACCESS, envVal);
 			ObjectStoreConstants.S3_ACCESS = envVal;
 		}
 		envVal = System.getenv("S3_SECRET_KEY");
 		if (envVal != null) {
-			logger.debug("Setting {} from {} to {} environemnt value",
-					fullKey(ObjectStoreConstants.S3_SECRET_KEY), ObjectStoreConstants.S3_SECRET, envVal);
+			logger.debug("Setting {} from {} to {} environemnt value", fullKey(ObjectStoreConstants.S3_SECRET_KEY), ObjectStoreConstants.S3_SECRET, envVal);
 			ObjectStoreConstants.S3_SECRET = envVal;
 		}
 		envVal = System.getenv("S3_REGION_NAME");
@@ -207,26 +170,22 @@ public class ObjectStoreConstants {
 		}
 		envVal = System.getenv("S3_BUCKET_NAME");
 		if (envVal != null) {
-			logger.debug("Setting {} from {} to {} environemnt value",
-					fullKey(ObjectStoreConstants.S3_BUCKET_NAME_KEY), ObjectStoreConstants.S3_BUCKET_NAME, envVal);
+			logger.debug("Setting {} from {} to {} environemnt value", fullKey(ObjectStoreConstants.S3_BUCKET_NAME_KEY), ObjectStoreConstants.S3_BUCKET_NAME, envVal);
 			ObjectStoreConstants.S3_BUCKET_NAME = envVal;
 		}
 		envVal = System.getenv("S3_ENDPOINT");
 		if (envVal != null) {
-			logger.debug("Setting {} from {} to {} environemnt value",
-					fullKey(ObjectStoreConstants.S3_ENDPOINT_KEY), ObjectStoreConstants.S3_ENDPOINT, envVal);
+			logger.debug("Setting {} from {} to {} environemnt value", fullKey(ObjectStoreConstants.S3_ENDPOINT_KEY), ObjectStoreConstants.S3_ENDPOINT, envVal);
 			ObjectStoreConstants.S3_ENDPOINT = envVal;
 		}
 		envVal = System.getenv("S3_PROTOCOL");
 		if (envVal != null) {
-			logger.debug("Setting {} from {} to {} environemnt value",
-					fullKey(ObjectStoreConstants.S3_PROTOCOL_KEY), ObjectStoreConstants.S3_PROTOCOL, envVal);
+			logger.debug("Setting {} from {} to {} environemnt value", fullKey(ObjectStoreConstants.S3_PROTOCOL_KEY), ObjectStoreConstants.S3_PROTOCOL, envVal);
 			ObjectStoreConstants.S3_PROTOCOL = envVal;
 		}
 		envVal = System.getenv("S3_SIGNER");
 		if (envVal != null) {
-			logger.debug("Setting {} from {} to {} environemnt value",
-					fullKey(ObjectStoreConstants.S3_SECRET_KEY), ObjectStoreConstants.S3_SIGNER, envVal);
+			logger.debug("Setting {} from {} to {} environemnt value", fullKey(ObjectStoreConstants.S3_SECRET_KEY), ObjectStoreConstants.S3_SIGNER, envVal);
 			ObjectStoreConstants.S3_SIGNER = envVal;
 		}
 	}

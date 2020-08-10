@@ -10,16 +10,16 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import com.harana.datagrid.conf.CrailConfiguration;
 import com.harana.datagrid.conf.CrailConstants;
+import com.harana.datagrid.narpc.NaRPCServerChannel;
+import com.harana.datagrid.narpc.NaRPCServerEndpoint;
+import com.harana.datagrid.narpc.NaRPCServerGroup;
+import com.harana.datagrid.narpc.NaRPCService;
 import com.harana.datagrid.storage.StorageResource;
 import com.harana.datagrid.storage.StorageServer;
 import com.harana.datagrid.storage.StorageUtils;
 import com.harana.datagrid.utils.CrailUtils;
-import org.slf4j.Logger;
-
-import com.ibm.narpc.NaRPCServerChannel;
-import com.ibm.narpc.NaRPCServerEndpoint;
-import com.ibm.narpc.NaRPCServerGroup;
-import com.ibm.narpc.NaRPCService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class TcpStorageServer implements Runnable, StorageServer, NaRPCService<TcpStorageRequest, TcpStorageResponse> {
 	private static final Logger logger = LogManager.getLogger();
@@ -37,14 +37,14 @@ public class TcpStorageServer implements Runnable, StorageServer, NaRPCService<T
 	public void init(CrailConfiguration conf, String[] args) throws Exception {
 		TcpStorageConstants.init(conf, args);
 		
-		this.serverGroup = new NaRPCServerGroup<TcpStorageRequest, TcpStorageResponse>(this, TcpStorageConstants.STORAGE_TCP_QUEUE_DEPTH, (int) CrailConstants.BLOCK_SIZE*2, false, TcpStorageConstants.STORAGE_TCP_CORES);
+		this.serverGroup = new NaRPCServerGroup<>(this, TcpStorageConstants.STORAGE_TCP_QUEUE_DEPTH, (int) CrailConstants.BLOCK_SIZE * 2, false, TcpStorageConstants.STORAGE_TCP_CORES);
 		this.serverEndpoint = serverGroup.createServerEndpoint();
 		this.address = StorageUtils.getDataNodeAddress(TcpStorageConstants.STORAGE_TCP_INTERFACE, TcpStorageConstants.STORAGE_TCP_PORT);
 		serverEndpoint.bind(address);
 		this.alive = false;
 		this.regions = TcpStorageConstants.STORAGE_TCP_STORAGE_LIMIT/TcpStorageConstants.STORAGE_TCP_ALLOCATION_SIZE;
 		this.keys = 0;
-		this.dataBuffers = new ConcurrentHashMap<Integer, ByteBuffer>();
+		this.dataBuffers = new ConcurrentHashMap<>();
 		this.dataDirPath = StorageUtils.getDatanodeDirectory(TcpStorageConstants.STORAGE_TCP_DATA_PATH, address);
 		StorageUtils.clean(TcpStorageConstants.STORAGE_TCP_DATA_PATH, dataDirPath);
 	}

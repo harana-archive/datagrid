@@ -24,15 +24,15 @@ lazy val crossProject = haranaCrossProject("datagrid").in(file("."))
 	.jsConfigure(_.enablePlugins(ScalaJSBundlerPlugin).enablePlugins(TzdbPlugin))
 	.jvmConfigure(_.enablePlugins(DockerPlugin))
   .settings(
-    name := "designer",
+    name := "datagrid",
     version := "0.0.1",
     libraryDependencies ++= Seq(
-			"modules" %%% "modules" % "0.9.9.u",
+			"modules" %%% "modules" % "c",
 			"com.softwaremill.sttp.client" %%% "core" % "2.2.1",
 			"com.softwaremill.sttp.client" %%% "circe" % "2.2.1",
 			"com.softwaremill.quicklens" %%% "quicklens" % "1.6.0",
 			"io.suzaku" %%% "diode" % "1.1.11"
-		),
+		)
 	).jsSettings(
 		zonesFilter := {(z: String) => z == "Australia/Sydney" || z == "Pacific/Honolulu"},
 		fastCompile := { copyJS(baseDirectory).dependsOn((Compile / fastOptJS / webpack)) }.value,
@@ -40,11 +40,12 @@ lazy val crossProject = haranaCrossProject("datagrid").in(file("."))
 		npmDependencies in Compile ++= Seq()
   ).jvmSettings(
 		libraryDependencies ++= Seq(
-			"com.harana.datagrid.darpc" %"	"
- 		)
+			"datagrid-common"		%%   "datagrid-common"		% "0.0.3",
+			"org.junit.jupiter" % "junit-jupiter" % "5.6.2" % "test"
+		)
 	)
 
-onLoad in Global := (onLoad in Global).value andThen (Command.process("project designerJVM;", _))
+onLoad in Global := (onLoad in Global).value andThen (Command.process("project datagridJVM;", _))
 
 def copyJS(baseDirectory: SettingKey[File]) = {
 	baseDirectory map {

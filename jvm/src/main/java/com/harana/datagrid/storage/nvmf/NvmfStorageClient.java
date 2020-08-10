@@ -1,6 +1,5 @@
 package com.harana.datagrid.storage.nvmf;
 
-import com.ibm.jnvmf.Nvme;
 import com.harana.datagrid.CrailBufferCache;
 import com.harana.datagrid.CrailStatistics;
 import com.harana.datagrid.conf.CrailConfiguration;
@@ -8,11 +7,11 @@ import com.harana.datagrid.metadata.DataNodeInfo;
 import com.harana.datagrid.storage.StorageClient;
 import com.harana.datagrid.storage.StorageEndpoint;
 import com.harana.datagrid.storage.nvmf.client.NvmfStorageEndpoint;
-import com.harana.datagrid.utils.CrailUtils;
-import org.slf4j.Logger;
+import com.harana.datagrid.storage.nvmf.jvnmf.Nvme;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
-import java.net.UnknownHostException;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -54,8 +53,7 @@ public class NvmfStorageClient implements StorageClient {
 		return keepAliveThread.isAlive();
 	}
 
-	public void init(CrailStatistics statistics, CrailBufferCache bufferCache, CrailConfiguration crailConfiguration,
-					 String[] args) throws IOException {
+	public void init(CrailStatistics statistics, CrailBufferCache bufferCache, CrailConfiguration crailConfiguration, String[] args) throws IOException {
 		if (initialized) {
 			throw new IOException("NvmfStorageTier already initialized");
 		}
@@ -101,5 +99,4 @@ public class NvmfStorageClient implements StorageClient {
 			}
 		}
 	}
-
 }

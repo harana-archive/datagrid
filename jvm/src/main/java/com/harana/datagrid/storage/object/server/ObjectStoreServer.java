@@ -1,38 +1,20 @@
-/*
- * Copyright (C) 2015-2018, IBM Corporation
- *
- * Licensed to the Apache Software Foundation (ASF) under one or more
- * contributor license agreements.  See the NOTICE file distributed with
- * this work for additional information regarding copyright ownership.
- * The ASF licenses this file to You under the Apache License, Version 2.0
- * (the "License"); you may not use this file except in compliance with
- * the License.  You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+package com.harana.datagrid.storage.object.server;
 
-package com.ibm.crail.storage.object.server;
-
-import com.ibm.crail.storage.object.ObjectStoreConstants;
-import com.ibm.crail.storage.object.ObjectStoreUtils;
-import com.ibm.crail.storage.object.client.S3ObjectStoreClient;
+import com.harana.datagrid.storage.object.ObjectStoreConstants;
+import com.harana.datagrid.storage.object.ObjectStoreUtils;
+import com.harana.datagrid.storage.object.client.S3ObjectStoreClient;
 import com.harana.datagrid.conf.CrailConfiguration;
 import com.harana.datagrid.conf.CrailConstants;
 import com.harana.datagrid.storage.StorageResource;
 import com.harana.datagrid.storage.StorageServer;
-import org.slf4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
 
 public class ObjectStoreServer implements StorageServer {
-	private static final Logger LOG = ObjectStoreUtils.getLogger();
+	private static final Logger logger = LogManager.getLogger();
 
 	private InetSocketAddress datanodeAddr;
 	private long blockID = 0;
@@ -63,7 +45,7 @@ public class ObjectStoreServer implements StorageServer {
 					if (args[i].charAt(0) == '-') {
 						flag = args[i].charAt(1);
 					} else {
-						loggerwarn("Invalid flag {}", args[i]);
+						logger.warn("Invalid flag {}", args[i]);
 						continue;
 					}
 					switch (flag) {
@@ -84,11 +66,11 @@ public class ObjectStoreServer implements StorageServer {
 							logger.info("Set custom option {} = {} ", key, val);
 							break;
 						default:
-							loggerwarn("Unknown flag {}", flag);
+							logger.warn("Unknown flag {}", flag);
 							break;
 					}
 				} catch (Exception e) {
-					loggerwarn("Error processing input {}", args[i]);
+					logger.warn("Error processing input {}", args[i]);
 				}
 			}
 		}
@@ -186,7 +168,7 @@ public class ObjectStoreServer implements StorageServer {
 	private void setup() throws Exception {
 		objectStoreClient = new S3ObjectStoreClient();
 		if (!objectStoreClient.createBucket(ObjectStoreConstants.S3_BUCKET_NAME)) {
-			loggerwarn("Could not create or confirm existence of bucket {}", ObjectStoreConstants.S3_BUCKET_NAME);
+			logger.warn("Could not create or confirm existence of bucket {}", ObjectStoreConstants.S3_BUCKET_NAME);
 		}
 	}
 

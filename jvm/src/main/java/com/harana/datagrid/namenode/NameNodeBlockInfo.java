@@ -41,5 +41,4 @@ public class NameNodeBlockInfo extends BlockInfo {
 	public BlockInfo getRegion() {
 		return region;
 	}
-	
 }

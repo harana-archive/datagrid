@@ -1,14 +1,13 @@
-package com.harana.datagrid.namenode.rpc.tcp;
+package com.harana.datagrid.rpc.tcp;
 
 import java.nio.ByteBuffer;
 
+import com.harana.datagrid.narpc.NaRPCMessage;
 import com.harana.datagrid.rpc.RpcNameNodeState;
 import com.harana.datagrid.rpc.RpcProtocol;
 import com.harana.datagrid.rpc.RpcResponseMessage;
-import com.harana.datagrid.utils.CrailUtils;
-import org.slf4j.Logger;
-
-import com.ibm.narpc.NaRPCMessage;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class TcpNameNodeResponse extends RpcResponseMessage implements RpcNameNodeState, NaRPCMessage {
 	public static final Logger logger = LogManager.getLogger();

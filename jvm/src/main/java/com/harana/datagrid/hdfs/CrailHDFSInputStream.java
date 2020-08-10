@@ -5,15 +5,13 @@ import java.io.InputStream;
 import java.nio.ByteBuffer;
 
 import com.harana.datagrid.CrailBufferedInputStream;
-import com.harana.datagrid.utils.CrailUtils;
 import org.apache.hadoop.fs.ByteBufferReadable;
 import org.apache.hadoop.fs.FSDataInputStream;
 import org.apache.hadoop.fs.PositionedReadable;
 import org.apache.hadoop.fs.Seekable;
 import org.apache.hadoop.fs.FileSystem.Statistics;
-import org.slf4j.Logger;
-
-
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class CrailHDFSInputStream extends FSDataInputStream {
 	private static final Logger logger = LogManager.getLogger();
@@ -28,7 +26,7 @@ public class CrailHDFSInputStream extends FSDataInputStream {
 	}
 
 	@Override
-	public long getPos() throws IOException {
+	public long getPos() {
 		return inputStream.position();
 	}
 
@@ -66,7 +64,7 @@ public class CrailHDFSInputStream extends FSDataInputStream {
 	}
 
 	@Override
-	public boolean seekToNewSource(long targetPos) throws IOException {
+	public boolean seekToNewSource(long targetPos) {
 		return false;
 	}
 
@@ -78,7 +76,7 @@ public class CrailHDFSInputStream extends FSDataInputStream {
 	}
 
 	@Override
-	public int available() throws IOException {
+	public int available() {
 		return inputStream.available();
 	}
 	
@@ -124,7 +122,7 @@ public class CrailHDFSInputStream extends FSDataInputStream {
 		}
 
 		@Override
-		public int available() throws IOException {
+		public int available() {
 			return inputStream.available();
 		}
 
@@ -182,7 +180,7 @@ public class CrailHDFSInputStream extends FSDataInputStream {
 		}
 
 		@Override
-		public long getPos() throws IOException {
+		public long getPos() {
 			return inputStream.position();
 		}
 
@@ -192,7 +190,7 @@ public class CrailHDFSInputStream extends FSDataInputStream {
 		}
 
 		@Override
-		public boolean seekToNewSource(long targetPos) throws IOException {
+		public boolean seekToNewSource(long targetPos) {
 			return false;
 		}
 		

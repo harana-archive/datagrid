@@ -17,13 +17,12 @@ import com.harana.datagrid.storage.rdma.MrCache;
 import com.harana.datagrid.storage.rdma.RdmaConstants;
 import com.harana.datagrid.storage.rdma.MrCache.DeviceMrCache;
 import com.harana.datagrid.utils.AtomicIntegerModulo;
-import com.harana.datagrid.utils.CrailUtils;
-import org.slf4j.Logger;
-
 import com.harana.datagrid.rdma.verbs.*;
 import com.harana.datagrid.rdma.verbs.SVCPostSend.SendWRMod;
 import com.harana.datagrid.rdma.verbs.SVCPostSend.SgeMod;
 import com.harana.datagrid.rdma.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class RdmaStoragePassiveEndpoint extends RdmaEndpoint implements StorageEndpoint {
 	private static final Logger logger = LogManager.getLogger();

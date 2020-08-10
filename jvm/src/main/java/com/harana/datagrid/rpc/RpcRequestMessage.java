@@ -69,7 +69,6 @@ public class RpcRequestMessage {
 			buffer.putInt(storageClass);
 			buffer.putInt(locationClass);
 			buffer.putInt(enumerable ? 1 : 0);
-			
 			return CSIZE;
 		}		
 
@@ -80,14 +79,12 @@ public class RpcRequestMessage {
 			storageClass = buffer.getInt();
 			locationClass = buffer.getInt();
 			int _enumerable = buffer.getInt();
-			enumerable = (_enumerable == 1) ? true : false;			
+			enumerable = (_enumerable == 1);
 		}
 
 		@Override
 		public String toString() {
-			return "CreateFileReq [filename=" + filename + ", type=" + type
-					+ ", storageClass=" + storageClass + ", locationClass="
-					+ locationClass + ", enumerable=" + enumerable + "]";
+			return "CreateFileReq [filename=" + filename + ", type=" + type + ", storageClass=" + storageClass + ", locationClass=" + locationClass + ", enumerable=" + enumerable + "]";
 		}
 	}
 	
@@ -133,7 +130,7 @@ public class RpcRequestMessage {
 		public void update(ByteBuffer buffer) {
 			filename.update(buffer);
 			int tmp = buffer.getInt();
-			writeable = (tmp == 1) ? true : false;
+			writeable = (tmp == 1);
 		}		
 	}
 	
@@ -179,7 +176,7 @@ public class RpcRequestMessage {
 			try {
 				fileInfo.update(buffer);
 				int tmp = buffer.getInt();
-				close = (tmp == 1) ? true : false;
+				close = (tmp == 1);
 			} catch (UnknownHostException e) {
 				e.printStackTrace();
 			}
@@ -187,8 +184,7 @@ public class RpcRequestMessage {
 
 		@Override
 		public String toString() {
-			return "SetFileReq [fileInfo=" + fileInfo + ", close=" + close
-					+ "]";
+			return "SetFileReq [fileInfo=" + fileInfo + ", close=" + close + "]";
 		}		
 	}
 	
@@ -234,7 +230,7 @@ public class RpcRequestMessage {
 		public void update(ByteBuffer buffer) {
 			filename.update(buffer);
 			int tmp = buffer.getInt();
-			recursive = (tmp == 1) ? true : false;
+			recursive = (tmp == 1);
 		}		
 	}	
 	
@@ -419,7 +415,7 @@ public class RpcRequestMessage {
 			this.blockInfo = blockInfo;
 		}
 
-		public BlockInfo getBlockInfo() throws Exception {
+		public BlockInfo getBlockInfo() {
 			return blockInfo;
 		}
 		
@@ -432,8 +428,7 @@ public class RpcRequestMessage {
 		}		
 		
 		public int write(ByteBuffer buffer){
-			int written = blockInfo.write(buffer);
-			return written;
+			return blockInfo.write(buffer);
 		}
 		
 		public void update(ByteBuffer buffer) {
@@ -448,8 +443,6 @@ public class RpcRequestMessage {
 		public String toString() {
 			return "SetBlockReq [blockInfo=" + blockInfo + "]";
 		}
-		
-		
 	}	
 	
 	public static class GetDataNodeReq implements RpcProtocol.NameNodeRpcMessage {
@@ -469,7 +462,6 @@ public class RpcRequestMessage {
 			return this.dnInfo;
 		}
 		
-		
 		public int size() {
 			return CSIZE;
 		}
@@ -479,8 +471,7 @@ public class RpcRequestMessage {
 		}		
 		
 		public int write(ByteBuffer buffer) {
-			int written = dnInfo.write(buffer);
-			return written;
+			return dnInfo.write(buffer);
 		}		
 
 		public void update(ByteBuffer buffer) {
@@ -491,8 +482,7 @@ public class RpcRequestMessage {
 			}
 		}		
 	}	
-	
-	
+
 	public static class DumpNameNodeReq implements RpcProtocol.NameNodeRpcMessage {
 		public static int CSIZE = 4;
 		
@@ -553,7 +543,5 @@ public class RpcRequestMessage {
 		public void update(ByteBuffer buffer) {
 			op = buffer.getInt();
 		}		
-	}	
-	
-
+	}
 }

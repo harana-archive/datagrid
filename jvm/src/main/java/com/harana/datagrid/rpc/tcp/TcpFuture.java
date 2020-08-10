@@ -1,12 +1,11 @@
-package com.harana.datagrid.namenode.rpc.tcp;
+package com.harana.datagrid.rpc.tcp;
 
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+import com.harana.datagrid.narpc.NaRPCFuture;
 import com.harana.datagrid.rpc.RpcFuture;
-
-import com.ibm.narpc.NaRPCFuture;
 
 public class TcpFuture<T> implements RpcFuture<T> {
 	private NaRPCFuture<TcpNameNodeRequest, TcpNameNodeResponse> future;

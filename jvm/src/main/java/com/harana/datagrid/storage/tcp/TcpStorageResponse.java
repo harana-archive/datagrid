@@ -1,13 +1,11 @@
 package com.harana.datagrid.storage.tcp;
 
-import java.io.IOException;
 import java.nio.ByteBuffer;
 
 import com.harana.datagrid.conf.CrailConstants;
+import com.harana.datagrid.narpc.NaRPCMessage;
 import com.harana.datagrid.storage.tcp.TcpStorageRequest.ReadRequest;
 import com.harana.datagrid.storage.tcp.TcpStorageRequest.WriteRequest;
-
-import com.ibm.narpc.NaRPCMessage;
 
 public class TcpStorageResponse implements NaRPCMessage {
 	public static final int HEADER_SIZE = Integer.BYTES + Integer.BYTES;
@@ -39,7 +37,7 @@ public class TcpStorageResponse implements NaRPCMessage {
 	}
 
 	@Override
-	public void update(ByteBuffer buffer) throws IOException {
+	public void update(ByteBuffer buffer) {
 		error = buffer.getInt();
 		type = buffer.getInt();
 		if (type == TcpStorageProtocol.REQ_WRITE){
@@ -50,7 +48,7 @@ public class TcpStorageResponse implements NaRPCMessage {
 	}
 
 	@Override
-	public int write(ByteBuffer buffer) throws IOException {
+	public int write(ByteBuffer buffer) {
 		buffer.putInt(error);
 		buffer.putInt(type);
 		int written = HEADER_SIZE;
@@ -77,11 +75,11 @@ public class TcpStorageResponse implements NaRPCMessage {
 			return size;
 		}
 		
-		public void update(ByteBuffer buffer) throws IOException {
+		public void update(ByteBuffer buffer) {
 			size = buffer.getInt();
 		}
 
-		public int write(ByteBuffer buffer) throws IOException {
+		public int write(ByteBuffer buffer) {
 			buffer.putInt(size);
 			return 4;
 		}		
@@ -96,14 +94,14 @@ public class TcpStorageResponse implements NaRPCMessage {
 			this.data = data;
 		}
 
-		public int write(ByteBuffer buffer) throws IOException {
+		public int write(ByteBuffer buffer) {
 			int written = data.remaining();
 			buffer.putInt(data.remaining());
 			buffer.put(data);
 			return Integer.BYTES + written;
 		}
 
-		public void update(ByteBuffer buffer) throws IOException {
+		public void update(ByteBuffer buffer) {
 			int remaining = buffer.getInt();
 			data.clear().limit(remaining);
 			buffer.limit(buffer.position() + remaining);

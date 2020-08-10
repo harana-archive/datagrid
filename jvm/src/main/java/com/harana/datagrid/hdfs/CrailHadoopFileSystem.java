@@ -6,7 +6,6 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import org.slf4j.Logger;
 import com.harana.datagrid.CrailBlockLocation;
 import com.harana.datagrid.CrailBufferedInputStream;
 import com.harana.datagrid.CrailBufferedOutputStream;
@@ -20,7 +19,6 @@ import com.harana.datagrid.CrailStorageClass;
 import com.harana.datagrid.conf.CrailConfiguration;
 import com.harana.datagrid.conf.CrailConstants;
 import com.harana.datagrid.rpc.RpcErrors;
-import com.harana.datagrid.utils.CrailUtils;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.BlockLocation;
 import org.apache.hadoop.fs.FSDataInputStream;
@@ -31,6 +29,8 @@ import org.apache.hadoop.fs.FsStatus;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.fs.permission.FsPermission;
 import org.apache.hadoop.util.Progressable;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class CrailHadoopFileSystem extends FileSystem {
 	private static final Logger logger = LogManager.getLogger();

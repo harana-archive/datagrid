@@ -12,8 +12,8 @@ import com.harana.datagrid.storage.rdma.client.RdmaStorageActiveEndpointFactory;
 import com.harana.datagrid.storage.rdma.client.RdmaStorageActiveGroup;
 import com.harana.datagrid.storage.rdma.client.RdmaStoragePassiveEndpointFactory;
 import com.harana.datagrid.storage.rdma.client.RdmaStoragePassiveGroup;
-import com.harana.datagrid.utils.CrailUtils;
-import org.slf4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class RdmaStorageClient implements StorageClient {
 	private static final Logger logger = LogManager.getLogger();

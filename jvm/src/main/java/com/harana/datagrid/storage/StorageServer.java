@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.StringTokenizer;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+import com.harana.datagrid.utils.CrailUtils;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
@@ -21,15 +22,15 @@ import com.harana.datagrid.metadata.DataNodeStatistics;
 import com.harana.datagrid.rpc.RpcClient;
 import com.harana.datagrid.rpc.RpcConnection;
 import com.harana.datagrid.rpc.RpcDispatcher;
-import com.harana.datagrid.utils.CrailUtils;
-import org.slf4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public interface StorageServer extends Configurable, Runnable {
-	public abstract StorageResource allocateResource() throws Exception;
-	public abstract boolean isAlive();
-	public abstract InetSocketAddress getAddress();
+	StorageResource allocateResource() throws Exception;
+	boolean isAlive();
+	InetSocketAddress getAddress();
 	
-	public static void main(String[] args) throws Exception {
+	static void main(String[] args) throws Exception {
 		Logger logger = LogManager.getLogger();
 		CrailConfiguration conf = CrailConfiguration.createConfigurationFromFile();
 		CrailConstants.updateConstants(conf);
@@ -72,7 +73,7 @@ public interface StorageServer extends Configurable, Runnable {
 				CommandLine line = parser.parse(options, Arrays.copyOfRange(args, 0, splitIndex));
 				if (line.hasOption(typeOption.getOpt())) {
 					storageName = line.getOptionValue(typeOption.getOpt());
-					storageType = storageTypes.get(storageName).intValue();
+					storageType = storageTypes.get(storageName);
 				}				
 				if (line.hasOption(classOption.getOpt())) {
 					storageClass = Integer.parseInt(line.getOptionValue(classOption.getOpt()));
@@ -93,7 +94,7 @@ public interface StorageServer extends Configurable, Runnable {
 		}
 		StorageServer server = storageTier.launchServer();
 		
-		String extraParams[] = null;
+		String[] extraParams = null;
 		splitIndex++;
 		if (args.length > splitIndex){
 			extraParams = new String[args.length - splitIndex];
@@ -102,17 +103,17 @@ public interface StorageServer extends Configurable, Runnable {
 			}
 		}
 		server.init(conf, extraParams);
-		server.printConf(LOG);
+		server.printConf(logger);
 		
 		Thread thread = new Thread(server);
 		thread.start();
 		
 		RpcClient rpcClient = RpcClient.createInstance(CrailConstants.NAMENODE_RPC_TYPE);
 		rpcClient.init(conf, args);
-		rpcClient.printConf(LOG);					
+		rpcClient.printConf(logger);
 		
 		ConcurrentLinkedQueue<InetSocketAddress> namenodeList = CrailUtils.getNameNodeList();
-		ConcurrentLinkedQueue<RpcConnection> connectionList = new ConcurrentLinkedQueue<RpcConnection>();
+		ConcurrentLinkedQueue<RpcConnection> connectionList = new ConcurrentLinkedQueue<>();
 		while(!namenodeList.isEmpty()){
 			InetSocketAddress address = namenodeList.poll();
 			RpcConnection connection = rpcClient.connect(address);
