@@ -1,19 +1,18 @@
-package com.harana.datagrid.rpc.darpc;
+package com.harana.datagrid.rpc.rdma;
 
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 import com.harana.datagrid.rpc.RpcFuture;
-
 import com.harana.datagrid.darpc.DaRPCFuture;
 
-public class DaRPCNameNodeFuture<T> implements RpcFuture<T> {
-	private DaRPCFuture<DaRPCNameNodeRequest, DaRPCNameNodeResponse> future;
+public class RdmaNameNodeFuture<T> implements RpcFuture<T> {
+	private DaRPCFuture<RdmaNameNodeRequest, RdmaNameNodeResponse> future;
 	private boolean prefetched;
 	private T response;
 	
-	public DaRPCNameNodeFuture(DaRPCFuture<DaRPCNameNodeRequest, DaRPCNameNodeResponse> future, T response) {
+	public RdmaNameNodeFuture(DaRPCFuture<RdmaNameNodeRequest, RdmaNameNodeResponse> future, T response) {
 		this.future = future;
 		this.response = response;
 		this.prefetched = false;

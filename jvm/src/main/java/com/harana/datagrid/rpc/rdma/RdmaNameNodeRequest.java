@@ -1,4 +1,4 @@
-package com.harana.datagrid.rpc.darpc;
+package com.harana.datagrid.rpc.rdma;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -9,7 +9,7 @@ import com.harana.datagrid.darpc.DaRPCMessage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class DaRPCNameNodeRequest implements DaRPCMessage {
+public class RdmaNameNodeRequest implements DaRPCMessage {
 	public static final Logger logger = LogManager.getLogger();
 	public static final int CSIZE = 4 + Math.max(RpcRequestMessage.SetFileReq.CSIZE, RpcRequestMessage.RenameFileReq.CSIZE);
 	
@@ -27,7 +27,7 @@ public class DaRPCNameNodeRequest implements DaRPCMessage {
 	private RpcRequestMessage.DumpNameNodeReq dumpNameNodeReq;
 	private RpcRequestMessage.PingNameNodeReq pingNameNodeReq;
 
-	public DaRPCNameNodeRequest() {
+	public RdmaNameNodeRequest() {
 		this.cmd = 0;
 		this.type = 0;
 		this.createFileReq = new RpcRequestMessage.CreateFileReq();
@@ -43,56 +43,56 @@ public class DaRPCNameNodeRequest implements DaRPCMessage {
 		this.getDataNodeReq = new RpcRequestMessage.GetDataNodeReq();
 	}
 	
-	public DaRPCNameNodeRequest(RpcRequestMessage.CreateFileReq message) {
+	public RdmaNameNodeRequest(RpcRequestMessage.CreateFileReq message) {
 		this.type = message.getType();
 		this.createFileReq = message;
 	}
-	public DaRPCNameNodeRequest(RpcRequestMessage.GetFileReq message) {
+	public RdmaNameNodeRequest(RpcRequestMessage.GetFileReq message) {
 		this.type = message.getType();
 		this.fileReq = message;
 	}
 	
-	public DaRPCNameNodeRequest(RpcRequestMessage.SetFileReq message) {
+	public RdmaNameNodeRequest(RpcRequestMessage.SetFileReq message) {
 		this.type = message.getType();
 		this.setFileReq = message;
 	}
 	
-	public DaRPCNameNodeRequest(RpcRequestMessage.RemoveFileReq message) {
+	public RdmaNameNodeRequest(RpcRequestMessage.RemoveFileReq message) {
 		this.type = message.getType();
 		this.removeReq = message;
 	}
 	
-	public DaRPCNameNodeRequest(RpcRequestMessage.RenameFileReq message) {
+	public RdmaNameNodeRequest(RpcRequestMessage.RenameFileReq message) {
 		this.type = message.getType();
 		this.renameFileReq = message;
 	}
 	
-	public DaRPCNameNodeRequest(RpcRequestMessage.GetBlockReq message) {
+	public RdmaNameNodeRequest(RpcRequestMessage.GetBlockReq message) {
 		this.type = message.getType();
 		this.getBlockReq = message;
 	}
 	
-	public DaRPCNameNodeRequest(RpcRequestMessage.GetLocationReq message) {
+	public RdmaNameNodeRequest(RpcRequestMessage.GetLocationReq message) {
 		this.type = message.getType();
 		this.getLocationReq = message;
 	}
 	
-	public DaRPCNameNodeRequest(RpcRequestMessage.SetBlockReq message) {
+	public RdmaNameNodeRequest(RpcRequestMessage.SetBlockReq message) {
 		this.type = message.getType();
 		this.setBlockReq = message;
 	}
 	
-	public DaRPCNameNodeRequest(RpcRequestMessage.GetDataNodeReq message) {
+	public RdmaNameNodeRequest(RpcRequestMessage.GetDataNodeReq message) {
 		this.type = message.getType();
 		this.getDataNodeReq = message;
 	}
 	
-	public DaRPCNameNodeRequest(RpcRequestMessage.DumpNameNodeReq message) {
+	public RdmaNameNodeRequest(RpcRequestMessage.DumpNameNodeReq message) {
 		this.type = message.getType();
 		this.dumpNameNodeReq = message;
 	}
 	
-	public DaRPCNameNodeRequest(RpcRequestMessage.PingNameNodeReq message) {
+	public RdmaNameNodeRequest(RpcRequestMessage.PingNameNodeReq message) {
 		this.type = message.getType();
 		this.pingNameNodeReq = message;
 	}

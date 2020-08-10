@@ -1,4 +1,4 @@
-package com.harana.datagrid.rpc.darpc;
+package com.harana.datagrid.rpc.rdma;
 
 import java.io.IOException;
 
@@ -28,13 +28,13 @@ import com.harana.datagrid.darpc.DaRPCStream;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class DaRPCNameNodeConnection implements RpcConnection {
+public class RdmaNameNodeConnection implements RpcConnection {
 	private static final Logger logger = LogManager.getLogger();
 	
-	private DaRPCClientEndpoint<DaRPCNameNodeRequest, DaRPCNameNodeResponse> rpcEndpoint;
-	private DaRPCStream<DaRPCNameNodeRequest, DaRPCNameNodeResponse> stream;
+	private DaRPCClientEndpoint<RdmaNameNodeRequest, RdmaNameNodeResponse> rpcEndpoint;
+	private DaRPCStream<RdmaNameNodeRequest, RdmaNameNodeResponse> stream;
 	
-	public DaRPCNameNodeConnection(DaRPCClientEndpoint<DaRPCNameNodeRequest, DaRPCNameNodeResponse> endpoint) throws IOException {
+	public RdmaNameNodeConnection(DaRPCClientEndpoint<RdmaNameNodeRequest, RdmaNameNodeResponse> endpoint) throws IOException {
 		this.rpcEndpoint = endpoint;
 		this.stream = endpoint.createStream();
 	}	
@@ -46,15 +46,15 @@ public class DaRPCNameNodeConnection implements RpcConnection {
 		}
 		
 		RpcRequestMessage.CreateFileReq createFileReq = new RpcRequestMessage.CreateFileReq(filename, type, storageClass, locationClass, enumerable);
-		DaRPCNameNodeRequest request = new DaRPCNameNodeRequest(createFileReq);
+		RdmaNameNodeRequest request = new RdmaNameNodeRequest(createFileReq);
 		request.setCommand(RpcProtocol.CMD_CREATE_FILE);
 		
 		RpcResponseMessage.CreateFileRes fileRes = new RpcResponseMessage.CreateFileRes();
-		DaRPCNameNodeResponse response = new DaRPCNameNodeResponse(fileRes);
+		RdmaNameNodeResponse response = new RdmaNameNodeResponse(fileRes);
 		
-		DaRPCFuture<DaRPCNameNodeRequest, DaRPCNameNodeResponse> future = issueRPC(request, response);
+		DaRPCFuture<RdmaNameNodeRequest, RdmaNameNodeResponse> future = issueRPC(request, response);
 
-		return new DaRPCNameNodeFuture<>(future, fileRes);
+		return new RdmaNameNodeFuture<>(future, fileRes);
 	}
 	
 	@Override
@@ -64,164 +64,164 @@ public class DaRPCNameNodeConnection implements RpcConnection {
 		}
 		
 		RpcRequestMessage.GetFileReq getFileReq = new RpcRequestMessage.GetFileReq(filename, writeable);
-		DaRPCNameNodeRequest request = new DaRPCNameNodeRequest(getFileReq);
+		RdmaNameNodeRequest request = new RdmaNameNodeRequest(getFileReq);
 		request.setCommand(RpcProtocol.CMD_GET_FILE);
 
 		RpcResponseMessage.GetFileRes fileRes = new RpcResponseMessage.GetFileRes();
-		DaRPCNameNodeResponse response = new DaRPCNameNodeResponse(fileRes);
+		RdmaNameNodeResponse response = new RdmaNameNodeResponse(fileRes);
 		
-		DaRPCFuture<DaRPCNameNodeRequest, DaRPCNameNodeResponse> future = issueRPC(request, response);
+		DaRPCFuture<RdmaNameNodeRequest, RdmaNameNodeResponse> future = issueRPC(request, response);
 
-		return new DaRPCNameNodeFuture<>(future, fileRes);
+		return new RdmaNameNodeFuture<>(future, fileRes);
 	}
 	
 	@Override
-	public DaRPCNameNodeFuture<RpcVoid> setFile(FileInfo fileInfo, boolean close) throws IOException {
+	public RdmaNameNodeFuture<RpcVoid> setFile(FileInfo fileInfo, boolean close) throws IOException {
 		if (CrailConstants.DEBUG){
 			logger.debug("RPC: setFile, id " + fileInfo.getFd() + ", close " + close);
 		}
 		
 		RpcRequestMessage.SetFileReq setFileReq = new RpcRequestMessage.SetFileReq(fileInfo, close);
-		DaRPCNameNodeRequest request = new DaRPCNameNodeRequest(setFileReq);
+		RdmaNameNodeRequest request = new RdmaNameNodeRequest(setFileReq);
 		request.setCommand(RpcProtocol.CMD_SET_FILE);
 		
 		RpcResponseMessage.VoidRes voidRes = new RpcResponseMessage.VoidRes();
-		DaRPCNameNodeResponse response = new DaRPCNameNodeResponse(voidRes);
+		RdmaNameNodeResponse response = new RdmaNameNodeResponse(voidRes);
 		
-		DaRPCFuture<DaRPCNameNodeRequest, DaRPCNameNodeResponse> future = issueRPC(request, response);
+		DaRPCFuture<RdmaNameNodeRequest, RdmaNameNodeResponse> future = issueRPC(request, response);
 
-		return new DaRPCNameNodeFuture<>(future, voidRes);
+		return new RdmaNameNodeFuture<>(future, voidRes);
 	}
 	
 	@Override
-	public DaRPCNameNodeFuture<RpcDeleteFile> removeFile(FileName filename, boolean recursive) throws IOException {
+	public RdmaNameNodeFuture<RpcDeleteFile> removeFile(FileName filename, boolean recursive) throws IOException {
 		if (CrailConstants.DEBUG){
 			logger.debug("RPC: removeFile");
 		}
 		
 		RpcRequestMessage.RemoveFileReq removeReq = new RpcRequestMessage.RemoveFileReq(filename, recursive);
-		DaRPCNameNodeRequest request = new DaRPCNameNodeRequest(removeReq);
+		RdmaNameNodeRequest request = new RdmaNameNodeRequest(removeReq);
 		request.setCommand(RpcProtocol.CMD_REMOVE_FILE);
 		
 		RpcResponseMessage.DeleteFileRes fileRes = new RpcResponseMessage.DeleteFileRes();
-		DaRPCNameNodeResponse response = new DaRPCNameNodeResponse(fileRes);
+		RdmaNameNodeResponse response = new RdmaNameNodeResponse(fileRes);
 		
-		DaRPCFuture<DaRPCNameNodeRequest, DaRPCNameNodeResponse> future = issueRPC(request, response);
+		DaRPCFuture<RdmaNameNodeRequest, RdmaNameNodeResponse> future = issueRPC(request, response);
 		
-		DaRPCNameNodeFuture<RpcDeleteFile> nameNodeFuture = new DaRPCNameNodeFuture<RpcDeleteFile>(future, fileRes);
+		RdmaNameNodeFuture<RpcDeleteFile> nameNodeFuture = new RdmaNameNodeFuture<RpcDeleteFile>(future, fileRes);
 		
 		return nameNodeFuture;			
 	}
 	
 	@Override
-	public DaRPCNameNodeFuture<RpcRenameFile> renameFile(FileName srcHash, FileName dstHash) throws IOException {
+	public RdmaNameNodeFuture<RpcRenameFile> renameFile(FileName srcHash, FileName dstHash) throws IOException {
 		if (CrailConstants.DEBUG){
 			logger.debug("RPC: renameFile");
 		}
 		
 		RpcRequestMessage.RenameFileReq renameReq = new RpcRequestMessage.RenameFileReq(srcHash, dstHash);
-		DaRPCNameNodeRequest request = new DaRPCNameNodeRequest(renameReq);
+		RdmaNameNodeRequest request = new RdmaNameNodeRequest(renameReq);
 		request.setCommand(RpcProtocol.CMD_RENAME_FILE);
 		
 		RpcResponseMessage.RenameRes renameRes = new RpcResponseMessage.RenameRes();
-		DaRPCNameNodeResponse response = new DaRPCNameNodeResponse(renameRes);
+		RdmaNameNodeResponse response = new RdmaNameNodeResponse(renameRes);
 		
-		DaRPCFuture<DaRPCNameNodeRequest, DaRPCNameNodeResponse> future = issueRPC(request, response);
-		return new DaRPCNameNodeFuture<>(future, renameRes);
+		DaRPCFuture<RdmaNameNodeRequest, RdmaNameNodeResponse> future = issueRPC(request, response);
+		return new RdmaNameNodeFuture<>(future, renameRes);
 	}
 	
 	@Override
-	public DaRPCNameNodeFuture<RpcGetBlock> getBlock(long fd, long token, long position, long capacity) throws IOException {
+	public RdmaNameNodeFuture<RpcGetBlock> getBlock(long fd, long token, long position, long capacity) throws IOException {
 		if (CrailConstants.DEBUG){
 			logger.debug("RPC: getBlock, fd " + fd + ", token " + token + ", position " + position + ", capacity " + capacity);
 		}
 		
 		RpcRequestMessage.GetBlockReq getBlockReq = new RpcRequestMessage.GetBlockReq(fd, token, position, capacity);
-		DaRPCNameNodeRequest request = new DaRPCNameNodeRequest(getBlockReq);
+		RdmaNameNodeRequest request = new RdmaNameNodeRequest(getBlockReq);
 		request.setCommand(RpcProtocol.CMD_GET_BLOCK);
 		
 		RpcResponseMessage.GetBlockRes getBlockRes = new RpcResponseMessage.GetBlockRes();
-		DaRPCNameNodeResponse response = new DaRPCNameNodeResponse(getBlockRes);
+		RdmaNameNodeResponse response = new RdmaNameNodeResponse(getBlockRes);
 		
-		DaRPCFuture<DaRPCNameNodeRequest, DaRPCNameNodeResponse> future = issueRPC(request, response);
-		return new DaRPCNameNodeFuture<>(future, getBlockRes);
+		DaRPCFuture<RdmaNameNodeRequest, RdmaNameNodeResponse> future = issueRPC(request, response);
+		return new RdmaNameNodeFuture<>(future, getBlockRes);
 	}
 	
 	@Override
-	public DaRPCNameNodeFuture<RpcGetLocation> getLocation(FileName fileName, long position) throws IOException {
+	public RdmaNameNodeFuture<RpcGetLocation> getLocation(FileName fileName, long position) throws IOException {
 		if (CrailConstants.DEBUG){
 			logger.debug("RPC: getLocation, position " + position);
 		}		
 		
 		RpcRequestMessage.GetLocationReq getLocationReq = new RpcRequestMessage.GetLocationReq(fileName, position);
-		DaRPCNameNodeRequest request = new DaRPCNameNodeRequest(getLocationReq);
+		RdmaNameNodeRequest request = new RdmaNameNodeRequest(getLocationReq);
 		request.setCommand(RpcProtocol.CMD_GET_LOCATION);
 
 		RpcResponseMessage.GetLocationRes getLocationRes = new RpcResponseMessage.GetLocationRes();
-		DaRPCNameNodeResponse response = new DaRPCNameNodeResponse(getLocationRes);
+		RdmaNameNodeResponse response = new RdmaNameNodeResponse(getLocationRes);
 		
-		DaRPCFuture<DaRPCNameNodeRequest, DaRPCNameNodeResponse> future = issueRPC(request, response);
-		return new DaRPCNameNodeFuture<>(future, getLocationRes);
+		DaRPCFuture<RdmaNameNodeRequest, RdmaNameNodeResponse> future = issueRPC(request, response);
+		return new RdmaNameNodeFuture<>(future, getLocationRes);
 	}	
 	
 	@Override
-	public DaRPCNameNodeFuture<RpcVoid> setBlock(BlockInfo blockInfo) throws Exception {
+	public RdmaNameNodeFuture<RpcVoid> setBlock(BlockInfo blockInfo) throws Exception {
 		if (CrailConstants.DEBUG){
 			logger.debug("RPC: setBlock, ");
 		}		
 		
 		RpcRequestMessage.SetBlockReq setBlockReq = new RpcRequestMessage.SetBlockReq(blockInfo);
-		DaRPCNameNodeRequest request = new DaRPCNameNodeRequest(setBlockReq);
+		RdmaNameNodeRequest request = new RdmaNameNodeRequest(setBlockReq);
 		request.setCommand(RpcProtocol.CMD_SET_BLOCK);
 		
 		RpcResponseMessage.VoidRes voidRes = new RpcResponseMessage.VoidRes();
-		DaRPCNameNodeResponse response = new DaRPCNameNodeResponse(voidRes);
+		RdmaNameNodeResponse response = new RdmaNameNodeResponse(voidRes);
 		
-		DaRPCFuture<DaRPCNameNodeRequest, DaRPCNameNodeResponse> future = issueRPC(request, response);
-		return new DaRPCNameNodeFuture<>(future, voidRes);
+		DaRPCFuture<RdmaNameNodeRequest, RdmaNameNodeResponse> future = issueRPC(request, response);
+		return new RdmaNameNodeFuture<>(future, voidRes);
 	}
 	
 	@Override
-	public DaRPCNameNodeFuture<RpcGetDataNode> getDataNode(DataNodeInfo dnInfo) throws Exception {
+	public RdmaNameNodeFuture<RpcGetDataNode> getDataNode(DataNodeInfo dnInfo) throws Exception {
 		RpcRequestMessage.GetDataNodeReq getDataNodeReq = new RpcRequestMessage.GetDataNodeReq(dnInfo);
-		DaRPCNameNodeRequest request = new DaRPCNameNodeRequest(getDataNodeReq);
+		RdmaNameNodeRequest request = new RdmaNameNodeRequest(getDataNodeReq);
 		request.setCommand(RpcProtocol.CMD_GET_DATANODE);
 		
 		RpcResponseMessage.GetDataNodeRes getDataNodeRes = new RpcResponseMessage.GetDataNodeRes();
-		DaRPCNameNodeResponse response = new DaRPCNameNodeResponse(getDataNodeRes);
+		RdmaNameNodeResponse response = new RdmaNameNodeResponse(getDataNodeRes);
 		
-		DaRPCFuture<DaRPCNameNodeRequest, DaRPCNameNodeResponse> future = issueRPC(request, response);
+		DaRPCFuture<RdmaNameNodeRequest, RdmaNameNodeResponse> future = issueRPC(request, response);
 
-		return new DaRPCNameNodeFuture<>(future, getDataNodeRes);
+		return new RdmaNameNodeFuture<>(future, getDataNodeRes);
 	}	
 	
 	@Override
-	public DaRPCNameNodeFuture<RpcVoid> dumpNameNode() throws Exception {
+	public RdmaNameNodeFuture<RpcVoid> dumpNameNode() throws Exception {
 
 		RpcRequestMessage.DumpNameNodeReq dumpNameNodeReq = new RpcRequestMessage.DumpNameNodeReq();
-		DaRPCNameNodeRequest request = new DaRPCNameNodeRequest(dumpNameNodeReq);
+		RdmaNameNodeRequest request = new RdmaNameNodeRequest(dumpNameNodeReq);
 		request.setCommand(RpcProtocol.CMD_DUMP_NAMENODE);
 
 		RpcResponseMessage.VoidRes voidRes = new RpcResponseMessage.VoidRes();
-		DaRPCNameNodeResponse response = new DaRPCNameNodeResponse(voidRes);	
+		RdmaNameNodeResponse response = new RdmaNameNodeResponse(voidRes);
 		
-		DaRPCFuture<DaRPCNameNodeRequest, DaRPCNameNodeResponse> future = issueRPC(request, response);
+		DaRPCFuture<RdmaNameNodeRequest, RdmaNameNodeResponse> future = issueRPC(request, response);
 
-		return new DaRPCNameNodeFuture<>(future, voidRes);
+		return new RdmaNameNodeFuture<>(future, voidRes);
 	}	
 	
 	@Override
-	public DaRPCNameNodeFuture<RpcPing> pingNameNode() throws Exception {
+	public RdmaNameNodeFuture<RpcPing> pingNameNode() throws Exception {
 		
 		RpcRequestMessage.PingNameNodeReq pingReq = new RpcRequestMessage.PingNameNodeReq();
-		DaRPCNameNodeRequest request = new DaRPCNameNodeRequest(pingReq);
+		RdmaNameNodeRequest request = new RdmaNameNodeRequest(pingReq);
 		request.setCommand(RpcProtocol.CMD_PING_NAMENODE);
 
 		RpcResponseMessage.PingNameNodeRes pingRes = new RpcResponseMessage.PingNameNodeRes();
-		DaRPCNameNodeResponse response = new DaRPCNameNodeResponse(pingRes);
+		RdmaNameNodeResponse response = new RdmaNameNodeResponse(pingRes);
 		
-		DaRPCFuture<DaRPCNameNodeRequest, DaRPCNameNodeResponse> future = issueRPC(request, response);
-		return new DaRPCNameNodeFuture<>(future, pingRes);
+		DaRPCFuture<RdmaNameNodeRequest, RdmaNameNodeResponse> future = issueRPC(request, response);
+		return new RdmaNameNodeFuture<>(future, pingRes);
 	}
 	
 	@Override
@@ -232,7 +232,7 @@ public class DaRPCNameNodeConnection implements RpcConnection {
 		}		
 	}
 
-	private DaRPCFuture<DaRPCNameNodeRequest, DaRPCNameNodeResponse> issueRPC(DaRPCNameNodeRequest request, DaRPCNameNodeResponse response) throws IOException{
+	private DaRPCFuture<RdmaNameNodeRequest, RdmaNameNodeResponse> issueRPC(RdmaNameNodeRequest request, RdmaNameNodeResponse response) throws IOException{
 		try {
 			return stream.request(request, response, false);
 		} catch(IOException e){

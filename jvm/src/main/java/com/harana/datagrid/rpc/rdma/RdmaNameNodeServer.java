@@ -1,4 +1,4 @@
-package com.harana.datagrid.rpc.darpc;
+package com.harana.datagrid.rpc.rdma;
 
 import java.net.InetSocketAddress;
 import com.harana.datagrid.conf.CrailConfiguration;
@@ -7,55 +7,52 @@ import com.harana.datagrid.rpc.RpcServer;
 import com.harana.datagrid.darpc.DaRPCServerEndpoint;
 import com.harana.datagrid.darpc.DaRPCServerGroup;
 import com.harana.datagrid.rdma.RdmaServerEndpoint;
-import com.harana.datagrid.rpc.darpc.DaRPCConstants;
-import com.harana.datagrid.rpc.darpc.DaRPCNameNodeRequest;
-import com.harana.datagrid.rpc.darpc.DaRPCNameNodeResponse;
 import com.harana.datagrid.utils.CrailUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class DaRPCNameNodeServer extends RpcServer {
+public class RdmaNameNodeServer extends RpcServer {
 	private static final Logger logger = LogManager.getLogger();
 	
 	private RpcNameNodeService service;
-	private DaRPCServerGroup<DaRPCNameNodeRequest, DaRPCNameNodeResponse> namenodeServerGroup;
-	private RdmaServerEndpoint<DaRPCServerEndpoint<DaRPCNameNodeRequest, DaRPCNameNodeResponse>> namenodeServerEp;	
+	private DaRPCServerGroup<RdmaNameNodeRequest, RdmaNameNodeResponse> namenodeServerGroup;
+	private RdmaServerEndpoint<DaRPCServerEndpoint<RdmaNameNodeRequest, RdmaNameNodeResponse>> namenodeServerEp;
 	
-	public DaRPCNameNodeServer(RpcNameNodeService service){
+	public RdmaNameNodeServer(RpcNameNodeService service){
 		this.service = service;
 		this.namenodeServerEp = null;
 		this.namenodeServerGroup = null;
 	}	
 
 	public void init(CrailConfiguration conf, String[] args) throws Exception{
-		DaRPCConstants.updateConstants(conf);
-		DaRPCConstants.verify();
+		RdmaConstants.updateConstants(conf);
+		RdmaConstants.verify();
 		
-		String[] _clusterAffinities = DaRPCConstants.NAMENODE_DARPC_AFFINITY.split(",");
+		String[] _clusterAffinities = RdmaConstants.NAMENODE_RDMA_AFFINITY.split(",");
 		long[] clusterAffinities = new long[_clusterAffinities.length];
 		for (int i = 0; i < clusterAffinities.length; i++){
 			int affinity = Integer.decode(_clusterAffinities[i]);
 			clusterAffinities[i] = 1L << affinity;
 		}
 
-		DaRPCServiceDispatcher darpcService = new DaRPCServiceDispatcher(service);
-		this.namenodeServerGroup = DaRPCServerGroup.createServerGroup(darpcService, clusterAffinities, -1, DaRPCConstants.NAMENODE_DARPC_MAXINLINE, DaRPCConstants.NAMENODE_DARPC_POLLING, DaRPCConstants.NAMENODE_DARPC_RECVQUEUE, DaRPCConstants.NAMENODE_DARPC_SENDQUEUE, DaRPCConstants.NAMENODE_DARPC_POLLSIZE, DaRPCConstants.NAMENODE_DARPC_CLUSTERSIZE);
+		RdmaServiceDispatcher rdmaService = new RdmaServiceDispatcher(service);
+		this.namenodeServerGroup = DaRPCServerGroup.createServerGroup(rdmaService, clusterAffinities, -1, RdmaConstants.NAMENODE_RDMA_MAXINLINE, RdmaConstants.NAMENODE_RDMA_POLLING, RdmaConstants.NAMENODE_RDMA_RECVQUEUE, RdmaConstants.NAMENODE_RDMA_SENDQUEUE, RdmaConstants.NAMENODE_RDMA_POLLSIZE, RdmaConstants.NAMENODE_RDMA_CLUSTERSIZE);
 		logger.info("rpc group started, recvQueue " + namenodeServerGroup.recvQueueSize());
 		this.namenodeServerEp = namenodeServerGroup.createServerEndpoint();		
 	}
 	
 	public void printConf(Logger logger){
-		DaRPCConstants.printConf(logger);
+		RdmaConstants.printConf(logger);
 	}
 
 	@Override
 	public void run() {
 		try {
 			InetSocketAddress addr = CrailUtils.getNameNodeAddress();
-			namenodeServerEp.bind(addr, DaRPCConstants.NAMENODE_DARPC_BACKLOG);
+			namenodeServerEp.bind(addr, RdmaConstants.NAMENODE_RDMA_BACKLOG);
 			logger.info("opened server at " + addr);
 			while (true) {
-				DaRPCServerEndpoint<DaRPCNameNodeRequest, DaRPCNameNodeResponse> clientEndpoint = namenodeServerEp.accept();
+				DaRPCServerEndpoint<RdmaNameNodeRequest, RdmaNameNodeResponse> clientEndpoint = namenodeServerEp.accept();
 				logger.info("accepting RPC connection, qpnum " + clientEndpoint.getQp().getQp_num());
 			}
 		} catch(Exception e){

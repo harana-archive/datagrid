@@ -1,14 +1,13 @@
-package com.harana.datagrid.rpc.darpc;
+package com.harana.datagrid.rpc.rdma;
 
 import java.nio.ByteBuffer;
 
+import com.harana.datagrid.darpc.DaRPCMessage;
 import com.harana.datagrid.rpc.RpcNameNodeState;
 import com.harana.datagrid.rpc.RpcProtocol;
 import com.harana.datagrid.rpc.RpcResponseMessage;
 
-import com.harana.datagrid.darpc.DaRPCMessage;
-
-public class DaRPCNameNodeResponse implements DaRPCMessage, RpcNameNodeState {
+public class RdmaNameNodeResponse implements DaRPCMessage, RpcNameNodeState {
 	public static final int CSIZE = 4 + Math.max(RpcResponseMessage.GetBlockRes.CSIZE, RpcResponseMessage.RenameRes.CSIZE);
 	
 	private short type;
@@ -23,7 +22,7 @@ public class DaRPCNameNodeResponse implements DaRPCMessage, RpcNameNodeState {
 	private RpcResponseMessage.GetDataNodeRes getDataNodeRes;
 	private RpcResponseMessage.PingNameNodeRes pingNameNodeRes;
 	
-	public DaRPCNameNodeResponse() {
+	public RdmaNameNodeResponse() {
 		this.type = 0;
 		this.error = 0;
 		
@@ -38,47 +37,47 @@ public class DaRPCNameNodeResponse implements DaRPCMessage, RpcNameNodeState {
 		this.pingNameNodeRes = new RpcResponseMessage.PingNameNodeRes();
 	}
 	
-	public DaRPCNameNodeResponse(RpcResponseMessage.VoidRes message) {
+	public RdmaNameNodeResponse(RpcResponseMessage.VoidRes message) {
 		this.type = message.getType();
 		this.voidRes = message;
 	}
 	
-	public DaRPCNameNodeResponse(RpcResponseMessage.CreateFileRes message) {
+	public RdmaNameNodeResponse(RpcResponseMessage.CreateFileRes message) {
 		this.type = message.getType();
 		this.createFileRes = message;
 	}	
 	
-	public DaRPCNameNodeResponse(RpcResponseMessage.GetFileRes message) {
+	public RdmaNameNodeResponse(RpcResponseMessage.GetFileRes message) {
 		this.type = message.getType();
 		this.getFileRes = message;
 	}
 	
-	public DaRPCNameNodeResponse(RpcResponseMessage.DeleteFileRes message) {
+	public RdmaNameNodeResponse(RpcResponseMessage.DeleteFileRes message) {
 		this.type = message.getType();
 		this.delFileRes = message;
 	}	
 	
-	public DaRPCNameNodeResponse(RpcResponseMessage.RenameRes message) {
+	public RdmaNameNodeResponse(RpcResponseMessage.RenameRes message) {
 		this.type = message.getType();
 		this.renameRes = message;
 	}
 	
-	public DaRPCNameNodeResponse(RpcResponseMessage.GetBlockRes message) {
+	public RdmaNameNodeResponse(RpcResponseMessage.GetBlockRes message) {
 		this.type = message.getType();
 		this.getBlockRes = message;
 	}
 	
-	public DaRPCNameNodeResponse(RpcResponseMessage.GetLocationRes message) {
+	public RdmaNameNodeResponse(RpcResponseMessage.GetLocationRes message) {
 		this.type = message.getType();
 		this.getLocationRes = message;
 	}
 	
-	public DaRPCNameNodeResponse(RpcResponseMessage.GetDataNodeRes message) {
+	public RdmaNameNodeResponse(RpcResponseMessage.GetDataNodeRes message) {
 		this.type = message.getType();
 		this.getDataNodeRes = message;
 	}	
 	
-	public DaRPCNameNodeResponse(RpcResponseMessage.PingNameNodeRes message) {
+	public RdmaNameNodeResponse(RpcResponseMessage.PingNameNodeRes message) {
 		this.type = message.getType();
 		this.pingNameNodeRes = message;
 	}

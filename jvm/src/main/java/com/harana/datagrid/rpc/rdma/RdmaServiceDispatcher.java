@@ -1,4 +1,4 @@
-package com.harana.datagrid.rpc.darpc;
+package com.harana.datagrid.rpc.rdma;
 
 import java.util.concurrent.atomic.AtomicLong;
 import java.io.IOException;
@@ -12,13 +12,10 @@ import com.harana.datagrid.rpc.RpcResponseMessage;
 import com.harana.datagrid.darpc.DaRPCServerEndpoint;
 import com.harana.datagrid.darpc.DaRPCServerEvent;
 import com.harana.datagrid.darpc.DaRPCService;
-import com.harana.datagrid.rpc.darpc.DaRPCNameNodeProtocol;
-import com.harana.datagrid.rpc.darpc.DaRPCNameNodeRequest;
-import com.harana.datagrid.rpc.darpc.DaRPCNameNodeResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class DaRPCServiceDispatcher extends DaRPCNameNodeProtocol implements DaRPCService<DaRPCNameNodeRequest, DaRPCNameNodeResponse> {
+public class RdmaServiceDispatcher extends RdmaNameNodeProtocol implements DaRPCService<RdmaNameNodeRequest, RdmaNameNodeResponse> {
 	private static final Logger logger = LogManager.getLogger();
 	
 	private RpcNameNodeService service;
@@ -33,7 +30,7 @@ public class DaRPCServiceDispatcher extends DaRPCNameNodeProtocol implements DaR
 	private AtomicLong locationOps;
 	private AtomicLong errorOps;
 	
-	public DaRPCServiceDispatcher(RpcNameNodeService service){
+	public RdmaServiceDispatcher(RpcNameNodeService service){
 		this.service = service;
 		
 		this.totalOps = new AtomicLong(0);
@@ -47,9 +44,9 @@ public class DaRPCServiceDispatcher extends DaRPCNameNodeProtocol implements DaR
 		this.errorOps = new AtomicLong(0);
 	}
 	
-	public void processServerEvent(DaRPCServerEvent<DaRPCNameNodeRequest, DaRPCNameNodeResponse> event) {
-		DaRPCNameNodeRequest request = event.getReceiveMessage();
-		DaRPCNameNodeResponse response = event.getSendMessage();
+	public void processServerEvent(DaRPCServerEvent<RdmaNameNodeRequest, RdmaNameNodeResponse> event) {
+		RdmaNameNodeRequest request = event.getReceiveMessage();
+		RdmaNameNodeResponse response = event.getSendMessage();
 		short error = RpcErrors.ERR_OK;
 		try {
 			response.setType(RpcProtocol.responseTypes[request.getCmd()]);
@@ -142,7 +139,7 @@ public class DaRPCServiceDispatcher extends DaRPCNameNodeProtocol implements DaR
 	}	
 	
 	@Override
-	public void open(DaRPCServerEndpoint<DaRPCNameNodeRequest, DaRPCNameNodeResponse> endpoint) {
+	public void open(DaRPCServerEndpoint<RdmaNameNodeRequest, RdmaNameNodeResponse> endpoint) {
 		try {
 			logger.info("RPC connection, qpnum " + endpoint.getQp().getQp_num());
 		} catch(IOException e) {
@@ -151,7 +148,7 @@ public class DaRPCServiceDispatcher extends DaRPCNameNodeProtocol implements DaR
 	}	
 
 	@Override
-	public void close(DaRPCServerEndpoint<DaRPCNameNodeRequest, DaRPCNameNodeResponse> endpoint) {
+	public void close(DaRPCServerEndpoint<RdmaNameNodeRequest, RdmaNameNodeResponse> endpoint) {
 		try {
 			logger.info("disconnecting RPC connection, qpnum " + endpoint.getQp().getQp_num());
 			endpoint.close();
