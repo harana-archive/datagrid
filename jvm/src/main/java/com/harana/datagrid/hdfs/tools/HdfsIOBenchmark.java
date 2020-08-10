@@ -328,7 +328,7 @@ public class HdfsIOBenchmark {
 		
 		int repfactor = 4;
 		for (int k = 0; k < repfactor; k++){
-			LinkedBlockingQueue<Path> pathQueue = new LinkedBlockingQueue<Path>();
+			LinkedBlockingQueue<Path> pathQueue = new LinkedBlockingQueue<>();
 			fs.mkdirs(path);
 			for (int i = 0; i < loop*size; i++){
 				String name = "" + i;
@@ -336,7 +336,7 @@ public class HdfsIOBenchmark {
 				pathQueue.add(f);
 			}			
 			
-			LinkedBlockingQueue<FSDataOutputStream> streamQueue = new LinkedBlockingQueue<FSDataOutputStream>();
+			LinkedBlockingQueue<FSDataOutputStream> streamQueue = new LinkedBlockingQueue<>();
 			long start = System.currentTimeMillis();
 			for (int i = 0; i < size; i++){
 				//single operation == loop

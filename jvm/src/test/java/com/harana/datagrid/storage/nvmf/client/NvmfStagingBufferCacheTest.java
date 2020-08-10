@@ -55,7 +55,7 @@ public class NvmfStagingBufferCacheTest {
 
 	@Test
 	public void recycleBuffers() throws Exception {
-		NvmfStagingBufferCache.BufferCacheEntry bufferCacheEntry[] = new NvmfStagingBufferCache.BufferCacheEntry[5];
+		NvmfStagingBufferCache.BufferCacheEntry[] bufferCacheEntry = new NvmfStagingBufferCache.BufferCacheEntry[5];
 		Set<CrailBuffer> buffers = new HashSet<>();
 		NvmfStagingBufferCache bufferCache = new NvmfStagingBufferCache(getBufferCache(), bufferCacheEntry.length, 512);
 		for (int i = 0; i < bufferCacheEntry.length; i++) {

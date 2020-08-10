@@ -52,7 +52,7 @@ public interface StorageServer extends Configurable, Runnable {
 		}
 		String storageName = tokenizer.nextToken();
 		int storageType = 0;
-		HashMap<String, Integer> storageTypes = new HashMap<String, Integer>();
+		HashMap<String, Integer> storageTypes = new HashMap<>();
 		storageTypes.put(storageName, storageType);
 		for (int type = 1; tokenizer.hasMoreElements(); type++){
 			String name = tokenizer.nextToken();
@@ -128,7 +128,7 @@ public interface StorageServer extends Configurable, Runnable {
 		
 		StorageRpcClient storageRpc = new StorageRpcClient(storageType, CrailStorageClass.get(storageClass), server.getAddress(), rpcConnection);
 		
-		HashMap<Long, Long> blockCount = new HashMap<Long, Long>();
+		HashMap<Long, Long> blockCount = new HashMap<>();
 		long sumCount = 0;
 		long lba = 0;
 		while (server.isAlive()) {

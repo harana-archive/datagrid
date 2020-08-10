@@ -161,7 +161,7 @@ public class CrailHadoopFileSystem extends FileSystem {
 		try {
 			CrailNode node = dfs.lookup(path.toUri().getRawPath()).get();
 			Iterator<String> iter = node.asContainer().listEntries();
-			ArrayList<FileStatus> statusList = new ArrayList<FileStatus>();
+			ArrayList<FileStatus> statusList = new ArrayList<>();
 			while(iter.hasNext()){
 				String filepath = iter.next();
 				CrailNode directFile = dfs.lookup(filepath).get();

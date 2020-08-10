@@ -1,13 +1,11 @@
 package com.harana.datagrid.storage;
 
-import com.harana.datagrid.storage.StorageClient;
-
 public interface StorageTier extends StorageClient {
 	
-	public abstract StorageServer launchServer() throws Exception;
+	StorageServer launchServer() throws Exception;
 	
 	@SuppressWarnings("unchecked")
-	public static StorageTier createInstance(String name) throws Exception {
+	static StorageTier createInstance(String name) throws Exception {
 		Class<?> nodeClass = Class.forName(name);
 		if (StorageTier.class.isAssignableFrom(nodeClass)){
 			Class<? extends StorageTier> storageTier = (Class<? extends StorageTier>) nodeClass;

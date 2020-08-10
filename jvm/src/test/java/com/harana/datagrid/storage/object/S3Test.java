@@ -211,7 +211,7 @@ public class S3Test {
 		// Listing recursively all objects
 		logger.info("--------------------------------------------------------------------------------------------------");
 		logger.info("List objects with prefix");
-		List<DeleteObjectsRequest.KeyVersion> keys = new ArrayList<DeleteObjectsRequest.KeyVersion>();
+		List<DeleteObjectsRequest.KeyVersion> keys = new ArrayList<>();
 		int count = 0;
 		try {
 			ListObjectsRequest listReq = new ListObjectsRequest().withBucketName(bucket).withPrefix(prefix);

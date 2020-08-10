@@ -32,10 +32,10 @@ public class RdmaStorageActiveEndpoint extends RdmaActiveEndpoint implements Sto
 	
 	public RdmaStorageActiveEndpoint(RdmaStorageActiveGroup group, RdmaCmId id, boolean serverSide) throws IOException {
 		super(group, id, serverSide);
-		writeOps = new LinkedBlockingQueue<SVCPostSend>();
-		readOps = new LinkedBlockingQueue<SVCPostSend>();
+		writeOps = new LinkedBlockingQueue<>();
+		readOps = new LinkedBlockingQueue<>();
 		this.opcount = new AtomicIntegerModulo();
-		this.futureMap = new ConcurrentHashMap<Long, RdmaActiveFuture>();
+		this.futureMap = new ConcurrentHashMap<>();
 		this.sendQueueAvailable = new Semaphore(RdmaConstants.STORAGE_RDMA_QUEUESIZE);
 		this.mrCache = group.getMrCache();
 		this.deviceCache = null;
@@ -54,12 +54,12 @@ public class RdmaStorageActiveEndpoint extends RdmaActiveEndpoint implements Sto
 	}
 	
 	private SVCPostSend initWriteOp() throws IOException {
-		LinkedList<IbvSendWR> wrList_send = new LinkedList<IbvSendWR>();
+		LinkedList<IbvSendWR> wrList_send = new LinkedList<>();
 		
 		IbvSendWR writeWR = new IbvSendWR();
 		writeWR.setWr_id(opcount.getAndIncrement());
 		writeWR.setOpcode(IbvSendWR.IBV_WR_RDMA_WRITE);
-		LinkedList<IbvSge> sgeListWrite = new LinkedList<IbvSge>();
+		LinkedList<IbvSge> sgeListWrite = new LinkedList<>();
 		IbvSge sgeSendWrite = new IbvSge();
 		sgeListWrite.add(sgeSendWrite);
 		writeWR.setSg_list(sgeListWrite);
@@ -70,7 +70,7 @@ public class RdmaStorageActiveEndpoint extends RdmaActiveEndpoint implements Sto
 		readWR.setOpcode(IbvSendWR.IBV_WR_RDMA_READ);
 		readWR.setSend_flags(IbvSendWR.IBV_SEND_SIGNALED);
 		
-		LinkedList<IbvSge> sgeListRead = new LinkedList<IbvSge>();
+		LinkedList<IbvSge> sgeListRead = new LinkedList<>();
 		IbvSge sgeSendRead = new IbvSge();
 		sgeSendRead.setLength(1);
 		sgeListRead.add(sgeSendRead);
@@ -82,8 +82,8 @@ public class RdmaStorageActiveEndpoint extends RdmaActiveEndpoint implements Sto
 	}
 
 	private SVCPostSend initReadOp() throws IOException{
-		LinkedList<IbvSendWR> wrList_send = new LinkedList<IbvSendWR>();
-		LinkedList<IbvSge> sgeList = new LinkedList<IbvSge>();
+		LinkedList<IbvSendWR> wrList_send = new LinkedList<>();
+		LinkedList<IbvSge> sgeList = new LinkedList<>();
 		IbvSge sgeSend = new IbvSge();
 		IbvSendWR sendWR = new IbvSendWR();
 		

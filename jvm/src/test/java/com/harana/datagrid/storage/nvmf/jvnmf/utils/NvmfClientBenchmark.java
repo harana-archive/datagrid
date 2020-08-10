@@ -82,8 +82,7 @@ public class NvmfClientBenchmark {
     SAME
   }
 
-  NvmfClientBenchmark(String[] args)
-      throws IOException, ExecutionException, InterruptedException, TimeoutException {
+  NvmfClientBenchmark(String[] args) throws IOException, TimeoutException {
     this.stats = new ArrayList<>();
     this.random = ThreadLocalRandom.current();
 

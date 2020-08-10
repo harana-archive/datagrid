@@ -16,7 +16,7 @@ public class MrCache {
 	private AtomicLong cacheMisses;
 	
 	public MrCache(){
-		this.cache = new ConcurrentHashMap<Integer, DeviceMrCache>();
+		this.cache = new ConcurrentHashMap<>();
 		this.cacheMisses = new AtomicLong(0);
 		this.cacheOps = new AtomicLong(0);
 	}
@@ -60,7 +60,7 @@ public class MrCache {
 		
 		public DeviceMrCache(IbvPd pd){
 			this.pd = pd;
-			this.device = new ConcurrentHashMap<Long, IbvMr>();
+			this.device = new ConcurrentHashMap<>();
 		}
 		
 		public IbvMr get(CrailBuffer buffer) throws IOException{

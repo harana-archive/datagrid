@@ -34,7 +34,7 @@ public class RdmaStorageServer implements Runnable, StorageServer {
 		this.serverAddr = null;
 		this.datanodeGroup = null;
 		this.datanodeServerEndpoint = null;
-		this.allEndpoints = new ConcurrentHashMap<Integer, RdmaEndpoint>();
+		this.allEndpoints = new ConcurrentHashMap<>();
 	}
 	
 	public void init(CrailConfiguration conf, String[] args) throws Exception {

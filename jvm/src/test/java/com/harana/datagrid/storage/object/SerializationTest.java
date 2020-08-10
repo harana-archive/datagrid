@@ -86,7 +86,7 @@ public class SerializationTest {
 		assertTrue(rpc1.getRequestSize() == rpc2.getRequestSize());
 
 		buf.clear();
-		List<MappingEntry> mapping1 = new ArrayList<MappingEntry>();
+		List<MappingEntry> mapping1 = new ArrayList<>();
 		List<MappingEntry> mapping2;
 		for (int i = 0; i < 10; i++) {
 			mapping1.add(makeRandomObjectInfo());

@@ -39,7 +39,7 @@ public class RdmaStorageLocalEndpoint implements StorageEndpoint {
 			throw new Exception("Local RDMA data path missing");
 		}
 		this.address = datanodeAddr;
-		this.bufferMap = new ConcurrentHashMap<Long, CrailBuffer>();
+		this.bufferMap = new ConcurrentHashMap<>();
 		this.unsafe = getUnsafe();
 		for (File dataFile : dataDir.listFiles()) {
 			long lba = Long.parseLong(dataFile.getName());
