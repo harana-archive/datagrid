@@ -3,7 +3,8 @@ package com.harana.datagrid.namenode;
 import java.net.URI;
 import java.util.Arrays;
 
-import com.harana.datagrid.utils.CrailUtils;
+import com.harana.datagrid.namenode.storage.LogDispatcher;
+import com.harana.datagrid.utils.Utils;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
@@ -11,11 +12,8 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
-import com.harana.datagrid.conf.CrailConfiguration;
-import com.harana.datagrid.conf.CrailConstants;
-import com.harana.datagrid.rpc.RpcBinding;
-import com.harana.datagrid.rpc.RpcNameNodeService;
-import com.harana.datagrid.rpc.RpcServer;
+import com.harana.datagrid.conf.Configuration;
+import com.harana.datagrid.conf.Constants;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -24,10 +22,10 @@ public class NameNode {
 	
 	public static void main(String args[]) throws Exception {
 		logger.info("initalizing namenode ");		
-		CrailConfiguration conf = CrailConfiguration.createConfigurationFromFile();
-		CrailConstants.updateConstants(conf);
+		Configuration conf = Configuration.createConfigurationFromFile();
+		Constants.updateConstants(conf);
 		
-		URI uri = CrailUtils.getPrimaryNameNode();
+		URI uri = Utils.getPrimaryNameNode();
 		String address = uri.getHost();
 		int port = uri.getPort();
 		
@@ -55,23 +53,23 @@ public class NameNode {
 		}		
 		
 		String namenode = "crail://" + address + ":" + port;
-		long serviceId = CrailUtils.getServiceId(namenode);
-		long serviceSize = CrailUtils.getServiceSize();
-		if (!CrailUtils.verifyNamenode(namenode)){
-			throw new Exception("Namenode address/port [" + namenode + "] has to be listed in crail.namenode.address " + CrailConstants.NAMENODE_ADDRESS);
+		long serviceId = Utils.getServiceId(namenode);
+		long serviceSize = Utils.getServiceSize();
+		if (!Utils.verifyNamenode(namenode)) {
+			throw new Exception("Namenode address/port [" + namenode + "] has to be listed in crail.namenode.address " + Constants.NAMENODE_ADDRESS);
 		}
 		
-		CrailConstants.NAMENODE_ADDRESS = namenode + "?id=" + serviceId + "&size=" + serviceSize;
-		CrailConstants.printConf();
-		CrailConstants.verify();
+		Constants.NAMENODE_ADDRESS = namenode + "?id=" + serviceId + "&size=" + serviceSize;
+		Constants.printConf();
+		Constants.verify();
 		
-		RpcNameNodeService service = RpcNameNodeService.createInstance(CrailConstants.NAMENODE_RPC_SERVICE);
+		RpcNameNodeService service = RpcNameNodeService.createInstance(Constants.NAMENODE_RPC_SERVICE);
 
 		// TODO: Configurable logging
 		service = new LogDispatcher(service);
 
-		RpcBinding rpcBinding = RpcBinding.createInstance(CrailConstants.NAMENODE_RPC_TYPE);
-		RpcServer rpcServer = rpcBinding.launchServer(service);
+		RpcBinding rpcBinding = RpcBinding.createInstance(Constants.NAMENODE_RPC_TYPE);
+		NamenodeServer rpcServer = rpcBinding.launchServer(service);
 		rpcServer.init(conf, null);
 		rpcServer.printConf(logger);
 		rpcServer.run();

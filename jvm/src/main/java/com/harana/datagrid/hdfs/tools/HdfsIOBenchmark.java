@@ -20,7 +20,7 @@ public class HdfsIOBenchmark {
 	private int loop;
 	private Path path;
 	
-	public HdfsIOBenchmark(String[] args){
+	public HdfsIOBenchmark(String[] args) {
 		mode = args[0];
 		size = Integer.parseInt(args[1]);
 		loop = Integer.parseInt(args[2]);
@@ -28,25 +28,25 @@ public class HdfsIOBenchmark {
 	}
 	
 	public void run() throws Exception {
-		if (mode.equals("writeSequentialHeap")){
+		if (mode.equals("writeSequentialHeap")) {
 			writeSequentialHeap();
-		} else if (mode.equalsIgnoreCase("readSequentialDirect")){
+		} else if (mode.equalsIgnoreCase("readSequentialDirect")) {
 			readSequentialDirect();
-		} else if (mode.equals("readSequentialHeap")){
+		} else if (mode.equals("readSequentialHeap")) {
 			readSequentialHeap();
-		} else if (mode.equals("readRandomDirect")){
+		} else if (mode.equals("readRandomDirect")) {
 			readRandomDirect();
-		} else if (mode.equals("readRandomHeap")){
+		} else if (mode.equals("readRandomHeap")) {
 			readRandomHeap();
-		} else if (mode.equals("getFile")){
+		} else if (mode.equals("getFile")) {
 			getFile();
-		} else if (mode.equals("createFile")){
+		} else if (mode.equals("createFile")) {
 			createFile();
-		} else if (mode.equals("enumerateDir")){
+		} else if (mode.equals("enumerateDir")) {
 			enumerateDir();
-		} else if (mode.equals("keyGet")){
+		} else if (mode.equals("keyGet")) {
 			keyGet();
-		} else if (mode.equals("browseDir")){
+		} else if (mode.equals("browseDir")) {
 			browseDir();
 		} else {
 			usage();
@@ -54,7 +54,7 @@ public class HdfsIOBenchmark {
 		}
 	}
 
-	public static void usage(){
+	public static void usage() {
 		System.out.println("Usage:");
 		System.out.println("hdfsbench <readSequentialDirect|readSequentialHeap|readRandomDirect|readRandomHeap|writeSequentialHeap> <size> <iterations> <path>");
 	}	
@@ -121,7 +121,7 @@ public class HdfsIOBenchmark {
 				ops = ops + 1.0;
 			} else {
 				ops = ops + 1.0;
-				if (instream.getPos() == 0){
+				if (instream.getPos() == 0) {
 					break;
 				} else {
 					instream.seek(0);
@@ -168,7 +168,7 @@ public class HdfsIOBenchmark {
 				ops = ops + 1.0;
 			} else {
 				ops = ops + 1.0;
-				if (instream.getPos() == 0){
+				if (instream.getPos() == 0) {
 					break;
 				} else {
 					instream.seek(0);
@@ -300,15 +300,15 @@ public class HdfsIOBenchmark {
 		FileSystem fs = FileSystem.get(conf);
 		
 		Path paths[] = new Path[loop];
-		for (int j = 0; j < loop; j++){
+		for (int j = 0; j < loop; j++) {
 			paths[j] = new Path(path.toString() + "/" + j);
 		}
 		int repfactor = 4;
-		for (int k = 0; k < repfactor; k++){
+		for (int k = 0; k < repfactor; k++) {
 			long start = System.currentTimeMillis();
-			for (int i = 0; i < size; i++){
+			for (int i = 0; i < size; i++) {
 				//single operation == loop
-				for (int j = 0; j < loop; j++){
+				for (int j = 0; j < loop; j++) {
 					fs.listStatus(paths[j]);
 				}
 			}
@@ -327,10 +327,10 @@ public class HdfsIOBenchmark {
 		FileSystem fs = FileSystem.get(conf); 
 		
 		int repfactor = 4;
-		for (int k = 0; k < repfactor; k++){
+		for (int k = 0; k < repfactor; k++) {
 			LinkedBlockingQueue<Path> pathQueue = new LinkedBlockingQueue<>();
 			fs.mkdirs(path);
-			for (int i = 0; i < loop*size; i++){
+			for (int i = 0; i < loop*size; i++) {
 				String name = "" + i;
 				Path f = new Path(path, name);
 				pathQueue.add(f);
@@ -338,7 +338,7 @@ public class HdfsIOBenchmark {
 			
 			LinkedBlockingQueue<FSDataOutputStream> streamQueue = new LinkedBlockingQueue<>();
 			long start = System.currentTimeMillis();
-			for (int i = 0; i < size; i++){
+			for (int i = 0; i < size; i++) {
 				//single operation == loop
 				for (int j = 0; j < loop; j++) {
 					Path path = pathQueue.poll();
@@ -351,12 +351,12 @@ public class HdfsIOBenchmark {
 			System.out.println("execution time [ms] " + executionTime);
 			System.out.println("latency [us] " + latency);
 			
-			while(!streamQueue.isEmpty()){
+			while (!streamQueue.isEmpty()) {
 				FSDataOutputStream stream = streamQueue.poll();
 				stream.close();
 			}
 
-			if (k < repfactor - 1){
+			if (k < repfactor - 1) {
 				fs.delete(path, true);
 				Thread.sleep(2000);
 			}
@@ -395,14 +395,14 @@ public class HdfsIOBenchmark {
 		FileSystem fs = FileSystem.get(conf); 
 		
 		Path[] paths = new Path[loop];
-		for (int i = 0; i < loop; i++){
+		for (int i = 0; i < loop; i++) {
 			String child = "" + i;
 			paths[i] = new Path(path, child);
 			System.out.println("path " + paths[i]);
 		}
 		
 		byte[] outBuf = new byte[size];
-		for (Path p : paths){
+		for (Path p : paths) {
 			FSDataOutputStream outputStream = fs.create(p);
 			outputStream.write(outBuf);
 			outputStream.close();
@@ -410,11 +410,11 @@ public class HdfsIOBenchmark {
 		
 		long start = System.currentTimeMillis();
 		ByteBuffer inBuf = ByteBuffer.allocateDirect(size);
-		for (int i = 0; i < loop; i++){
+		for (int i = 0; i < loop; i++) {
 			Path p = paths[i];
 			FSDataInputStream inputStream = fs.open(p);
 			inBuf.clear();
-			while(inBuf.remaining() > 0){
+			while (inBuf.remaining() > 0) {
 				inputStream.read(inBuf);
 			}
 			inputStream.close();
@@ -432,7 +432,7 @@ public class HdfsIOBenchmark {
 		int off = 0;
 		int len = buf.length;
 		int ret = stream.read(buf, off, len);
-		while(ret > 0 && len - ret > 0){
+		while (ret > 0 && len - ret > 0) {
 			len -= ret;
 			off += ret;
 			ret = stream.read(buf, off, len);
@@ -459,7 +459,7 @@ public class HdfsIOBenchmark {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		if (args.length != 4){
+		if (args.length != 4) {
 			usage();
 			System.exit(0);
 		}

@@ -15,7 +15,7 @@ lazy val datagrid = project.in(file(".")).
 	aggregate(crossProject.js, crossProject.jvm).
 	settings(
 		publish := {},
-		publishLocal := {},
+		publishLocal := {}
 	)
 
 lazy val crossProject = haranaCrossProject("datagrid").in(file("."))
@@ -27,7 +27,7 @@ lazy val crossProject = haranaCrossProject("datagrid").in(file("."))
     name := "datagrid",
     version := "0.0.1",
     libraryDependencies ++= Seq(
-			"modules" %%% "modules" % "c",
+			"modules" %%% "modules" % "d",
 			"com.softwaremill.sttp.client" %%% "core" % "2.2.1",
 			"com.softwaremill.sttp.client" %%% "circe" % "2.2.1",
 			"com.softwaremill.quicklens" %%% "quicklens" % "1.6.0",
@@ -40,7 +40,7 @@ lazy val crossProject = haranaCrossProject("datagrid").in(file("."))
 		npmDependencies in Compile ++= Seq()
   ).jvmSettings(
 		libraryDependencies ++= Seq(
-			"datagrid-common"		%%   "datagrid-common"		% "0.0.3",
+			"datagrid-common"		%%   "datagrid-common"		% "0.0.9",
 			"org.junit.jupiter" % "junit-jupiter" % "5.6.2" % "test"
 		)
 	)
