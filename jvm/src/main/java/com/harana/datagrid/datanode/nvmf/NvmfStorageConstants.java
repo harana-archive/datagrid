@@ -1,10 +1,10 @@
 package com.harana.datagrid.datanode.nvmf;
 
+import com.harana.datagrid.conf.DatagridConfiguration;
+import com.harana.datagrid.conf.DatagridConstants;
 import com.harana.datagrid.datanode.nvmf.jvnmf.NamespaceIdentifier;
 import com.harana.datagrid.datanode.nvmf.jvnmf.NvmeQualifiedName;
 import org.apache.commons.cli.*;
-import com.harana.datagrid.conf.Configuration;
-import com.harana.datagrid.conf.Constants;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
@@ -47,11 +47,11 @@ public class NvmfStorageConstants {
 		return PREFIX + "." + key;
 	}
 
-	private static String get(Configuration conf, String key) {
+	private static String get(DatagridConfiguration conf, String key) {
 		return conf.get(fullKey(key));
 	}
 
-	public static void updateConstants(Configuration conf) throws UnknownHostException {
+	public static void updateConstants(DatagridConfiguration conf) throws UnknownHostException {
 		String arg = get(conf, IP_ADDR_KEY);
 		if (arg != null) {
 			IP_ADDR = InetAddress.getByName(arg);
@@ -89,9 +89,9 @@ public class NvmfStorageConstants {
 	}
 
 	public static void verify() {
-		if (ALLOCATION_SIZE % Constants.BLOCK_SIZE != 0) {
+		if (ALLOCATION_SIZE % DatagridConstants.BLOCK_SIZE != 0) {
 			throw new IllegalArgumentException(fullKey(ALLOCATION_SIZE_KEY) + " (" + ALLOCATION_SIZE +
-					") must be multiple of crail.blocksize (" + Constants.BLOCK_SIZE + ")");
+					") must be multiple of crail.blocksize (" + DatagridConstants.BLOCK_SIZE + ")");
 		}
 		if (QUEUE_SIZE < 0) {
 			throw new IllegalArgumentException("Queue size negative");
@@ -109,8 +109,8 @@ public class NvmfStorageConstants {
 		logger.info(fullKey(QUEUE_SIZE_KEY) + " " + QUEUE_SIZE);
 	}
 
-	public static void parseCmdLine(Configuration crailConfiguration, String[] args) throws IOException {
-		NvmfStorageConstants.updateConstants(crailConfiguration);
+	public static void parseCmdLine(DatagridConfiguration conf, String[] args) throws IOException {
+		NvmfStorageConstants.updateConstants(conf);
 
 		if (args != null) {
 			Options options = new Options();

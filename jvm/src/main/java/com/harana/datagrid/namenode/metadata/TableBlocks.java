@@ -1,11 +1,11 @@
-package com.harana.datagrid.namenode.storage;
+package com.harana.datagrid.namenode.metadata;
 
-import com.harana.datagrid.DataType;
-import com.harana.datagrid.conf.Constants;
+import com.harana.datagrid.DatagridDataType;
+import com.harana.datagrid.conf.DatagridConstants;
 
 public class TableBlocks extends DirectoryBlocks {
 
-	TableBlocks(long fd, int fileComponent, DataType type, int storageClass, int locationClass, boolean enumerable) {
+	TableBlocks(long fd, int fileComponent, DatagridDataType type, int storageClass, int locationClass, boolean enumerable) {
 		super(fd, fileComponent, type, storageClass, locationClass, enumerable);
 	}
 
@@ -17,7 +17,7 @@ public class TableBlocks extends DirectoryBlocks {
 		
 		AbstractNode oldNode = children.put(child.getComponent(), child);
 		if (child.isEnumerable()) {
-			child.setDirOffset(dirOffsetCounter.getAndAdd(Constants.DIRECTORY_RECORD));
+			child.setDirOffset(dirOffsetCounter.getAndAdd(DatagridConstants.DIRECTORY_RECORD));
 		}		
 		return oldNode;
 	}

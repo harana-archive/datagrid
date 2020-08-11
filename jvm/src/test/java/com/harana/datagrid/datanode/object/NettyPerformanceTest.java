@@ -123,7 +123,7 @@ public class NettyPerformanceTest {
 					BlockInfo bi = new BlockInfo(new DatanodeInfo(),
 							addr + id * ObjectStoreConstants.ALLOCATION_SIZE,
 							addr + id * ObjectStoreConstants.ALLOCATION_SIZE,
-							(int) Constants.BLOCK_SIZE,
+							(int) DatagridConstants.BLOCK_SIZE,
 							123456);
 					rpcFuture = client.writeBlock(bi, "objkey" + id);
 					ObjectStoreRPC.WriteBlock writeBlock = (ObjectStoreRPC.WriteBlock) rpcFuture.get();
@@ -142,7 +142,7 @@ public class NettyPerformanceTest {
 					BlockInfo bi = new BlockInfo(new DatanodeInfo(),
 							addr + id * ObjectStoreConstants.ALLOCATION_SIZE,
 							addr + id * ObjectStoreConstants.ALLOCATION_SIZE,
-							(int) Constants.BLOCK_SIZE,
+							(int) DatagridConstants.BLOCK_SIZE,
 							123456);
 					rpcFuture = client.translateBlock(bi);
 					translateBlock = (ObjectStoreRPC.TranslateBlock) rpcFuture.get();

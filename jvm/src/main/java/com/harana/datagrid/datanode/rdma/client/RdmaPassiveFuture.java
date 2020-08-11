@@ -1,14 +1,14 @@
 package com.harana.datagrid.datanode.rdma.client;
 
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
-import java.util.concurrent.atomic.AtomicInteger;
-
 import com.harana.datagrid.client.datanode.DatanodeFuture;
 import com.harana.datagrid.client.datanode.DatanodeResult;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class RdmaPassiveFuture implements DatanodeFuture, DatanodeResult {
 	private static final Logger logger = LogManager.getLogger();

@@ -9,6 +9,9 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import com.harana.datagrid.client.namenode.NamenodeClient;
 import com.harana.datagrid.client.namenode.NamenodeConnection;
 import com.harana.datagrid.client.namenode.NamenodeDispatcher;
+import com.harana.datagrid.conf.DatagridConfigurable;
+import com.harana.datagrid.conf.DatagridConfiguration;
+import com.harana.datagrid.conf.DatagridConstants;
 import com.harana.datagrid.utils.Utils;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -17,25 +20,22 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
-import com.harana.datagrid.StorageClass;
-import com.harana.datagrid.conf.Configurable;
-import com.harana.datagrid.conf.Configuration;
-import com.harana.datagrid.conf.Constants;
+import com.harana.datagrid.DatagridStorageClass;
 import com.harana.datagrid.metadata.DatanodeStatistics;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public interface DatanodeServer extends Configurable, Runnable {
+public interface DatanodeServer extends DatagridConfigurable, Runnable {
 	DatanodeResource allocateResource() throws Exception;
 	boolean isAlive();
 	InetSocketAddress getAddress();
 	
 	static void main(String[] args) throws Exception {
 		Logger logger = LogManager.getLogger();
-		Configuration conf = Configuration.createConfigurationFromFile();
-		Constants.updateConstants(conf);
-		Constants.printConf();
-		Constants.verify();
+		DatagridConfiguration conf = DatagridConfiguration.createConfigurationFromFile();
+		DatagridConstants.updateConstants(conf);
+		DatagridConstants.printConf();
+		DatagridConstants.verify();
 		
 		int splitIndex = 0;
 		for (String param : args) {
@@ -46,7 +46,7 @@ public interface DatanodeServer extends Configurable, Runnable {
 		}
 		
 		//default values
-		StringTokenizer tokenizer = new StringTokenizer(Constants.STORAGE_TYPES, ",");
+		StringTokenizer tokenizer = new StringTokenizer(DatagridConstants.STORAGE_TYPES, ",");
 		if (!tokenizer.hasMoreTokens()) {
 			throw new Exception("No storage types defined!");
 		}
@@ -108,7 +108,7 @@ public interface DatanodeServer extends Configurable, Runnable {
 		Thread thread = new Thread(server);
 		thread.start();
 		
-		NamenodeClient namenodeClient = NamenodeClient.createInstance(Constants.NAMENODE_RPC_TYPE);
+		NamenodeClient namenodeClient = NamenodeClient.createInstance(DatagridConstants.NAMENODE_RPC_TYPE);
 		namenodeClient.init(conf, args);
 		namenodeClient.printConf(logger);
 		
@@ -126,7 +126,7 @@ public interface DatanodeServer extends Configurable, Runnable {
 		logger.info("connected to namenode(s) " + NamenodeConnection.toString());
 		
 		
-		DatanodeStorage datanodeStorage = new DatanodeStorage(storageType, StorageClass.get(storageClass), server.getAddress(), NamenodeConnection);
+		DatanodeStorage datanodeStorage = new DatanodeStorage(storageType, DatagridStorageClass.get(storageClass), server.getAddress(), NamenodeConnection);
 		
 		HashMap<Long, Long> blockCount = new HashMap<>();
 		long sumCount = 0;
@@ -168,7 +168,7 @@ public interface DatanodeServer extends Configurable, Runnable {
 			sumCount += diffCount;			
 			
 			logger.info("datanode statistics, freeBlocks " + sumCount);
-			Thread.sleep(Constants.STORAGE_KEEPALIVE*1000);
+			Thread.sleep(DatagridConstants.STORAGE_KEEPALIVE*1000);
 		}			
 	}
 }

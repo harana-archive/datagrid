@@ -1,13 +1,12 @@
 package com.harana.datagrid.datanode.rdma.client;
 
+import com.harana.datagrid.client.datanode.DatanodeFuture;
+import com.harana.datagrid.client.datanode.DatanodeResult;
+import sun.misc.Unsafe;
+
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-
-import com.harana.datagrid.client.datanode.DatanodeFuture;
-import com.harana.datagrid.client.datanode.DatanodeResult;
-
-import sun.misc.Unsafe;
 
 public class RdmaLocalFuture implements DatanodeFuture, DatanodeResult {
 	private Unsafe unsafe;

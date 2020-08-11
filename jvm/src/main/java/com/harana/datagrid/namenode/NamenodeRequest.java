@@ -3,7 +3,7 @@ package com.harana.datagrid.namenode;
 import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 
-import com.harana.datagrid.DataType;
+import com.harana.datagrid.DatagridDataType;
 import com.harana.datagrid.metadata.BlockInfo;
 import com.harana.datagrid.metadata.DatanodeInfo;
 import com.harana.datagrid.metadata.FileInfo;
@@ -15,20 +15,20 @@ public class NamenodeRequest {
 		public static int CSIZE = FileName.CSIZE + 16;
 		
 		protected FileName filename;
-		protected DataType type;
+		protected DatagridDataType type;
 		protected int storageClass;
 		protected int locationClass;
 		protected boolean enumerable;
 		
 		public CreateFile() {
 			this.filename = new FileName();
-			this.type = DataType.DATAFILE;
+			this.type = DatagridDataType.DATAFILE;
 			this.storageClass = 0;
 			this.locationClass = 0;
 			this.enumerable = true;
 		}
 		
-		public CreateFile(FileName filename, DataType type, int storageClass, int locationClass, boolean enumerable) {
+		public CreateFile(FileName filename, DatagridDataType type, int storageClass, int locationClass, boolean enumerable) {
 			this.filename = filename;
 			this.type = type;
 			this.storageClass = storageClass;
@@ -40,7 +40,7 @@ public class NamenodeRequest {
 			return filename;
 		}
 
-		public DataType getFileType() {
+		public DatagridDataType getFileType() {
 			return type;
 		}
 		
@@ -76,7 +76,7 @@ public class NamenodeRequest {
 		public void update(ByteBuffer buffer) {
 			filename.update(buffer);
 			int _type = buffer.getInt();
-			type = DataType.parse(_type);
+			type = DatagridDataType.parse(_type);
 			storageClass = buffer.getInt();
 			locationClass = buffer.getInt();
 			int _enumerable = buffer.getInt();

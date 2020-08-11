@@ -1,4 +1,4 @@
-package com.harana.datagrid.namenode.storage;
+package com.harana.datagrid.namenode.metadata;
 
 public interface Sequencer {
 	long getNextId();

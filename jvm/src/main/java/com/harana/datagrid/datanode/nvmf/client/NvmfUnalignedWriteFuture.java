@@ -1,6 +1,6 @@
 package com.harana.datagrid.datanode.nvmf.client;
 
-import com.harana.datagrid.Buffer;
+import com.harana.datagrid.DatagridBuffer;
 import com.harana.datagrid.client.datanode.DatanodeFuture;
 import com.harana.datagrid.client.datanode.DatanodeResult;
 import com.harana.datagrid.metadata.BlockInfo;
@@ -39,7 +39,7 @@ public class NvmfUnalignedWriteFuture implements DatanodeFuture {
 		return (int)(address % endpoint.getLBADataSize());
 	}
 
-	NvmfUnalignedWriteFuture(NvmfDatanodeEndpoint endpoint, Buffer buffer, BlockInfo blockInfo, long remoteOffset) throws Exception {
+	NvmfUnalignedWriteFuture(NvmfDatanodeEndpoint endpoint, DatagridBuffer buffer, BlockInfo blockInfo, long remoteOffset) throws Exception {
 		this.endpoint = endpoint;
 		this.written = buffer.remaining();
 		/* assume blockInfo.getAddr() is sector aligned */
@@ -63,7 +63,7 @@ public class NvmfUnalignedWriteFuture implements DatanodeFuture {
 				/* Wait for previous end operation to finish */
 				beginBuffer.getFuture().get();
 			}
-			Buffer stagingBuffer = beginBuffer.getBuffer();
+			DatagridBuffer stagingBuffer = beginBuffer.getBuffer();
 			stagingBuffer.position(offsetInSector(remoteOffset));
 			stagingBuffer.getByteBuffer().put(buffer.getByteBuffer());
 			buffer.limit(oldLimit);
@@ -87,7 +87,7 @@ public class NvmfUnalignedWriteFuture implements DatanodeFuture {
 		/* end */
 		if (buffer.remaining() > 0) {
 			endBuffer = endpoint.getStagingBufferCache().get(blockInfo.getAddr() + nextRemoteOffset);
-			Buffer stagingBuffer = endBuffer.getBuffer();
+			DatagridBuffer stagingBuffer = endBuffer.getBuffer();
 			stagingBuffer.position(0);
 			stagingBuffer.getByteBuffer().put(buffer.getByteBuffer());
 			stagingBuffer.position(0);

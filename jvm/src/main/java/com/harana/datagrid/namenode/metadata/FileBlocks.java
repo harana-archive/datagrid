@@ -1,12 +1,12 @@
-package com.harana.datagrid.namenode.storage;
+package com.harana.datagrid.namenode.metadata;
 
 import java.util.ArrayList;
 import java.util.Queue;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-import com.harana.datagrid.DataType;
-import com.harana.datagrid.conf.Constants;
+import com.harana.datagrid.DatagridDataType;
+import com.harana.datagrid.conf.DatagridConstants;
 
 public class FileBlocks extends AbstractNode {
 	private final ArrayList<NameNodeBlockInfo> blocks;
@@ -14,9 +14,9 @@ public class FileBlocks extends AbstractNode {
 	private final Lock readLock;
 	private final Lock writeLock;
 	
-	public FileBlocks(long fd, int fileComponent, DataType type, int storageClass, int locationClass, boolean enumerable) {
+	public FileBlocks(long fd, int fileComponent, DatagridDataType type, int storageClass, int locationClass, boolean enumerable) {
 		super(fd, fileComponent, type, storageClass, locationClass, enumerable);
-		this.blocks = new ArrayList<>(Constants.NAMENODE_FILEBLOCKS);
+		this.blocks = new ArrayList<>(DatagridConstants.NAMENODE_FILEBLOCKS);
 		this.lock = new ReentrantReadWriteLock();
 		this.readLock = lock.readLock();
 		this.writeLock = lock.writeLock();

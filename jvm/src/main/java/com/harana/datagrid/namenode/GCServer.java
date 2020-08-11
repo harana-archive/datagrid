@@ -1,5 +1,6 @@
-package com.harana.datagrid.namenode.storage;
+package com.harana.datagrid.namenode;
 
+import com.harana.datagrid.namenode.metadata.AbstractNode;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -8,10 +9,10 @@ import java.util.concurrent.DelayQueue;
 public class GCServer implements Runnable {
 	private static final Logger logger = LogManager.getLogger();
 	
-	private NameNodeService rpcService;
+	private NamenodeService rpcService;
 	private DelayQueue<AbstractNode> deleteQueue;
 	
-	public GCServer(NameNodeService service, DelayQueue<AbstractNode> deleteQueue) {
+	public GCServer(NamenodeService service, DelayQueue<AbstractNode> deleteQueue) {
 		this.rpcService = service;
 		this.deleteQueue = deleteQueue;
 	}

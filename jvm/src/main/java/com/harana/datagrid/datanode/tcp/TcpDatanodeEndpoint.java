@@ -3,7 +3,7 @@ package com.harana.datagrid.datanode.tcp;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 
-import com.harana.datagrid.Buffer;
+import com.harana.datagrid.DatagridBuffer;
 import com.harana.datagrid.metadata.BlockInfo;
 import com.harana.datagrid.client.datanode.DatanodeEndpoint;
 import com.harana.datagrid.client.datanode.DatanodeFuture;
@@ -35,7 +35,7 @@ public class TcpDatanodeEndpoint implements DatanodeEndpoint {
 	}
 
 	@Override
-	public DatanodeFuture read(Buffer buffer, BlockInfo block, long offset) throws IOException {
+	public DatanodeFuture read(DatagridBuffer buffer, BlockInfo block, long offset) throws IOException {
 		logger.info("TCP read, buffer " + buffer.remaining() + ", block " + block.getLkey() + "/" + block.getAddr() + "/" + block.getLength() + ", offset " + offset);
 		TcpDatanodeRequest.ReadRequest readReq = new TcpDatanodeRequest.ReadRequest(block.getLkey(), block.getAddr() + offset, buffer.remaining());
 		TcpDatanodeResponse.ReadResponse readResp = new TcpDatanodeResponse.ReadResponse(buffer.getByteBuffer());
@@ -48,7 +48,7 @@ public class TcpDatanodeEndpoint implements DatanodeEndpoint {
 	}
 
 	@Override
-	public DatanodeFuture write(Buffer buffer, BlockInfo block, long offset) throws IOException {
+	public DatanodeFuture write(DatagridBuffer buffer, BlockInfo block, long offset) throws IOException {
 		logger.info("TCP write, buffer " + buffer.remaining() + ", block " +  block.getLkey() + "/" + block.getAddr() + "/" + block.getLength() + ", offset " + offset);
 		TcpDatanodeRequest.WriteRequest writeReq = new TcpDatanodeRequest.WriteRequest(block.getLkey(), block.getAddr() + offset, buffer.remaining(), buffer.getByteBuffer());
 		TcpDatanodeResponse.WriteResponse writeResp = new TcpDatanodeResponse.WriteResponse();

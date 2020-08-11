@@ -1,7 +1,7 @@
-package com.harana.datagrid.namenode.storage;
+package com.harana.datagrid.namenode.metadata;
 
 import com.harana.datagrid.client.namenode.NamenodeErrors;
-import com.harana.datagrid.conf.Constants;
+import com.harana.datagrid.conf.DatagridConstants;
 import com.harana.datagrid.metadata.BlockInfo;
 import com.harana.datagrid.metadata.DatanodeInfo;
 import com.harana.datagrid.utils.AtomicIntegerModulo;
@@ -9,7 +9,6 @@ import com.harana.datagrid.utils.Utils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ThreadLocalRandom;
@@ -28,7 +27,7 @@ public class StorageClass {
         this.storageClass = storageClass;
         this.membership = new ConcurrentHashMap<>();
         this.affinitySets = new ConcurrentHashMap<>();
-        if (Constants.NAMENODE_BLOCKSELECTION.equalsIgnoreCase("roundrobin")) {
+        if (DatagridConstants.NAMENODE_BLOCKSELECTION.equalsIgnoreCase("roundrobin")) {
             this.blockSelection = new RoundRobinBlockSelection();
         } else {
             this.blockSelection = new RandomBlockSelection();
@@ -56,7 +55,7 @@ public class StorageClass {
         }
     }
 
-    short addBlock(NameNodeBlockInfo block) throws UnknownHostException {
+    short addBlock(NameNodeBlockInfo block) {
         long dnAddress = block.getDnInfo().key();
         DatanodeBlocks current = membership.get(dnAddress);
         if (current == null) {
@@ -69,7 +68,7 @@ public class StorageClass {
         return NamenodeErrors.ERR_OK;
     }
 
-    NameNodeBlockInfo getBlock(int affinity) throws InterruptedException {
+    NameNodeBlockInfo getBlock(int affinity) {
         NameNodeBlockInfo block;
         if (affinity == 0) {
             block = anySet.get();
@@ -110,7 +109,7 @@ public class StorageClass {
         anySet.add(dataNode);
     }
 
-    private NameNodeBlockInfo _getAffinityBlock(int affinity) throws InterruptedException {
+    private NameNodeBlockInfo _getAffinityBlock(int affinity) {
         NameNodeBlockInfo block = null;
         DataNodeArray affinitySet = affinitySets.get(affinity);
         if (affinitySet != null) {
@@ -124,7 +123,7 @@ public class StorageClass {
     }
 
     private static class RoundRobinBlockSelection implements BlockSelection {
-        private AtomicIntegerModulo counter;
+        private final AtomicIntegerModulo counter;
 
         public RoundRobinBlockSelection() {
             logger.info("round robin block selection");
@@ -137,7 +136,7 @@ public class StorageClass {
         }
     }
 
-    private class RandomBlockSelection implements BlockSelection {
+    private static class RandomBlockSelection implements BlockSelection {
         public RandomBlockSelection() {
             logger.info("random block selection");
         }
@@ -148,13 +147,13 @@ public class StorageClass {
         }
     }
 
-    private class DataNodeArray {
-        private ArrayList<DatanodeBlocks> arrayList;
-        private ReentrantReadWriteLock lock;
-        private BlockSelection blockSelection;
+    private static class DataNodeArray {
+        private final ArrayList<DatanodeBlocks> arrayList;
+        private final ReentrantReadWriteLock lock;
+        private final BlockSelection blockSelection;
 
         public DataNodeArray(BlockSelection blockSelection) {
-            this.arrayList = new ArrayList<DatanodeBlocks>();
+            this.arrayList = new ArrayList<>();
             this.lock = new ReentrantReadWriteLock();
             this.blockSelection = blockSelection;
         }

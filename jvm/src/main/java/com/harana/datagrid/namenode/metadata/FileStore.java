@@ -1,10 +1,10 @@
-package com.harana.datagrid.namenode.storage;
+package com.harana.datagrid.namenode.metadata;
 
 import java.io.IOException;
 
-import com.harana.datagrid.DataType;
+import com.harana.datagrid.DatagridDataType;
 import com.harana.datagrid.client.namenode.NamenodeErrors;
-import com.harana.datagrid.conf.Constants;
+import com.harana.datagrid.conf.DatagridConstants;
 import com.harana.datagrid.metadata.FileName;
 import com.harana.datagrid.namenode.NamenodeState;
 
@@ -14,19 +14,19 @@ public class FileStore {
 	
 	public FileStore(Sequencer sequencer) throws IOException { 
 		this.sequencer = sequencer;
-		this.root = createNode(new FileName("/").getFileComponent(), DataType.DIRECTORY, Constants.STORAGE_ROOTCLASS, 0, false);
+		this.root = createNode(new FileName("/").getFileComponent(), DatagridDataType.DIRECTORY, DatagridConstants.STORAGE_ROOTCLASS, 0, false);
 	}
 	
-	public AbstractNode createNode(int fileComponent, DataType type, int storageClass, int locationClass, boolean enumerable) throws IOException {
-		if (type == DataType.DIRECTORY) {
+	public AbstractNode createNode(int fileComponent, DatagridDataType type, int storageClass, int locationClass, boolean enumerable) throws IOException {
+		if (type == DatagridDataType.DIRECTORY) {
 			return new DirectoryBlocks(sequencer.getNextId(), fileComponent, type, storageClass, locationClass, enumerable);
-		} else if (type == DataType.MULTIFILE) {
+		} else if (type == DatagridDataType.MULTIFILE) {
 			return new MultiFileBlocks(sequencer.getNextId(), fileComponent, type, storageClass, locationClass, enumerable);
-		} else if (type == DataType.TABLE) {
+		} else if (type == DatagridDataType.TABLE) {
 			return new TableBlocks(sequencer.getNextId(), fileComponent, type, storageClass, locationClass, enumerable);
-		} else if (type == DataType.KEYVALUE) {
+		} else if (type == DatagridDataType.KEYVALUE) {
 			return new KeyValueBlocks(sequencer.getNextId(), fileComponent, type, storageClass, locationClass, enumerable);
-		} else if (type == DataType.DATAFILE) {
+		} else if (type == DatagridDataType.DATAFILE) {
 			return new FileBlocks(sequencer.getNextId(), fileComponent, type, storageClass, locationClass, enumerable);
 		} else {
 			throw new IOException("File type unkown: " + type);
@@ -50,7 +50,7 @@ public class FileStore {
 	}
 	
 	private AbstractNode retrieveFileInternal(FileName filename, int length, NamenodeState error) throws Exception {
-		if (length >= Constants.DIRECTORY_DEPTH) {
+		if (length >= DatagridConstants.DIRECTORY_DEPTH) {
 			error.setError(NamenodeErrors.ERR_FILE_COMPONENTS_EXCEEDED);
 			return null;
 		}

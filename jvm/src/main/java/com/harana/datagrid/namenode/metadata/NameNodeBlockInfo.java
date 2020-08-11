@@ -1,4 +1,4 @@
-package com.harana.datagrid.namenode.storage;
+package com.harana.datagrid.namenode.metadata;
 
 import com.harana.datagrid.metadata.BlockInfo;
 import com.harana.datagrid.metadata.DatanodeInfo;

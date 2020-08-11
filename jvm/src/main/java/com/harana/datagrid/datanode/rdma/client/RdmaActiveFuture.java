@@ -1,11 +1,11 @@
 package com.harana.datagrid.datanode.rdma.client;
 
+import com.harana.datagrid.client.datanode.DatanodeFuture;
+import com.harana.datagrid.client.datanode.DatanodeResult;
+
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
-
-import com.harana.datagrid.client.datanode.DatanodeFuture;
-import com.harana.datagrid.client.datanode.DatanodeResult;
 
 public class RdmaActiveFuture implements DatanodeFuture, DatanodeResult {
 	protected static int RPC_PENDING = 0;

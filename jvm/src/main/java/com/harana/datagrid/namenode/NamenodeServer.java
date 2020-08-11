@@ -1,7 +1,7 @@
 package com.harana.datagrid.namenode;
 
-import com.harana.datagrid.conf.Configurable;
+import com.harana.datagrid.conf.DatagridConfigurable;
 
-public interface NamenodeServer extends Configurable {
+public interface NamenodeServer extends DatagridConfigurable {
 	void run();
 }

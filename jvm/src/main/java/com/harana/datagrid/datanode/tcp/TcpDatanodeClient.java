@@ -2,11 +2,11 @@ package com.harana.datagrid.datanode.tcp;
 
 import java.io.IOException;
 
-import com.harana.datagrid.BufferCache;
-import com.harana.datagrid.Statistics;
+import com.harana.datagrid.DatagridBufferCache;
+import com.harana.datagrid.DatagridStatistics;
 import com.harana.datagrid.client.datanode.DatanodeClient;
-import com.harana.datagrid.conf.Configuration;
-import com.harana.datagrid.conf.Constants;
+import com.harana.datagrid.conf.DatagridConfiguration;
+import com.harana.datagrid.conf.DatagridConstants;
 import com.harana.datagrid.metadata.DatanodeInfo;
 import com.harana.datagrid.rpc.narpc.NaRPCClientGroup;
 import com.harana.datagrid.rpc.narpc.NaRPCEndpoint;
@@ -18,9 +18,9 @@ public class TcpDatanodeClient implements DatanodeClient {
 	private NaRPCClientGroup<TcpDatanodeRequest, TcpDatanodeResponse> clientGroup;
 
 	@Override
-	public void init(Statistics statistics, BufferCache bufferCache, Configuration conf, String[] args) {
+	public void init(DatagridStatistics statistics, DatagridBufferCache bufferCache, DatagridConfiguration conf, String[] args) {
 		TcpDatanodeConstants.updateConstants(conf);
-		this.clientGroup = new NaRPCClientGroup<>(TcpDatanodeConstants.STORAGE_TCP_QUEUE_DEPTH, (int) Constants.BLOCK_SIZE * 2, false);
+		this.clientGroup = new NaRPCClientGroup<>(TcpDatanodeConstants.STORAGE_TCP_QUEUE_DEPTH, (int) DatagridConstants.BLOCK_SIZE * 2, false);
 	}
 
 	@Override

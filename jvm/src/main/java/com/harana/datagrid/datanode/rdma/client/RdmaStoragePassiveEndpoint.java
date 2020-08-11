@@ -1,5 +1,21 @@
 package com.harana.datagrid.datanode.rdma.client;
 
+import com.harana.datagrid.DatagridBuffer;
+import com.harana.datagrid.client.datanode.DatanodeEndpoint;
+import com.harana.datagrid.client.datanode.DatanodeFuture;
+import com.harana.datagrid.conf.DatagridConstants;
+import com.harana.datagrid.datanode.rdma.MrCache;
+import com.harana.datagrid.datanode.rdma.MrCache.DeviceMrCache;
+import com.harana.datagrid.datanode.rdma.RdmaConstants;
+import com.harana.datagrid.metadata.BlockInfo;
+import com.harana.datagrid.rdma.RdmaEndpoint;
+import com.harana.datagrid.rdma.verbs.*;
+import com.harana.datagrid.rdma.verbs.SVCPostSend.SendWRMod;
+import com.harana.datagrid.rdma.verbs.SVCPostSend.SgeMod;
+import com.harana.datagrid.utils.AtomicIntegerModulo;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.concurrent.ConcurrentHashMap;
@@ -7,22 +23,6 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.ReentrantLock;
-
-import com.harana.datagrid.Buffer;
-import com.harana.datagrid.conf.Constants;
-import com.harana.datagrid.metadata.BlockInfo;
-import com.harana.datagrid.client.datanode.DatanodeEndpoint;
-import com.harana.datagrid.client.datanode.DatanodeFuture;
-import com.harana.datagrid.datanode.rdma.MrCache;
-import com.harana.datagrid.datanode.rdma.RdmaConstants;
-import com.harana.datagrid.datanode.rdma.MrCache.DeviceMrCache;
-import com.harana.datagrid.utils.AtomicIntegerModulo;
-import com.harana.datagrid.rdma.verbs.*;
-import com.harana.datagrid.rdma.verbs.SVCPostSend.SendWRMod;
-import com.harana.datagrid.rdma.verbs.SVCPostSend.SgeMod;
-import com.harana.datagrid.rdma.*;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 public class RdmaStoragePassiveEndpoint extends RdmaEndpoint implements DatanodeEndpoint {
 	private static final Logger logger = LogManager.getLogger();
@@ -117,8 +117,8 @@ public class RdmaStoragePassiveEndpoint extends RdmaEndpoint implements Datanode
 		return this.postSend(wrList_send);
 	}
 	
-	public DatanodeFuture write(Buffer buffer, BlockInfo remoteMr, long remoteOffset) throws IOException, InterruptedException {
-		if (buffer.remaining() > Constants.BLOCK_SIZE) {
+	public DatanodeFuture write(DatagridBuffer buffer, BlockInfo remoteMr, long remoteOffset) throws IOException, InterruptedException {
+		if (buffer.remaining() > DatagridConstants.BLOCK_SIZE) {
 			throw new IOException("write size too large " + buffer.remaining());
 		}
 		if (buffer.remaining() <= 0) {
@@ -184,8 +184,8 @@ public class RdmaStoragePassiveEndpoint extends RdmaEndpoint implements Datanode
 		return future;
 	}
 
-	public DatanodeFuture read(Buffer buffer, BlockInfo remoteMr, long remoteOffset) throws IOException, InterruptedException {
-		if (buffer.remaining() > Constants.BLOCK_SIZE) {
+	public DatanodeFuture read(DatagridBuffer buffer, BlockInfo remoteMr, long remoteOffset) throws IOException, InterruptedException {
+		if (buffer.remaining() > DatagridConstants.BLOCK_SIZE) {
 			throw new IOException("read size too large");
 		}	
 		if (buffer.remaining() <= 0) {

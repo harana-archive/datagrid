@@ -1,11 +1,10 @@
 package com.harana.datagrid.datanode.nvmf;
 
-import com.harana.datagrid.BufferCache;
-import com.harana.datagrid.Statistics;
+import com.harana.datagrid.DatagridBufferCache;
+import com.harana.datagrid.DatagridStatistics;
 import com.harana.datagrid.client.datanode.DatanodeClient;
-import com.harana.datagrid.conf.Configuration;
+import com.harana.datagrid.conf.DatagridConfiguration;
 import com.harana.datagrid.metadata.DatanodeInfo;
-import com.harana.datagrid.datanode.DatanodeStorage;
 import com.harana.datagrid.client.datanode.DatanodeEndpoint;
 import com.harana.datagrid.datanode.nvmf.client.NvmfDatanodeEndpoint;
 import com.harana.datagrid.datanode.nvmf.jvnmf.Nvme;
@@ -23,8 +22,8 @@ public class NvmfDatanodeClient implements DatanodeClient {
 	private volatile boolean closing;
 	private final Thread keepAliveThread;
 	private final List<NvmfDatanodeEndpoint> endpoints;
-	private Statistics statistics;
-	private BufferCache bufferCache;
+	private DatagridStatistics statistics;
+	private DatagridBufferCache bufferCache;
 
 	public NvmfDatanodeClient() {
 		this.initialized = false;
@@ -54,7 +53,7 @@ public class NvmfDatanodeClient implements DatanodeClient {
 		return keepAliveThread.isAlive();
 	}
 
-	public void init(Statistics statistics, BufferCache bufferCache, Configuration crailConfiguration, String[] args) throws IOException {
+	public void init(DatagridStatistics statistics, DatagridBufferCache bufferCache, DatagridConfiguration conf, String[] args) throws IOException {
 		if (initialized) {
 			throw new IOException("NvmfStorageTier already initialized");
 		}
@@ -62,7 +61,7 @@ public class NvmfDatanodeClient implements DatanodeClient {
 		this.statistics = statistics;
 		this.bufferCache = bufferCache;
 		logger.info("Initialize Nvmf storage client");
-		NvmfStorageConstants.parseCmdLine(crailConfiguration, args);
+		NvmfStorageConstants.parseCmdLine(conf, args);
 		keepAliveThread.start();
 	}
 

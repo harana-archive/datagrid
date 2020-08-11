@@ -1,10 +1,10 @@
-package com.harana.datagrid.namenode.storage;
+package com.harana.datagrid.namenode.metadata;
 
 import java.util.Queue;
 import java.util.concurrent.Delayed;
 import java.util.concurrent.TimeUnit;
 
-import com.harana.datagrid.DataType;
+import com.harana.datagrid.DatagridDataType;
 import com.harana.datagrid.metadata.FileInfo;
 
 public abstract class AbstractNode extends FileInfo implements Delayed {
@@ -33,7 +33,7 @@ public abstract class AbstractNode extends FileInfo implements Delayed {
 	// clear all the blocks (used by GC)
 	public abstract void freeBlocks(BlockStore blockStore) throws Exception;	
 	
-	public AbstractNode(long fd, int fileComponent, DataType type, int storageClass, int locationAffinity, boolean enumerable) {
+	public AbstractNode(long fd, int fileComponent, DatagridDataType type, int storageClass, int locationAffinity, boolean enumerable) {
 		super(fd, type, enumerable);
 		this.fileComponent = fileComponent;
 		this.storageClass = storageClass;
@@ -42,7 +42,7 @@ public abstract class AbstractNode extends FileInfo implements Delayed {
 		this.setModificationTime(System.currentTimeMillis());
 	}
 	
-	void rename(int newFileComponent) {
+	public void rename(int newFileComponent) {
 		this.fileComponent = newFileComponent;
 	}	
 

@@ -1,4 +1,4 @@
-package com.harana.datagrid.namenode.storage;
+package com.harana.datagrid.namenode.metadata;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;

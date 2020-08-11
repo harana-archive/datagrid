@@ -1,4 +1,4 @@
-package com.harana.datagrid.namenode.storage;
+package com.harana.datagrid.namenode;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -9,13 +9,13 @@ import java.nio.channels.FileChannel;
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.harana.datagrid.client.namenode.NamenodeErrors;
-import com.harana.datagrid.conf.Constants;
-import com.harana.datagrid.namenode.RpcNameNodeService;
-import com.harana.datagrid.namenode.NamenodeProtocol;
+import com.harana.datagrid.conf.DatagridConstants;
+import com.harana.datagrid.namenode.metadata.LogRecord;
+import com.harana.datagrid.namenode.metadata.LogResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class LogService {
+public class NamenodeLogService {
 	public static final Logger logger = LogManager.getLogger();
 	
 	private final ConcurrentHashMap<Long, Long> tokens;
@@ -24,12 +24,12 @@ public class LogService {
 	private final ByteBuffer header;
 	private final ByteBuffer payload;
 	
-	public LogService() throws IOException {
-		File file = new File(Constants.NAMENODE_LOG);
+	public NamenodeLogService() throws IOException {
+		File file = new File(DatagridConstants.NAMENODE_LOG);
 		if (!file.exists()) {
 			file.createNewFile();
 		}
-		outStream = new FileOutputStream(Constants.NAMENODE_LOG, true);
+		outStream = new FileOutputStream(DatagridConstants.NAMENODE_LOG, true);
 		outChannel = outStream.getChannel();
 		header = ByteBuffer.allocate(4);
 		payload = ByteBuffer.allocate(512);
@@ -51,13 +51,13 @@ public class LogService {
 		}
 	}
 	
-	public void replay(RpcNameNodeService service) throws Exception {
-		File file = new File(Constants.NAMENODE_LOG);
+	public void replay(NamenodeService service) throws Exception {
+		File file = new File(DatagridConstants.NAMENODE_LOG);
 		if (!file.exists()) {
 			return;
 		}		
 		
-		FileInputStream inStream = new FileInputStream(Constants.NAMENODE_LOG);
+		FileInputStream inStream = new FileInputStream(DatagridConstants.NAMENODE_LOG);
 		FileChannel inChannel = inStream.getChannel();
 		LogRecord record = new LogRecord();
 		LogResponse response = new LogResponse();
@@ -89,7 +89,7 @@ public class LogService {
 		outStream.close();
 	}
 	
-	private void processServerEvent(RpcNameNodeService service, LogRecord record, LogResponse response) {
+	private void processServerEvent(NamenodeService service, LogRecord record, LogResponse response) {
 		short error = NamenodeErrors.ERR_OK;
 		try {
 			switch(record.getCmd()) {

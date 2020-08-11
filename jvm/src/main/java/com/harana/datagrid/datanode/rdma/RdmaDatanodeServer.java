@@ -7,7 +7,7 @@ import java.nio.channels.FileChannel;
 import java.nio.channels.FileChannel.MapMode;
 import java.util.concurrent.ConcurrentHashMap;
 
-import com.harana.datagrid.conf.Configuration;
+import com.harana.datagrid.conf.DatagridConfiguration;
 import com.harana.datagrid.datanode.DatanodeResource;
 import com.harana.datagrid.datanode.DatanodeServer;
 import com.harana.datagrid.datanode.DatanodeUtils;
@@ -37,7 +37,7 @@ public class RdmaDatanodeServer implements Runnable, DatanodeServer {
 		this.allEndpoints = new ConcurrentHashMap<>();
 	}
 	
-	public void init(Configuration conf, String[] args) throws Exception {
+	public void init(DatagridConfiguration conf, String[] args) throws Exception {
 		RdmaConstants.init(conf, args);
 
 		this.serverAddr = DatanodeUtils.getDataNodeAddress(RdmaConstants.STORAGE_RDMA_INTERFACE, RdmaConstants.STORAGE_RDMA_PORT);

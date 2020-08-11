@@ -4,7 +4,7 @@ import java.net.InetSocketAddress;
 
 import com.harana.datagrid.client.namenode.NamenodeClient;
 import com.harana.datagrid.client.namenode.NamenodeConnection;
-import com.harana.datagrid.conf.Configuration;
+	import com.harana.datagrid.conf.DatagridConfiguration;
 import com.harana.datagrid.rpc.darpc.DaRPCClientEndpoint;
 import com.harana.datagrid.rpc.darpc.DaRPCClientGroup;
 import org.apache.logging.log4j.LogManager;
@@ -21,7 +21,7 @@ public class RdmaNamenodeClient implements NamenodeClient {
 		this.namenodeClientGroup = null;
 	}
 	
-	public void init(Configuration conf, String[] args) throws Exception{
+	public void init(DatagridConfiguration conf, String[] args) throws Exception{
 		RdmaConstants.updateConstants(conf);
 		RdmaConstants.verify();
 		this.namenodeProtocol = new RdmaNamenodeProtocol();

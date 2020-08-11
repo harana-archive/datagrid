@@ -2,7 +2,7 @@ package com.harana.datagrid.datanode.tcp;
 
 import java.nio.ByteBuffer;
 
-import com.harana.datagrid.conf.Constants;
+import com.harana.datagrid.conf.DatagridConstants;
 import com.harana.datagrid.rpc.narpc.NaRPCMessage;
 
 public class TcpDatanodeRequest implements NaRPCMessage {
@@ -60,7 +60,7 @@ public class TcpDatanodeRequest implements NaRPCMessage {
 	
 	public static class WriteRequest {
 		public static final int FIELDS_SIZE = Integer.BYTES + Long.BYTES + Integer.BYTES;
-		public static final int CSIZE = FIELDS_SIZE + Integer.BYTES + (int) Constants.BLOCK_SIZE;
+		public static final int CSIZE = FIELDS_SIZE + Integer.BYTES + (int) DatagridConstants.BLOCK_SIZE;
 		private final ByteBuffer data;
 
 		private int key;
@@ -68,7 +68,7 @@ public class TcpDatanodeRequest implements NaRPCMessage {
 		private int length;
 
 		public WriteRequest() {
-			data = ByteBuffer.allocateDirect((int) Constants.BLOCK_SIZE);
+			data = ByteBuffer.allocateDirect((int) DatagridConstants.BLOCK_SIZE);
 		}
 		
 		public WriteRequest(int key, long address, int length, ByteBuffer buffer) {

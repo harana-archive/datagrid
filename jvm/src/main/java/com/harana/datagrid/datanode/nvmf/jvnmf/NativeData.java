@@ -13,7 +13,7 @@ abstract class NativeData<B extends NativeBuffer> {
 
   NativeData(B buffer, int size) {
     if (buffer.remaining() < size) {
-      throw new IllegalArgumentException("Buffer size to small");
+      throw new IllegalArgumentException("DatagridBuffer size to small");
     }
     buffer.limit(buffer.position() + size);
     this.buffer = (B) buffer.slice();

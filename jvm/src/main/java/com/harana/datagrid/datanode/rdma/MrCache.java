@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
-import com.harana.datagrid.Buffer;
+import com.harana.datagrid.DatagridBuffer;
 
 import com.harana.datagrid.rdma.verbs.IbvMr;
 import com.harana.datagrid.rdma.verbs.IbvPd;
@@ -61,7 +61,7 @@ public class MrCache {
 			this.device = new ConcurrentHashMap<>();
 		}
 		
-		public IbvMr get(Buffer buffer) throws IOException{
+		public IbvMr get(DatagridBuffer buffer) throws IOException{
 			return device.get(buffer.address());
 		}
 		

@@ -1,12 +1,12 @@
 package com.harana.datagrid.datanode.nvmf.client;
 
+import com.harana.datagrid.DatagridStatistics;
 import com.harana.datagrid.client.datanode.DatanodeEndpoint;
 import com.harana.datagrid.client.datanode.DatanodeFuture;
+import com.harana.datagrid.conf.DatagridConstants;
 import com.harana.datagrid.datanode.nvmf.jvnmf.*;
-import com.harana.datagrid.Buffer;
-import com.harana.datagrid.BufferCache;
-import com.harana.datagrid.Statistics;
-import com.harana.datagrid.conf.Constants;
+import com.harana.datagrid.DatagridBuffer;
+import com.harana.datagrid.DatagridBufferCache;
 import com.harana.datagrid.metadata.BlockInfo;
 import com.harana.datagrid.metadata.DatanodeInfo;
 import com.harana.datagrid.datanode.nvmf.NvmfStorageConstants;
@@ -31,14 +31,14 @@ public class NvmfDatanodeEndpoint implements DatanodeEndpoint {
 	private final long namespaceCapacity;
 	private final NvmfRegisteredBufferCache registeredBufferCache;
 	private final NvmfStagingBufferCache stagingBufferCache;
-	private final Statistics statistics;
+	private final DatagridStatistics statistics;
 
 	private final Queue<NvmWriteCommand> writeCommands;
 	private final Queue<NvmReadCommand> readCommands;
 
 	private final AtomicInteger outstandingOperations;
 
-	public NvmfDatanodeEndpoint(Nvme nvme, DatanodeInfo info, Statistics statistics, BufferCache bufferCache) throws IOException {
+	public NvmfDatanodeEndpoint(Nvme nvme, DatanodeInfo info, DatagridStatistics statistics, DatagridBufferCache bufferCache) throws IOException {
 		InetSocketAddress inetSocketAddress = new InetSocketAddress(
 				InetAddress.getByAddress(info.getIpAddress()), info.getPort());
 		// XXX FIXME: nsid from datanodeinfo
@@ -53,8 +53,8 @@ public class NvmfDatanodeEndpoint implements DatanodeEndpoint {
 			throw new IOException(e);
 		}
 		IdentifyControllerData identifyControllerData = controller.getIdentifyControllerData();
-		if (Constants.SLICE_SIZE > identifyControllerData.getMaximumDataTransferSize().toInt()) {
-			throw new IllegalArgumentException(Constants.SLICE_SIZE_KEY + " > max transfer size (" + identifyControllerData.getMaximumDataTransferSize() + ")");
+		if (DatagridConstants.SLICE_SIZE > identifyControllerData.getMaximumDataTransferSize().toInt()) {
+			throw new IllegalArgumentException(DatagridConstants.SLICE_SIZE_KEY + " > max transfer size (" + identifyControllerData.getMaximumDataTransferSize() + ")");
 		}
 		List<Namespace> namespaces = controller.getActiveNamespaces();
 		//TODO: poll nsid in datanodeinfo
@@ -67,13 +67,12 @@ public class NvmfDatanodeEndpoint implements DatanodeEndpoint {
 			}
 		}
 		if (namespace == null) {
-			throw new IllegalArgumentException("No namespace with id " + namespaceIdentifier +
-					" at controller " + transportId.toString());
+			throw new IllegalArgumentException("No namespace with id " + namespaceIdentifier + " at controller " + transportId.toString());
 		}
 		IdentifyNamespaceData identifyNamespaceData = namespace.getIdentifyNamespaceData();
 		lbaDataSize = identifyNamespaceData.getFormattedLbaSize().getLbaDataSize().toInt();
-		if (Constants.SLICE_SIZE % lbaDataSize != 0) {
-			throw new IllegalArgumentException(Constants.SLICE_SIZE_KEY + " is not a multiple of LBA data size (" + lbaDataSize + ")");
+		if (DatagridConstants.SLICE_SIZE % lbaDataSize != 0) {
+			throw new IllegalArgumentException(DatagridConstants.SLICE_SIZE_KEY + " is not a multiple of LBA data size (" + lbaDataSize + ")");
 		}
 		namespaceCapacity = identifyNamespaceData.getNamespaceCapacity() * lbaDataSize;
 		this.queuePair = controller.createIoQueuePair(NvmfStorageConstants.QUEUE_SIZE, 0, 0, SubmissionQueueEntry.SIZE);
@@ -130,14 +129,14 @@ public class NvmfDatanodeEndpoint implements DatanodeEndpoint {
 		return (a + b - 1) / b;
 	}
 
-	private int getNumLogicalBlocks(Buffer buffer) {
+	private int getNumLogicalBlocks(DatagridBuffer buffer) {
 		return divCeil(buffer.remaining(), getLBADataSize());
 	}
 
-	DatanodeFuture Op(Operation op, Buffer buffer, BlockInfo blockInfo, long remoteOffset) throws IOException {
+	DatanodeFuture Op(Operation op, DatagridBuffer buffer, BlockInfo blockInfo, long remoteOffset) throws IOException {
 		assert blockInfo.getAddr() + remoteOffset + buffer.remaining() <= getNamespaceCapacity();
 		assert remoteOffset >= 0;
-		assert buffer.remaining() <= Constants.BLOCK_SIZE;
+		assert buffer.remaining() <= DatagridConstants.BLOCK_SIZE;
 
 		long startingAddress = blockInfo.getAddr() + remoteOffset;
 		if (startingAddress % getLBADataSize() != 0 ||
@@ -194,11 +193,11 @@ public class NvmfDatanodeEndpoint implements DatanodeEndpoint {
 		return future;
 	}
 
-	public DatanodeFuture write(Buffer buffer, BlockInfo blockInfo, long remoteOffset) throws InterruptedException, IOException {
+	public DatanodeFuture write(DatagridBuffer buffer, BlockInfo blockInfo, long remoteOffset) throws IOException {
 		return Op(Operation.WRITE, buffer, blockInfo, remoteOffset);
 	}
 
-	public DatanodeFuture read(Buffer buffer, BlockInfo blockInfo, long remoteOffset) throws InterruptedException, IOException {
+	public DatanodeFuture read(DatagridBuffer buffer, BlockInfo blockInfo, long remoteOffset) throws IOException {
 		return Op(Operation.READ, buffer, blockInfo, remoteOffset);
 	}
 
@@ -206,10 +205,9 @@ public class NvmfDatanodeEndpoint implements DatanodeEndpoint {
 		queuePair.poll();
 	}
 
-	public void close() throws IOException, InterruptedException {
+	public void close() throws IOException {
 		registeredBufferCache.free();
 		controller.free();
-
 	}
 
 	public boolean isLocal() {
@@ -219,5 +217,4 @@ public class NvmfDatanodeEndpoint implements DatanodeEndpoint {
 	NvmfStagingBufferCache getStagingBufferCache() {
 		return stagingBufferCache;
 	}
-
 }

@@ -5,6 +5,7 @@ import org.apache.hadoop.fs.ByteBufferReadable;
 import org.apache.hadoop.fs.FSDataInputStream;
 import org.apache.hadoop.fs.FileSystem.Statistics;
 import org.apache.hadoop.fs.PositionedReadable;
+import org.apache.hadoop.fs.Seekable;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -19,7 +20,7 @@ public class HDFSInputStream extends FSDataInputStream {
 	private Statistics stats;
 	
 	public HDFSInputStream(DatagridBufferedInputStream stream, Statistics stats) {
-		super(new Seekable(stream, stats));
+		super(new DatagridSeekable(stream, stats));
 		logger.info("new HDFS stream");
 		this.inputStream = stream;
 	}
@@ -84,11 +85,11 @@ public class HDFSInputStream extends FSDataInputStream {
 		}
 	}
 	
-	public static class Seekable extends InputStream implements Seekable, PositionedReadable, ByteBufferReadable {
+	public static class DatagridSeekable extends InputStream implements Seekable, PositionedReadable, ByteBufferReadable {
 		private final DatagridBufferedInputStream inputStream;
-		private Statistics stats;
+		private final Statistics stats;
 		
-		public Seekable(DatagridBufferedInputStream inputStream, Statistics stats) {
+		public DatagridSeekable(DatagridBufferedInputStream inputStream, Statistics stats) {
 			this.inputStream = inputStream;
 			this.stats = stats;
 		}

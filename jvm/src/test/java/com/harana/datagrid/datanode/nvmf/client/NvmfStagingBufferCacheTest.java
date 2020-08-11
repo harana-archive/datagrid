@@ -1,7 +1,7 @@
 package com.harana.datagrid.datanode.nvmf.client;
 
-import com.harana.datagrid.Buffer;
-import com.harana.datagrid.BufferCache;
+import com.harana.datagrid.DatagridBuffer;
+import com.harana.datagrid.DatagridBufferCache;
 import com.harana.datagrid.conf.Configuration;
 import com.harana.datagrid.conf.Constants;
 import com.harana.datagrid.memory.MappedBufferCache;
@@ -21,8 +21,8 @@ public class NvmfStagingBufferCacheTest {
 		Constants.updateConstants(Configuration.createConfigurationFromFile());
 	}
 
-	private static BufferCache bufferCache;
-	static BufferCache getBufferCache() throws IOException {
+	private static DatagridBufferCache bufferCache;
+	static DatagridBufferCache getBufferCache() throws IOException {
 		if (bufferCache == null) {
 			bufferCache = new MappedBufferCache();
 		}
@@ -56,7 +56,7 @@ public class NvmfStagingBufferCacheTest {
 	@Test
 	public void recycleBuffers() throws Exception {
 		NvmfStagingBufferCache.BufferCacheEntry[] bufferCacheEntry = new NvmfStagingBufferCache.BufferCacheEntry[5];
-		Set<Buffer> buffers = new HashSet<>();
+		Set<DatagridBuffer> buffers = new HashSet<>();
 		NvmfStagingBufferCache bufferCache = new NvmfStagingBufferCache(getBufferCache(), bufferCacheEntry.length, 512);
 		for (int i = 0; i < bufferCacheEntry.length; i++) {
 			bufferCacheEntry[i] = bufferCache.get(i);

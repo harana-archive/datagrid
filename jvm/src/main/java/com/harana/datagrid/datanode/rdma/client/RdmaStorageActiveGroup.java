@@ -1,16 +1,16 @@
 package com.harana.datagrid.datanode.rdma.client;
 
-import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.util.HashMap;
-
-import com.harana.datagrid.metadata.DatanodeInfo;
 import com.harana.datagrid.client.datanode.DatanodeEndpoint;
 import com.harana.datagrid.datanode.rdma.MrCache;
 import com.harana.datagrid.datanode.rdma.RdmaConstants;
 import com.harana.datagrid.datanode.rdma.RdmaDatanodeGroup;
-import com.harana.datagrid.rdma.*;
+import com.harana.datagrid.metadata.DatanodeInfo;
+import com.harana.datagrid.rdma.RdmaActiveEndpointGroup;
 import com.harana.datagrid.utils.Utils;
+
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.util.HashMap;
 
 public class RdmaStorageActiveGroup extends RdmaActiveEndpointGroup<RdmaStorageActiveEndpoint> implements RdmaDatanodeGroup {
 	private final HashMap<InetSocketAddress, RdmaStorageLocalEndpoint> localCache;

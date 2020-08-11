@@ -1,7 +1,7 @@
 package com.harana.datagrid.datanode.object;
 
 import io.netty.buffer.ByteBuf;
-import com.harana.datagrid.Buffer;
+import com.harana.datagrid.DatagridBuffer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -27,7 +27,7 @@ public class ObjectStoreUtils {
 		} catch (IOException e) {
 			// this could happen if the block size is reduced without deleting existing objects
 			logger.error("Got exception while trying to write into ByteBuffer " + dst + ": ", e);
-			logger.error("Buffer start = {}, pos = {}, capacity = {}, written bytes = {}, read bytes = {}", startPos, dst.position(), dst.capacity(), writtenBytes, readBytes);
+			logger.error("DatagridBuffer start = {}, pos = {}, capacity = {}, written bytes = {}, read bytes = {}", startPos, dst.position(), dst.capacity(), writtenBytes, readBytes);
 			logger.error("Read truncated to {} bytes", writtenBytes);
 			throw e;
 		}
@@ -36,7 +36,7 @@ public class ObjectStoreUtils {
 		return writtenBytes;
 	}
 
-	public static int readStreamIntoDirectByteBuffer(InputStream src, byte stagingBuffer[], Buffer dst) throws IOException {
+	public static int readStreamIntoDirectByteBuffer(InputStream src, byte stagingBuffer[], DatagridBuffer dst) throws IOException {
 		int readBytes, writtenBytes = 0;
 		int startPos = dst.position();
 		long t1 = 0, t2;
@@ -49,7 +49,7 @@ public class ObjectStoreUtils {
 			} catch (java.nio.BufferOverflowException e) {
 				// this could happen if the block size is reduced without deleting existing objects
 				logger.error("Got exception while trying to write into ByteBuffer " + dst + ": ", e);
-				logger.error("Buffer start = {}, pos = {}, capacity = {}, written bytes = {}, read bytes = {}",
+				logger.error("DatagridBuffer start = {}, pos = {}, capacity = {}, written bytes = {}, read bytes = {}",
 						startPos, dst.position(), dst.capacity(), writtenBytes, readBytes);
 				logger.error("Read truncated to {} bytes", writtenBytes);
 				break;
@@ -65,7 +65,7 @@ public class ObjectStoreUtils {
 		return writtenBytes;
 	}
 
-	public static void putZeroes(Buffer buf, int count) {
+	public static void putZeroes(DatagridBuffer buf, int count) {
 		while (count > 0) {
 			buf.putInt(0);
 			count -= 4;
@@ -113,16 +113,15 @@ public class ObjectStoreUtils {
 	}
 
 	public static class ByteBufferBackedInputStream extends InputStream {
-		private final Buffer buf;
+		private final DatagridBuffer buf;
 		//private int mark;
 		//private int readlimit;
 
-		public ByteBufferBackedInputStream(Buffer buf) {
+		public ByteBufferBackedInputStream(DatagridBuffer buf) {
 			logger.debug("New buffer");
 			this.buf = buf;
 		}
 
-		@Override
 		public int read() {
 			byte[] tmppbuf = new byte[1];
 			if (!buf.hasRemaining()) {
@@ -132,7 +131,6 @@ public class ObjectStoreUtils {
 			return (ret <= 0) ? -1 : (tmppbuf[0] & 0xff);
 		}
 
-		@Override
 		public int read(byte[] bytes) {
 			if (!buf.hasRemaining()) {
 				return -1;
@@ -143,7 +141,6 @@ public class ObjectStoreUtils {
 			return finalPos - initialPos;
 		}
 
-		@Override
 		public int read(byte[] bytes, int off, int len) {
 			if (!buf.hasRemaining()) {
 				return -1;
@@ -153,32 +150,27 @@ public class ObjectStoreUtils {
 			return len;
 		}
 
-		@Override
 		public long skip(long n) {
 			int step = Math.min((int) n, buf.remaining());
 			this.buf.position(buf.position() + step);
 			return step;
 		}
 
-		@Override
 		public int available() {
 			return buf.remaining();
 		}
 
-		@Override
 		public void mark(int readlimit) {
 			//this.mark = this.buf.position();
 			//this.readlimit = readlimit;
 			//buf.mark();
 		}
 
-		@Override
 		public void reset() {
 			//buf.position(this.mark);
 			//buf.reset();
 		}
 
-		@Override
 		public boolean markSupported() {
 			return true;
 		}

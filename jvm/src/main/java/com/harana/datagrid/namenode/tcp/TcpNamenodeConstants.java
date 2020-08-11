@@ -1,6 +1,6 @@
 package com.harana.datagrid.namenode.tcp;
 
-import com.harana.datagrid.conf.Configuration;
+import com.harana.datagrid.conf.DatagridConfiguration;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -16,7 +16,7 @@ public class TcpNamenodeConstants {
 	public static final String NAMENODE_TCP_CORES_KEY = "crail.namenode.tcp.cores";
 	public static int NAMENODE_TCP_CORES = 1;	
 	
-	public static void updateConstants(Configuration conf) {
+	public static void updateConstants(DatagridConfiguration conf) {
 		if (conf.get(NAMENODE_TCP_QUEUEDEPTH_KEY) != null) {
 			NAMENODE_TCP_QUEUEDEPTH = Integer.parseInt(conf.get(NAMENODE_TCP_QUEUEDEPTH_KEY));
 		}

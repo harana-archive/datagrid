@@ -2,7 +2,7 @@ package com.harana.datagrid.namenode.tcp;
 
 import com.harana.datagrid.client.namenode.NamenodeErrors;
 
-import com.harana.datagrid.namenode.RpcNameNodeService;
+import com.harana.datagrid.namenode.NamenodeService;
 import com.harana.datagrid.namenode.NamenodeProtocol;
 import com.harana.datagrid.rpc.narpc.NaRPCServerChannel;
 import com.harana.datagrid.rpc.narpc.NaRPCService;
@@ -11,9 +11,9 @@ import org.apache.logging.log4j.Logger;
 
 public class TcpNamenodeDispatcher implements NaRPCService<TcpNamenodeRequest, TcpNamenodeResponse> {
 	public static final Logger logger = LogManager.getLogger();
-	private final RpcNameNodeService service;
+	private final NamenodeService service;
 	
-	public TcpNamenodeDispatcher(RpcNameNodeService service) {
+	public TcpNamenodeDispatcher(NamenodeService service) {
 		this.service = service;
 	}
 

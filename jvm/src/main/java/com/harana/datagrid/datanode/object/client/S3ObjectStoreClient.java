@@ -11,10 +11,10 @@ import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.*;
+import com.harana.datagrid.conf.DatagridConstants;
 import com.harana.datagrid.datanode.object.ObjectStoreConstants;
 import com.harana.datagrid.datanode.object.ObjectStoreUtils;
-import com.harana.datagrid.Buffer;
-import com.harana.datagrid.conf.Constants;
+import com.harana.datagrid.DatagridBuffer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -124,7 +124,7 @@ public class S3ObjectStoreClient {
 		AmazonS3 connection = connections[endpointID];
 		GetObjectRequest objReq = new GetObjectRequest(ObjectStoreConstants.S3_BUCKET_NAME, key);
 		logger.debug("TID {} : Getting object {}, start offset = {}, end offset = {} ", Thread.currentThread().getId(), key, startOffset, endOffset);
-		if (startOffset > 0 || endOffset != Constants.BLOCK_SIZE) {
+		if (startOffset > 0 || endOffset != DatagridConstants.BLOCK_SIZE) {
 			// NOTE: start and end offset are inclusive in the S3 API.
 			objReq.withRange(startOffset, endOffset - 1);
 		}
@@ -140,7 +140,7 @@ public class S3ObjectStoreClient {
 		return object.getObjectContent();
 	}
 
-	public void putObject(String key, Buffer buffer) throws AmazonClientException {
+	public void putObject(String key, DatagridBuffer buffer) throws AmazonClientException {
 		int length = buffer.remaining();
 		InputStream input = new ObjectStoreUtils.ByteBufferBackedInputStream(buffer);
 		ObjectMetadata md = getObjectMetadata();

@@ -1,4 +1,4 @@
-package com.harana.datagrid.namenode.storage;
+package com.harana.datagrid.namenode;
 
 import java.io.IOException;
 import java.net.URI;
@@ -7,23 +7,19 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.DelayQueue;
 import java.util.concurrent.atomic.AtomicLong;
 
-import com.harana.datagrid.DataType;
+import com.harana.datagrid.DatagridDataType;
 import com.harana.datagrid.client.namenode.NamenodeErrors;
-import com.harana.datagrid.conf.Constants;
+import com.harana.datagrid.conf.DatagridConstants;
 import com.harana.datagrid.metadata.BlockInfo;
 import com.harana.datagrid.metadata.DatanodeInfo;
 import com.harana.datagrid.metadata.FileInfo;
 import com.harana.datagrid.metadata.FileName;
-import com.harana.datagrid.namenode.RpcNameNodeService;
-import com.harana.datagrid.namenode.NamenodeState;
-import com.harana.datagrid.namenode.NamenodeProtocol;
-import com.harana.datagrid.namenode.NamenodeRequest;
-import com.harana.datagrid.namenode.NamenodeResponse;
+import com.harana.datagrid.namenode.metadata.*;
 import com.harana.datagrid.utils.Utils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class NameNodeService implements RpcNameNodeService, Sequencer {
+public class NamenodeService implements Sequencer {
 	private static final Logger logger = LogManager.getLogger();
 	
 	private final long serviceId;
@@ -34,8 +30,8 @@ public class NameNodeService implements RpcNameNodeService, Sequencer {
 	private final FileStore fileTree;
 	private final ConcurrentHashMap<Long, AbstractNode> fileTable;
 
-	public NameNodeService() throws IOException {
-		URI uri = URI.create(Constants.NAMENODE_ADDRESS);
+	public NamenodeService() throws IOException {
+		URI uri = URI.create(DatagridConstants.NAMENODE_ADDRESS);
 		String query = uri.getRawQuery();
 		StringTokenizer tokenizer = new StringTokenizer(query, "&");
 		this.serviceId = Long.parseLong(tokenizer.nextToken().substring(3));
@@ -57,8 +53,7 @@ public class NameNodeService implements RpcNameNodeService, Sequencer {
 		return sequenceId.getAndAdd(serviceSize);
 	}
 
-	@Override
-	public short createFile(NamenodeRequest.CreateFile request, NamenodeResponse.CreateFile response, NamenodeState errorState) throws Exception {
+public short createFile(NamenodeRequest.CreateFile request, NamenodeResponse.CreateFile response, NamenodeState errorState) throws Exception {
 		//check protocol
 		if (!NamenodeProtocol.verifyProtocol(NamenodeProtocol.CMD_CREATE_FILE, request, response)) {
 			return NamenodeErrors.ERR_PROTOCOL_MISMATCH;
@@ -66,7 +61,7 @@ public class NameNodeService implements RpcNameNodeService, Sequencer {
 
 		//get params
 		FileName fileHash = request.getFileName();
-		DataType type = request.getFileType();
+		DatagridDataType type = request.getFileType();
 		boolean writeable = !type.isDirectory();
 		int storageClass = request.getStorageClass();
 		int locationClass = request.getLocationClass();
@@ -133,7 +128,7 @@ public class NameNodeService implements RpcNameNodeService, Sequencer {
 					}
 				}
 			}
-			parentInfo.incCapacity(Constants.DIRECTORY_RECORD);
+			parentInfo.incCapacity(DatagridConstants.DIRECTORY_RECORD);
 		}
 		
 		if (writeable) {
@@ -147,14 +142,13 @@ public class NameNodeService implements RpcNameNodeService, Sequencer {
 		response.setFileBlock(fileBlock);
 		response.setDirBlock(parentBlock);
 		
-		if (Constants.DEBUG) {
+		if (DatagridConstants.DEBUG) {
 			logger.info("createFile: fd " + fileInfo.getFd() + ", parent " + parentInfo.getFd() + ", writeable " + writeable + ", token " + fileInfo.getToken() + ", capacity " + fileInfo.getCapacity() + ", dirOffset " + fileInfo.getDirOffset());
 		}	
 		
 		return NamenodeErrors.ERR_OK;
 	}	
 	
-	@Override
 	public short getFile(NamenodeRequest.GetFile request, NamenodeResponse.GetFile response, NamenodeState errorState) throws Exception {
 		//check protocol
 		if (!NamenodeProtocol.verifyProtocol(NamenodeProtocol.CMD_GET_FILE, request, response)) {
@@ -190,14 +184,13 @@ public class NameNodeService implements RpcNameNodeService, Sequencer {
 			response.shipToken();
 		}
 		
-		if (Constants.DEBUG) {
+		if (DatagridConstants.DEBUG) {
 			logger.info("getFile: fd " + fileInfo.getFd() + ", isDir " + fileInfo.getType().isDirectory() + ", token " + fileInfo.getToken() + ", capacity " + fileInfo.getCapacity());
 		}			
 		
 		return NamenodeErrors.ERR_OK;
 	}
 	
-	@Override
 	public short setFile(NamenodeRequest.SetFile request, NamenodeResponse.Void response, NamenodeState errorState) throws Exception {
 		//check protocol
 		if (!NamenodeProtocol.verifyProtocol(NamenodeProtocol.CMD_SET_FILE, request, response)) {
@@ -221,14 +214,13 @@ public class NameNodeService implements RpcNameNodeService, Sequencer {
 			storedFile.resetToken();
 		}
 		
-		if (Constants.DEBUG) {
+		if (DatagridConstants.DEBUG) {
 			logger.info("setFile: " + fileInfo.toString() + ", close " + close);
 		}
 		
 		return NamenodeErrors.ERR_OK;
 	}
 
-	@Override
 	public short removeFile(NamenodeRequest.RemoveFile request, NamenodeResponse.DeleteFile response, NamenodeState errorState) throws Exception {
 		//check protocol
 		if (!NamenodeProtocol.verifyProtocol(NamenodeProtocol.CMD_REMOVE_FILE, request, response)) {
@@ -265,14 +257,13 @@ public class NameNodeService implements RpcNameNodeService, Sequencer {
 		
 		appendToDeleteQueue(fileInfo);
 		
-		if (Constants.DEBUG) {
+		if (DatagridConstants.DEBUG) {
 			logger.info("removeFile: filename, fd " + fileInfo.getFd());
 		}	
 		
 		return NamenodeErrors.ERR_OK;
 	}	
 	
-	@Override
 	public short renameFile(NamenodeRequest.RenameFile request, NamenodeResponse.RenameFile response, NamenodeState errorState) throws Exception {
 		//check protocol
 		if (!NamenodeProtocol.verifyProtocol(NamenodeProtocol.CMD_RENAME_FILE, request, response)) {
@@ -360,26 +351,25 @@ public class NameNodeService implements RpcNameNodeService, Sequencer {
 				}
 			} 
 		}
-		dstParent.incCapacity(Constants.DIRECTORY_RECORD);
+		dstParent.incCapacity(DatagridConstants.DIRECTORY_RECORD);
 		//end
 		
 		response.setDstParent(dstParent);
 		response.setDstFile(dstFile);
 		response.setDstBlock(dstBlock);
 		
-		if (response.getDstParent().getCapacity() < response.getDstFile().getDirOffset() + Constants.DIRECTORY_RECORD) {
+		if (response.getDstParent().getCapacity() < response.getDstFile().getDirOffset() + DatagridConstants.DIRECTORY_RECORD) {
 			logger.info("rename: parent capacity does not match dst file offset, capacity " + response.getDstParent().getCapacity() + ", offset " + response.getDstFile().getDirOffset() + ", capacity " + dstParent.getCapacity() + ", offset " + dstFile.getDirOffset());
 		}
 		
-		if (Constants.DEBUG) {
+		if (DatagridConstants.DEBUG) {
 			logger.info("renameFile: src-parent " + srcParent.getFd() + ", src-file " + srcFile.getFd() + ", dst-parent " + dstParent.getFd() + ", dst-fd " + dstFile.getFd());
 		}	
 		
 		return NamenodeErrors.ERR_OK;
 	}	
 	
-	@Override
-	public short getDataNode(NamenodeRequest.GetDataNode request, NamenodeResponse.GetDataNode response, NamenodeState errorState) throws Exception {
+public short getDataNode(NamenodeRequest.GetDataNode request, NamenodeResponse.GetDataNode response, NamenodeState errorState) throws Exception {
 		//check protocol
 		if (!NamenodeProtocol.verifyProtocol(NamenodeProtocol.CMD_GET_DATANODE, request, response)) {
 			return NamenodeErrors.ERR_PROTOCOL_MISMATCH;
@@ -401,8 +391,7 @@ public class NameNodeService implements RpcNameNodeService, Sequencer {
 		return NamenodeErrors.ERR_OK;
 	}	
 
-	@Override
-	public short setBlock(NamenodeRequest.SetBlock request, NamenodeResponse.Void response, NamenodeState errorState) throws Exception {
+public short setBlock(NamenodeRequest.SetBlock request, NamenodeResponse.Void response, NamenodeState errorState) throws Exception {
 		//check protocol
 		if (!NamenodeProtocol.verifyProtocol(NamenodeProtocol.CMD_SET_BLOCK, request, response)) {
 			return NamenodeErrors.ERR_PROTOCOL_MISMATCH;
@@ -417,12 +406,12 @@ public class NameNodeService implements RpcNameNodeService, Sequencer {
 			error = blockStore.updateRegion(region);
 		} else {
 			//rpc
-			int realBlocks = (int) (((long) region.getLength()) / Constants.BLOCK_SIZE) ;
+			int realBlocks = (int) (((long) region.getLength()) / DatagridConstants.BLOCK_SIZE) ;
 			long offset = 0;
 			for (int i = 0; i < realBlocks; i++) {
-				NameNodeBlockInfo nnBlock = new NameNodeBlockInfo(region, offset, (int) Constants.BLOCK_SIZE);
+				NameNodeBlockInfo nnBlock = new NameNodeBlockInfo(region, offset, (int) DatagridConstants.BLOCK_SIZE);
 				error = blockStore.addBlock(nnBlock);
-				offset += Constants.BLOCK_SIZE;
+				offset += DatagridConstants.BLOCK_SIZE;
 				
 				if (error != NamenodeErrors.ERR_OK) {
 					break;
@@ -433,8 +422,7 @@ public class NameNodeService implements RpcNameNodeService, Sequencer {
 		return error;
 	}
 
-	@Override
-	public short getBlock(NamenodeRequest.GetBlock request, NamenodeResponse.GetBlock response, NamenodeState errorState) throws Exception {
+public short getBlock(NamenodeRequest.GetBlock request, NamenodeResponse.GetBlock response, NamenodeState errorState) throws Exception {
 		//check protocol
 		if (!NamenodeProtocol.verifyProtocol(NamenodeProtocol.CMD_GET_BLOCK, request, response)) {
 			return NamenodeErrors.ERR_PROTOCOL_MISMATCH;
@@ -486,8 +474,7 @@ public class NameNodeService implements RpcNameNodeService, Sequencer {
 		return NamenodeErrors.ERR_OK;
 	}
 	
-	@Override
-	public short getLocation(NamenodeRequest.GetLocation request, NamenodeResponse.GetLocation response, NamenodeState errorState) throws Exception {
+public short getLocation(NamenodeRequest.GetLocation request, NamenodeResponse.GetLocation response, NamenodeState errorState) throws Exception {
 		//check protocol
 		if (!NamenodeProtocol.verifyProtocol(NamenodeProtocol.CMD_GET_LOCATION, request, response)) {
 			return NamenodeErrors.ERR_PROTOCOL_MISMATCH;
@@ -527,8 +514,7 @@ public class NameNodeService implements RpcNameNodeService, Sequencer {
 
 	//------------------------
 	
-	@Override
-	public short dump(NamenodeRequest.DumpNameNode request, NamenodeResponse.Void response, NamenodeState errorState) throws Exception {
+public short dump(NamenodeRequest.DumpNameNode request, NamenodeResponse.Void response, NamenodeState errorState) throws Exception {
 		if (!NamenodeProtocol.verifyProtocol(NamenodeProtocol.CMD_DUMP_NAMENODE, request, response)) {
 			return NamenodeErrors.ERR_PROTOCOL_MISMATCH;
 		}			
@@ -541,8 +527,7 @@ public class NameNodeService implements RpcNameNodeService, Sequencer {
 		return NamenodeErrors.ERR_OK;
 	}	
 	
-	@Override
-	public short ping(NamenodeRequest.PingNameNode request, NamenodeResponse.PingNameNode response, NamenodeState errorState) throws Exception {
+public short ping(NamenodeRequest.PingNameNode request, NamenodeResponse.PingNameNode response, NamenodeState errorState) throws Exception {
 		if (!NamenodeProtocol.verifyProtocol(NamenodeProtocol.CMD_PING_NAMENODE, request, response)) {
 			return NamenodeErrors.ERR_PROTOCOL_MISMATCH;
 		}	
@@ -557,7 +542,7 @@ public class NameNodeService implements RpcNameNodeService, Sequencer {
 	
 	void appendToDeleteQueue(AbstractNode fileInfo) {
 		if (fileInfo != null) {
-			fileInfo.setDelay(Constants.TOKEN_EXPIRATION);
+			fileInfo.setDelay(DatagridConstants.TOKEN_EXPIRATION);
 			deleteQueue.add(fileInfo);			
 		}
 	}	

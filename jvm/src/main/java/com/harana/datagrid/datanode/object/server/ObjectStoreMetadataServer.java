@@ -1,5 +1,6 @@
 package com.harana.datagrid.datanode.object.server;
 
+import com.harana.datagrid.conf.DatagridConstants;
 import com.harana.datagrid.datanode.object.ObjectStoreConstants;
 import com.harana.datagrid.datanode.object.client.S3ObjectStoreClient;
 import com.harana.datagrid.datanode.object.rpc.*;
@@ -11,7 +12,6 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
-import com.harana.datagrid.conf.Constants;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -51,7 +51,7 @@ public class ObjectStoreMetadataServer extends Thread {
 			assert prev.getEndOffset() <= cur.getStartOffset();
 			assert cur.getStartOffset() < cur.getEndOffset();
 		}
-		assert cur.getEndOffset() <= Constants.BLOCK_SIZE;
+		assert cur.getEndOffset() <= DatagridConstants.BLOCK_SIZE;
 	}
 
 	public void run() {
@@ -67,7 +67,7 @@ public class ObjectStoreMetadataServer extends Thread {
 			ObjectStoreServerRPCProcessor.setMetadataService(this);
 			boot.childHandler(new ChannelInitializer<SocketChannel>() {
 				@Override
-				public void initChannel(SocketChannel ch) throws Exception {
+				public void initChannel(SocketChannel ch) {
 					logger.debug("A new connection has arrived from {} ", ch.remoteAddress());
 					/* incoming pipeline */
 					ch.pipeline().addLast("ObjectStoreRequestDecoder", new ObjectStoreRequestDecoder());

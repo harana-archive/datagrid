@@ -1,5 +1,19 @@
 package com.harana.datagrid.datanode.rdma.client;
 
+import com.harana.datagrid.DatagridBuffer;
+import com.harana.datagrid.client.datanode.DatanodeEndpoint;
+import com.harana.datagrid.client.datanode.DatanodeFuture;
+import com.harana.datagrid.conf.DatagridConstants;
+import com.harana.datagrid.datanode.DatanodeUtils;
+import com.harana.datagrid.datanode.rdma.RdmaConstants;
+import com.harana.datagrid.memory.OffHeapBuffer;
+import com.harana.datagrid.metadata.BlockInfo;
+import com.harana.datagrid.rdma.verbs.IbvQP;
+import com.harana.datagrid.rdma.verbs.RdmaCmId;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import sun.misc.Unsafe;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -12,23 +26,9 @@ import java.nio.channels.FileChannel.MapMode;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
-import com.harana.datagrid.Buffer;
-import com.harana.datagrid.conf.Constants;
-import com.harana.datagrid.memory.OffHeapBuffer;
-import com.harana.datagrid.metadata.BlockInfo;
-import com.harana.datagrid.client.datanode.DatanodeEndpoint;
-import com.harana.datagrid.client.datanode.DatanodeFuture;
-import com.harana.datagrid.datanode.DatanodeUtils;
-import com.harana.datagrid.datanode.rdma.RdmaConstants;
-import com.harana.datagrid.rdma.verbs.*;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import sun.misc.Unsafe;
-
 public class RdmaStorageLocalEndpoint implements DatanodeEndpoint {
 	private static final Logger logger = LogManager.getLogger();
-	private final ConcurrentHashMap<Long, Buffer> bufferMap;
+	private final ConcurrentHashMap<Long, DatagridBuffer> bufferMap;
 	private final Unsafe unsafe;
 	private final InetSocketAddress address;
 	
@@ -50,9 +50,9 @@ public class RdmaStorageLocalEndpoint implements DatanodeEndpoint {
 	}
 
 	@Override
-	public DatanodeFuture write(Buffer buffer, BlockInfo remoteMr, long remoteOffset) throws IOException,
+	public DatanodeFuture write(DatagridBuffer buffer, BlockInfo remoteMr, long remoteOffset) throws IOException,
 			InterruptedException {
-		if (buffer.remaining() > Constants.BLOCK_SIZE) {
+		if (buffer.remaining() > DatagridConstants.BLOCK_SIZE) {
 			throw new IOException("write size too large " + buffer.remaining());
 		}
 		if (buffer.remaining() <= 0) {
@@ -65,7 +65,7 @@ public class RdmaStorageLocalEndpoint implements DatanodeEndpoint {
 		long alignedLba = getAlignedLba(remoteMr.getLba());
 		long lbaOffset = getLbaOffset(remoteMr.getLba());
 		
-		Buffer mappedBuffer = bufferMap.get(alignedLba);
+		DatagridBuffer mappedBuffer = bufferMap.get(alignedLba);
 		if (mappedBuffer == null) {
 			throw new IOException("No mapped buffer for this key " + remoteMr.getLkey() + ", address " + address);
 		}
@@ -80,9 +80,9 @@ public class RdmaStorageLocalEndpoint implements DatanodeEndpoint {
 	}
 
 	@Override
-	public DatanodeFuture read(Buffer buffer, BlockInfo remoteMr, long remoteOffset) throws IOException,
+	public DatanodeFuture read(DatagridBuffer buffer, BlockInfo remoteMr, long remoteOffset) throws IOException,
 			InterruptedException {
-		if (buffer.remaining() > Constants.BLOCK_SIZE) {
+		if (buffer.remaining() > DatagridConstants.BLOCK_SIZE) {
 			throw new IOException("read size too large");
 		}	
 		if (buffer.remaining() <= 0) {
@@ -98,7 +98,7 @@ public class RdmaStorageLocalEndpoint implements DatanodeEndpoint {
 		long alignedLba = getAlignedLba(remoteMr.getLba());
 		long lbaOffset = getLbaOffset(remoteMr.getLba());
 		
-		Buffer mappedBuffer = bufferMap.get(alignedLba);
+		DatagridBuffer mappedBuffer = bufferMap.get(alignedLba);
 		if (mappedBuffer == null) {
 			throw new IOException("No mapped buffer for this key");
 		}

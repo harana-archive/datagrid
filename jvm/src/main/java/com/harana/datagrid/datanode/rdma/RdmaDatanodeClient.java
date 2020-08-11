@@ -2,11 +2,11 @@ package com.harana.datagrid.datanode.rdma;
 
 import java.io.IOException;
 
-import com.harana.datagrid.BufferCache;
-import com.harana.datagrid.Statistics;
+import com.harana.datagrid.DatagridBufferCache;
+import com.harana.datagrid.DatagridStatistics;
 import com.harana.datagrid.client.datanode.DatanodeClient;
 import com.harana.datagrid.client.datanode.DatanodeEndpoint;
-import com.harana.datagrid.conf.Configuration;
+import com.harana.datagrid.conf.DatagridConfiguration;
 import com.harana.datagrid.metadata.DatanodeInfo;
 import com.harana.datagrid.datanode.rdma.client.RdmaStorageActiveEndpointFactory;
 import com.harana.datagrid.datanode.rdma.client.RdmaStorageActiveGroup;
@@ -26,7 +26,7 @@ public class RdmaDatanodeClient implements DatanodeClient {
 		this.clientMrCache = null;
 	}
 
-	public void init(Statistics statistics, BufferCache bufferCache, Configuration conf, String[] args) throws IOException {
+	public void init(DatagridStatistics statistics, DatagridBufferCache bufferCache, DatagridConfiguration conf, String[] args) throws IOException {
 		RdmaConstants.init(conf, args);
 	}
 

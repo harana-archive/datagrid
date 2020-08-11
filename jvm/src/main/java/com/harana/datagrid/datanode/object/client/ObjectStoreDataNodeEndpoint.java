@@ -1,12 +1,12 @@
 package com.harana.datagrid.datanode.object.client;
 
+import com.harana.datagrid.conf.DatagridConstants;
 import com.harana.datagrid.datanode.object.ObjectStoreConstants;
 import com.harana.datagrid.datanode.object.ObjectStoreUtils;
 import com.harana.datagrid.datanode.object.rpc.MappingEntry;
 import com.harana.datagrid.datanode.object.rpc.ObjectStoreRPC;
 import com.harana.datagrid.datanode.object.rpc.RPCCall;
-import com.harana.datagrid.Buffer;
-import com.harana.datagrid.conf.Constants;
+import com.harana.datagrid.DatagridBuffer;
 import com.harana.datagrid.metadata.BlockInfo;
 import com.harana.datagrid.client.datanode.DatanodeEndpoint;
 import com.harana.datagrid.client.datanode.DatanodeFuture;
@@ -29,7 +29,7 @@ public class ObjectStoreDataNodeEndpoint implements DatanodeEndpoint {
 	private final S3ObjectStoreClient objectStoreClient;
 	private final String localObjectKeyPrefix;
 	private final byte[] stagingBuffer = new byte[64 * 1024 * 1024];
-	private final int blockSize = Long.valueOf(Constants.BLOCK_SIZE).intValue();
+	private final int blockSize = Long.valueOf(DatagridConstants.BLOCK_SIZE).intValue();
 
 	public ObjectStoreDataNodeEndpoint(ObjectStoreMetadataClient metadataClient) throws IOException {
 		logger.debug("TID {} : Creating a new ObjectStore client endpoint", Thread.currentThread().getId());
@@ -41,7 +41,7 @@ public class ObjectStoreDataNodeEndpoint implements DatanodeEndpoint {
 				+ Integer.toString(Math.abs(rand.nextInt())) + "-";
 	}
 
-	public DatanodeFuture write(Buffer buffer, BlockInfo blockInfo, long remoteOffset) {
+	public DatanodeFuture write(DatagridBuffer buffer, BlockInfo blockInfo, long remoteOffset) {
 		long startTime = 0, endTime;
 		if (ObjectStoreConstants.PROFILE) {
 			startTime = System.nanoTime();
@@ -63,12 +63,10 @@ public class ObjectStoreDataNodeEndpoint implements DatanodeEndpoint {
 	}
 
 	private String makeUniqueKey(BlockInfo blockInfo) {
-		return localObjectKeyPrefix + Long.toString(blockInfo.getAddr() / Constants.BLOCK_SIZE)
-				+ "-" + objectSequenceNumber.getAndIncrement();
+		return localObjectKeyPrefix + blockInfo.getAddr() / DatagridConstants.BLOCK_SIZE + "-" + objectSequenceNumber.getAndIncrement();
 	}
 
-	public DatanodeFuture read(Buffer buffer, BlockInfo blockInfo, long remoteOffset)
-			throws IOException {
+	public DatanodeFuture read(DatagridBuffer buffer, BlockInfo blockInfo, long remoteOffset) throws IOException {
 		long startTime = 0, endTime;
 		if (ObjectStoreConstants.PROFILE) {
 			startTime = System.nanoTime();

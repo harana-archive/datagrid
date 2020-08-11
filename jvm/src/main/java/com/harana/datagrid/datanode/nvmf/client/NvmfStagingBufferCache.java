@@ -1,7 +1,7 @@
 package com.harana.datagrid.datanode.nvmf.client;
 
-import com.harana.datagrid.Buffer;
-import com.harana.datagrid.BufferCache;
+import com.harana.datagrid.DatagridBuffer;
+import com.harana.datagrid.DatagridBufferCache;
 import com.harana.datagrid.client.datanode.DatanodeFuture;
 
 import java.util.Iterator;
@@ -13,16 +13,16 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class NvmfStagingBufferCache {
 	private final Map<Long, BufferCacheEntry> remoteAddressMap;
-	private final Queue<Buffer> freeBuffers;
+	private final Queue<DatagridBuffer> freeBuffers;
 	private int buffersLeft;
 	private final int lbaDataSize;
-	private final BufferCache bufferCache;
+	private final DatagridBufferCache bufferCache;
 
-	private BufferCache getBufferCache() {
+	private DatagridBufferCache getBufferCache() {
 		return bufferCache;
 	}
 
-	NvmfStagingBufferCache(BufferCache bufferCache, int maxEntries, int lbaDataSize) {
+	NvmfStagingBufferCache(DatagridBufferCache bufferCache, int maxEntries, int lbaDataSize) {
 		if (maxEntries <= 0) {
 			throw new IllegalArgumentException("maximum entries (" + maxEntries + ") <= 0");
 		}
@@ -54,7 +54,7 @@ public class NvmfStagingBufferCache {
 			throw new OutOfMemoryError();
 		}
 
-		Buffer buffer = getBufferCache().allocateBuffer();
+		DatagridBuffer buffer = getBufferCache().allocateBuffer();
 		if (buffer == null) {
 			throw new OutOfMemoryError();
 		}
@@ -72,11 +72,11 @@ public class NvmfStagingBufferCache {
 	}
 
 	static class BufferCacheEntry {
-		private final Buffer buffer;
+		private final DatagridBuffer buffer;
 		private final AtomicInteger pending;
 		private DatanodeFuture future;
 
-		BufferCacheEntry(Buffer buffer) {
+		BufferCacheEntry(DatagridBuffer buffer) {
 			this.buffer = buffer;
 			this.pending = new AtomicInteger(1);
 		}
@@ -108,7 +108,7 @@ public class NvmfStagingBufferCache {
 			return pending.compareAndSet(0, -1);
 		}
 
-		Buffer getBuffer() {
+		DatagridBuffer getBuffer() {
 			return buffer;
 		}
 
@@ -116,7 +116,7 @@ public class NvmfStagingBufferCache {
 	}
 
 	BufferCacheEntry get(long alignedRemoteAddress) throws Exception {
-		Buffer buffer;
+		DatagridBuffer buffer;
 		do {
 			buffer = freeBuffers.poll();
 			if (buffer == null) {

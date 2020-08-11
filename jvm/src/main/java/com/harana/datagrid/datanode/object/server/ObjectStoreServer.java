@@ -1,9 +1,9 @@
 package com.harana.datagrid.datanode.object.server;
 
+import com.harana.datagrid.conf.DatagridConfiguration;
+import com.harana.datagrid.conf.DatagridConstants;
 import com.harana.datagrid.datanode.object.ObjectStoreConstants;
 import com.harana.datagrid.datanode.object.client.S3ObjectStoreClient;
-import com.harana.datagrid.conf.Configuration;
-import com.harana.datagrid.conf.Constants;
 import com.harana.datagrid.datanode.DatanodeResource;
 import com.harana.datagrid.datanode.DatanodeServer;
 import org.apache.logging.log4j.LogManager;
@@ -32,7 +32,7 @@ public class ObjectStoreServer implements DatanodeServer {
 	}
 
 	@Override
-	public void init(Configuration crailConfiguration, String[] args) throws IOException {
+	public void init(DatagridConfiguration conf, String[] args) throws IOException {
 		if (initialized) {
 			throw new IOException("ObjectStorageServer already initialized");
 		}
@@ -61,7 +61,7 @@ public class ObjectStoreServer implements DatanodeServer {
 							String[] split = opt.split("=");
 							String key = split[0];
 							String val = split[1];
-							crailConfiguration.set(key, val);
+							conf.set(key, val);
 							logger.info("Set custom option {} = {} ", key, val);
 							break;
 						default:
@@ -73,13 +73,11 @@ public class ObjectStoreServer implements DatanodeServer {
 				}
 			}
 		}
-		ObjectStoreConstants.updateConstants(crailConfiguration);
+		ObjectStoreConstants.updateConstants(conf);
 		ObjectStoreConstants.verify();
-		ObjectStoreConstants.parseCmdLine(crailConfiguration, args);
+		ObjectStoreConstants.parseCmdLine(conf, args);
 
-		this.alignedSize = ObjectStoreConstants.STORAGE_LIMIT -
-				(ObjectStoreConstants.STORAGE_LIMIT % ObjectStoreConstants.ALLOCATION_SIZE);
-
+		this.alignedSize = ObjectStoreConstants.STORAGE_LIMIT - (ObjectStoreConstants.STORAGE_LIMIT % ObjectStoreConstants.ALLOCATION_SIZE);
 		this.alive = false;
 	}
 
@@ -118,7 +116,7 @@ public class ObjectStoreServer implements DatanodeServer {
 			long addr = allocated;
 			allocated += ObjectStoreConstants.ALLOCATION_SIZE;
 			res = DatanodeResource.createResource(addr, (int) ObjectStoreConstants.ALLOCATION_SIZE, currentStag);
-			blockID += ObjectStoreConstants.ALLOCATION_SIZE / Constants.BLOCK_SIZE;
+			blockID += ObjectStoreConstants.ALLOCATION_SIZE / DatagridConstants.BLOCK_SIZE;
 			double perc = (allocated * 100.) / alignedSize;
 			currentStag++;
 			logger.info("Allocation done : " + perc + "% , allocated " + allocated + " / " + alignedSize);

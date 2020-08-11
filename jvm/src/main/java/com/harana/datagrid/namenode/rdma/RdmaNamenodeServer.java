@@ -1,9 +1,9 @@
 package com.harana.datagrid.namenode.rdma;
 
 import java.net.InetSocketAddress;
-import com.harana.datagrid.conf.Configuration;
+import com.harana.datagrid.conf.DatagridConfiguration;
 import com.harana.datagrid.rdma.RdmaServerEndpoint;
-import com.harana.datagrid.namenode.RpcNameNodeService;
+import com.harana.datagrid.namenode.NamenodeService;
 import com.harana.datagrid.namenode.NamenodeServer;
 import com.harana.datagrid.rpc.darpc.DaRPCServerEndpoint;
 import com.harana.datagrid.rpc.darpc.DaRPCServerGroup;
@@ -11,20 +11,20 @@ import com.harana.datagrid.utils.Utils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class RdmaNamenodeServer extends NamenodeServer {
+public class RdmaNamenodeServer implements NamenodeServer {
 	private static final Logger logger = LogManager.getLogger();
 	
-	private final RpcNameNodeService service;
+	private final NamenodeService service;
 	private DaRPCServerGroup<RdmaNamenodeRequest, RdmaNamenodeResponse> namenodeServerGroup;
 	private RdmaServerEndpoint<DaRPCServerEndpoint<RdmaNamenodeRequest, RdmaNamenodeResponse>> namenodeServerEp;
 	
-	public RdmaNamenodeServer(RpcNameNodeService service) {
+	public RdmaNamenodeServer(NamenodeService service) {
 		this.service = service;
 		this.namenodeServerEp = null;
 		this.namenodeServerGroup = null;
 	}	
 
-	public void init(Configuration conf, String[] args) throws Exception{
+	public void init(DatagridConfiguration conf, String[] args) throws Exception{
 		RdmaConstants.updateConstants(conf);
 		RdmaConstants.verify();
 		

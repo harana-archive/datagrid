@@ -1,4 +1,4 @@
-package com.harana.datagrid.namenode.storage;
+package com.harana.datagrid.namenode.metadata;
 
 import com.harana.datagrid.namenode.*;
 import com.harana.datagrid.namenode.NamenodeRequest.CreateFile;
@@ -15,13 +15,13 @@ import com.harana.datagrid.namenode.NamenodeResponse.DeleteFile;
 import com.harana.datagrid.namenode.NamenodeResponse.RenameFile;
 import com.harana.datagrid.namenode.NamenodeResponse.Void;
 
-public class LogDispatcher implements RpcNameNodeService {
-	private RpcNameNodeService service;
-	private LogService logService;
+public class LogDispatcher implements NamenodeService {
+	private NamenodeService service;
+	private NamenodeLogService logService;
 	
-	public LogDispatcher(RpcNameNodeService service) throws Exception{
+	public LogDispatcher(NamenodeService service) throws Exception{
 		this.service = service;
-		this.logService = new LogService();
+		this.logService = new NamenodeLogService();
 		this.logService.replay(service);
 	}
 

@@ -1,11 +1,11 @@
-package com.harana.datagrid.namenode.storage;
+package com.harana.datagrid.namenode.metadata;
 
 import java.util.Queue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
-import com.harana.datagrid.DataType;
-import com.harana.datagrid.conf.Constants;
+import com.harana.datagrid.DatagridDataType;
+import com.harana.datagrid.conf.DatagridConstants;
 import com.harana.datagrid.metadata.BlockInfo;
 
 public class DirectoryBlocks extends AbstractNode {
@@ -13,7 +13,7 @@ public class DirectoryBlocks extends AbstractNode {
 	protected AtomicLong dirOffsetCounter;
 	protected ConcurrentHashMap<Integer, AbstractNode> children;	
 
-	DirectoryBlocks(long fd, int fileComponent, DataType type, int storageClass, int locationClass, boolean enumerable) {
+	DirectoryBlocks(long fd, int fileComponent, DatagridDataType type, int storageClass, int locationClass, boolean enumerable) {
 		super(fd, fileComponent, type, storageClass, locationClass, enumerable);
 		this.children = new ConcurrentHashMap<>();
 		this.dirOffsetCounter = new AtomicLong(0);
@@ -26,7 +26,7 @@ public class DirectoryBlocks extends AbstractNode {
 			throw new Exception("File exists");
 		}
 		if (child.isEnumerable()) {
-			child.setDirOffset(dirOffsetCounter.getAndAdd(Constants.DIRECTORY_RECORD));
+			child.setDirOffset(dirOffsetCounter.getAndAdd(DatagridConstants.DIRECTORY_RECORD));
 		}
 		return old;
 	}	

@@ -3,7 +3,10 @@ package com.harana.datagrid.namenode;
 import java.net.URI;
 import java.util.Arrays;
 
-import com.harana.datagrid.namenode.storage.LogDispatcher;
+import com.harana.datagrid.conf.DatagridConfiguration;
+import com.harana.datagrid.conf.DatagridConstants;
+import com.harana.datagrid.namenode.metadata.LogDispatcher;
+import com.harana.datagrid.namenode.tcp.TcpNamenodeServer;
 import com.harana.datagrid.utils.Utils;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -12,18 +15,16 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
-import com.harana.datagrid.conf.Configuration;
-import com.harana.datagrid.conf.Constants;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class NameNode {
+public class Namenode {
 	private static final Logger logger = LogManager.getLogger();
 	
-	public static void main(String args[]) throws Exception {
+	public static void main(String[] args) throws Exception {
 		logger.info("initalizing namenode ");		
-		Configuration conf = Configuration.createConfigurationFromFile();
-		Constants.updateConstants(conf);
+		DatagridConfiguration conf = DatagridConfiguration.createConfigurationFromFile();
+		DatagridConstants.updateConstants(conf);
 		
 		URI uri = Utils.getPrimaryNameNode();
 		String address = uri.getHost();
@@ -56,23 +57,20 @@ public class NameNode {
 		long serviceId = Utils.getServiceId(namenode);
 		long serviceSize = Utils.getServiceSize();
 		if (!Utils.verifyNamenode(namenode)) {
-			throw new Exception("Namenode address/port [" + namenode + "] has to be listed in crail.namenode.address " + Constants.NAMENODE_ADDRESS);
+			throw new Exception("Namenode address/port [" + namenode + "] has to be listed in crail.namenode.address " + DatagridConstants.NAMENODE_ADDRESS);
 		}
-		
-		Constants.NAMENODE_ADDRESS = namenode + "?id=" + serviceId + "&size=" + serviceSize;
-		Constants.printConf();
-		Constants.verify();
-		
-		RpcNameNodeService service = RpcNameNodeService.createInstance(Constants.NAMENODE_RPC_SERVICE);
 
-		// TODO: Configurable logging
-		service = new LogDispatcher(service);
+		DatagridConstants.NAMENODE_ADDRESS = namenode + "?id=" + serviceId + "&size=" + serviceSize;
+		DatagridConstants.printConf();
+		DatagridConstants.verify();
+		
+		NamenodeService service = new NamenodeService();
 
-		RpcBinding rpcBinding = RpcBinding.createInstance(Constants.NAMENODE_RPC_TYPE);
-		NamenodeServer rpcServer = rpcBinding.launchServer(service);
-		rpcServer.init(conf, null);
-		rpcServer.printConf(logger);
-		rpcServer.run();
+		// TCP or RDMA
+		NamenodeServer namenodeServer = new TcpNamenodeServer(service);
+		namenodeServer.init(conf, null);
+		namenodeServer.printConf(logger);
+		namenodeServer.run();
 		System.exit(0);;
 	}
 }

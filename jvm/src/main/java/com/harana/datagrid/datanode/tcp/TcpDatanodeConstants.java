@@ -1,5 +1,7 @@
 package com.harana.datagrid.datanode.tcp;
 
+import com.harana.datagrid.conf.DatagridConfiguration;
+import com.harana.datagrid.conf.DatagridConstants;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
@@ -7,8 +9,6 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
-import com.harana.datagrid.conf.Configuration;
-import com.harana.datagrid.conf.Constants;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -27,7 +27,7 @@ public class TcpDatanodeConstants {
 	public static long STORAGE_TCP_STORAGE_LIMIT = 1073741824;
 
 	public static final String STORAGE_TCP_ALLOCATION_SIZE_KEY = "crail.storage.tcp.allocationsize";
-	public static long STORAGE_TCP_ALLOCATION_SIZE = Constants.REGION_SIZE;
+	public static long STORAGE_TCP_ALLOCATION_SIZE = DatagridConstants.REGION_SIZE;
 	
 	public static final String STORAGE_TCP_DATA_PATH_KEY = "crail.storage.tcp.datapath";
 	public static String STORAGE_TCP_DATA_PATH = "/dev/hugepages/data";
@@ -38,7 +38,7 @@ public class TcpDatanodeConstants {
 	public static final String STORAGE_TCP_CORES_KEY = "crail.storage.tcp.cores";
 	public static int STORAGE_TCP_CORES = 1;		
 	
-    public static void init(Configuration conf, String[] args) throws Exception {
+    public static void init(DatagridConfiguration conf, String[] args) throws Exception {
         if (args != null) {
                 Option portOption = Option.builder("p").desc("port to start server on").hasArg().build();
                 Option coresOption = Option.builder("c").desc("number of cores to use").hasArg().build();
@@ -70,7 +70,7 @@ public class TcpDatanodeConstants {
         TcpDatanodeConstants.updateConstants(conf);
     }
 	
-	public static void updateConstants(Configuration conf) {
+	public static void updateConstants(DatagridConfiguration conf) {
 		if (conf.get(STORAGE_TCP_INTERFACE_KEY) != null) {
 			STORAGE_TCP_INTERFACE = conf.get(STORAGE_TCP_INTERFACE_KEY);
 		}	

@@ -1,7 +1,7 @@
 package com.harana.datagrid.datanode.nvmf;
 
+import com.harana.datagrid.conf.DatagridConfiguration;
 import com.harana.datagrid.datanode.nvmf.jvnmf.*;
-import com.harana.datagrid.conf.Configuration;
 import com.harana.datagrid.datanode.DatanodeResource;
 import com.harana.datagrid.datanode.DatanodeServer;
 import org.apache.logging.log4j.LogManager;
@@ -22,12 +22,12 @@ public class NvmfStorageServer implements DatanodeServer {
 
 	public NvmfStorageServer() {}
 
-	public void init(Configuration crailConfiguration, String[] args) throws Exception {
+	public void init(DatagridConfiguration conf, String[] args) throws Exception {
 		if (initialized) {
 			throw new IOException("NvmfStorageTier already initialized");
 		}
 		initialized = true;
-		NvmfStorageConstants.parseCmdLine(crailConfiguration, args);
+		NvmfStorageConstants.parseCmdLine(conf, args);
 
 		Nvme nvme;
 		if (NvmfStorageConstants.HOST_NQN == null) {

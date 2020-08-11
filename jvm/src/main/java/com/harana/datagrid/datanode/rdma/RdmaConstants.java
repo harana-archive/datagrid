@@ -3,6 +3,8 @@ package com.harana.datagrid.datanode.rdma;
 import java.io.IOException;
 import java.util.Arrays;
 
+import com.harana.datagrid.conf.DatagridConfiguration;
+import com.harana.datagrid.conf.DatagridConstants;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
@@ -10,8 +12,6 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
-import com.harana.datagrid.conf.Configuration;
-import com.harana.datagrid.conf.Constants;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -28,7 +28,7 @@ public class RdmaConstants {
 	public static long STORAGE_RDMA_STORAGE_LIMIT = 1073741824;
 
 	public static final String STORAGE_RDMA_ALLOCATION_SIZE_KEY = "crail.storage.rdma.allocationsize";
-	public static long STORAGE_RDMA_ALLOCATION_SIZE = Constants.REGION_SIZE;
+	public static long STORAGE_RDMA_ALLOCATION_SIZE = DatagridConstants.REGION_SIZE;
 
 	public static final String STORAGE_RDMA_DATA_PATH_KEY = "crail.storage.rdma.datapath";
 	public static String STORAGE_RDMA_DATA_PATH = "/dev/hugepages/data";
@@ -51,7 +51,7 @@ public class RdmaConstants {
 	public static final String STORAGE_RDMA_CONNECTTIMEOUT_KEY = "crail.storage.rdma.connecttimeout";
 	public static int STORAGE_RDMA_CONNECTTIMEOUT = 1000;		
 
-	public static void updateConstants(Configuration conf) {
+	public static void updateConstants(DatagridConfiguration conf) {
 		if (conf.get(STORAGE_RDMA_INTERFACE_KEY) != null) {
 			STORAGE_RDMA_INTERFACE = conf.get(STORAGE_RDMA_INTERFACE_KEY);
 		}
@@ -88,7 +88,7 @@ public class RdmaConstants {
 	}
 
 	public static void verify() throws IOException {
-		if (STORAGE_RDMA_ALLOCATION_SIZE % Constants.BLOCK_SIZE != 0) {
+		if (STORAGE_RDMA_ALLOCATION_SIZE % DatagridConstants.BLOCK_SIZE != 0) {
 			throw new IOException("crail.storage.rdma.allocationsize must be multiple of crail.blocksize");
 		}
 		if (STORAGE_RDMA_STORAGE_LIMIT % STORAGE_RDMA_ALLOCATION_SIZE != 0) {
@@ -112,7 +112,7 @@ public class RdmaConstants {
 		logger.info(STORAGE_RDMA_CONNECTTIMEOUT_KEY + " " + STORAGE_RDMA_CONNECTTIMEOUT);		
 	}
 
-	public static void init(Configuration conf, String[] args) throws IOException {
+	public static void init(DatagridConfiguration conf, String[] args) throws IOException {
 		if (args != null) {
 			Option interfaceOption = Option.builder("i").desc("interface to start server on").hasArg().build();
 			Option portOption = Option.builder("p").desc("port to start server on").hasArg().build();

@@ -31,7 +31,7 @@ public class ObjectStoreResponseDecoder extends ByteToMessageDecoder {
 				future.markDone();
 			} else {
 				// This can happen in several scenarios: (a) network issues, (b) client kill and restart
-				logger.warn("Received response to non registered RPC. Buffer reader index = {}, readable bytes = {}, " + "Cookie = {}. Draining message...", byteBuf.readerIndex(), byteBuf.readableBytes(), cookie);
+				logger.warn("Received response to non registered RPC. DatagridBuffer reader index = {}, readable bytes = {}, " + "Cookie = {}. Draining message...", byteBuf.readerIndex(), byteBuf.readableBytes(), cookie);
 				if (group.getInFlight() == 0) {
 					byteBuf.clear();
 				} else {

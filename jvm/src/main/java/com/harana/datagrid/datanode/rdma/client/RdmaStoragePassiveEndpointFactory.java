@@ -1,8 +1,9 @@
 package com.harana.datagrid.datanode.rdma.client;
 
+import com.harana.datagrid.rdma.RdmaEndpointFactory;
+import com.harana.datagrid.rdma.verbs.RdmaCmId;
+
 import java.io.IOException;
-import com.harana.datagrid.rdma.verbs.*;
-import com.harana.datagrid.rdma.*;
 
 public class RdmaStoragePassiveEndpointFactory implements RdmaEndpointFactory<RdmaStoragePassiveEndpoint> {
 	private final RdmaStoragePassiveGroup group;

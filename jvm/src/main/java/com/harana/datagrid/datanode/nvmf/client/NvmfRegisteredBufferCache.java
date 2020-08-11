@@ -3,7 +3,7 @@ package com.harana.datagrid.datanode.nvmf.client;
 import com.harana.datagrid.datanode.nvmf.jvnmf.Freeable;
 import com.harana.datagrid.datanode.nvmf.jvnmf.KeyedNativeBuffer;
 import com.harana.datagrid.datanode.nvmf.jvnmf.QueuePair;
-import com.harana.datagrid.Buffer;
+import com.harana.datagrid.DatagridBuffer;
 
 import java.io.IOException;
 import java.util.Map;
@@ -20,8 +20,8 @@ class NvmfRegisteredBufferCache implements Freeable {
 		this.valid = true;
 	}
 
-	int getRemoteKey(Buffer buffer) throws IOException {
-		Buffer regionBuffer = buffer.getRegion();
+	int getRemoteKey(DatagridBuffer buffer) throws IOException {
+		DatagridBuffer regionBuffer = buffer.getRegion();
 		KeyedNativeBuffer keyedNativeBuffer = regionMap.get(regionBuffer.address());
 		if (keyedNativeBuffer == null) {
 			/* region has not been registered yet */

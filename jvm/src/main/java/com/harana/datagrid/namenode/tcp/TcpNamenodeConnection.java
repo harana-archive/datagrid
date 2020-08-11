@@ -4,7 +4,7 @@ import com.harana.datagrid.client.namenode.NamenodeConnection;
 import com.harana.datagrid.client.namenode.NamenodeFuture;
 import com.harana.datagrid.client.namenode.NamenodeVoid;
 
-import com.harana.datagrid.DataType;
+import com.harana.datagrid.DatagridDataType;
 import com.harana.datagrid.client.namenode.responses.*;
 import com.harana.datagrid.metadata.BlockInfo;
 import com.harana.datagrid.metadata.DatanodeInfo;
@@ -40,7 +40,7 @@ public class TcpNamenodeConnection implements NamenodeConnection {
 		this.endpoint.close();
 	}
 
-	public NamenodeFuture<CreateFileResponse> createFile(FileName fileName, DataType type, int storageAffinity, int locationAffinity, boolean enumerable) throws IOException {
+	public NamenodeFuture<CreateFileResponse> createFile(FileName fileName, DatagridDataType type, int storageAffinity, int locationAffinity, boolean enumerable) throws IOException {
 		NamenodeRequest.CreateFile req = new NamenodeRequest.CreateFile(fileName, type, storageAffinity, locationAffinity, enumerable);
 		NamenodeResponse.CreateFile resp = new NamenodeResponse.CreateFile();
 

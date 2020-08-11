@@ -1,7 +1,7 @@
 package com.harana.datagrid.datanode.object;
 
-import com.harana.datagrid.conf.Configuration;
-import com.harana.datagrid.conf.Constants;
+import com.harana.datagrid.conf.DatagridConfiguration;
+import com.harana.datagrid.conf.DatagridConstants;
 import org.apache.commons.cli.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -46,8 +46,8 @@ public class ObjectStoreConstants {
 	private static final String S3_SIGNER_KEY = "s3signer";
 	public static String S3_SIGNER = null; //other possible values "AWS3SignerType", "AWS4SignerType", "NoOpSignerType"
 
-	public static void parseCmdLine(Configuration crailConfiguration, String[] args) throws IOException {
-		ObjectStoreConstants.updateConstants(crailConfiguration);
+	public static void parseCmdLine(DatagridConfiguration conf, String[] args) throws IOException {
+		ObjectStoreConstants.updateConstants(conf);
 		if (args != null) {
 			Options options = new Options();
 
@@ -74,7 +74,7 @@ public class ObjectStoreConstants {
 		ObjectStoreConstants.verify();
 	}
 
-	public static void updateConstants(Configuration conf) {
+	public static void updateConstants(DatagridConfiguration conf) {
 		String arg = get(conf, S3_ACCESS_KEY);
 		if (arg != null) S3_ACCESS = arg;
 
@@ -119,8 +119,8 @@ public class ObjectStoreConstants {
 	}
 
 	public static void verify() throws IOException {
-		if (ALLOCATION_SIZE % Constants.BLOCK_SIZE != 0) {
-			logger.error("Allocation size ({}) must be a multiple of the crail blocksize ({})", ALLOCATION_SIZE, Constants.BLOCK_SIZE);
+		if (ALLOCATION_SIZE % DatagridConstants.BLOCK_SIZE != 0) {
+			logger.error("Allocation size ({}) must be a multiple of the crail blocksize ({})", ALLOCATION_SIZE, DatagridConstants.BLOCK_SIZE);
 			throw new IOException("Allocation size must be multiple of the  blocksize");
 		}
 		if (STORAGE_LIMIT % ALLOCATION_SIZE != 0) {
@@ -129,7 +129,7 @@ public class ObjectStoreConstants {
 		}
 	}
 
-	private static String get(Configuration conf, String key) {
+	private static String get(DatagridConfiguration conf, String key) {
 		return conf.get(fullKey(key));
 	}
 

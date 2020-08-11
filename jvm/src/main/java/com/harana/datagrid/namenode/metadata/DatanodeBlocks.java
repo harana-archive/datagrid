@@ -1,7 +1,7 @@
-package com.harana.datagrid.namenode.storage;
+package com.harana.datagrid.namenode.metadata;
 
 import com.harana.datagrid.client.namenode.NamenodeErrors;
-import com.harana.datagrid.conf.Constants;
+import com.harana.datagrid.conf.DatagridConstants;
 import com.harana.datagrid.metadata.BlockInfo;
 import com.harana.datagrid.metadata.DatanodeInfo;
 import org.apache.logging.log4j.LogManager;
@@ -55,7 +55,7 @@ public class DatanodeBlocks extends DatanodeInfo {
 	}
 
 	public void touch() {
-		this.token = System.nanoTime() + TimeUnit.SECONDS.toNanos(Constants.STORAGE_KEEPALIVE * 8);
+		this.token = System.nanoTime() + TimeUnit.SECONDS.toNanos(DatagridConstants.STORAGE_KEEPALIVE * 8);
 	}
 	
 	public boolean isOnline() {

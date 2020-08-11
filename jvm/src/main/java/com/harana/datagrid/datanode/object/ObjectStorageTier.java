@@ -1,16 +1,16 @@
 package com.harana.datagrid.datanode.object;
 
-import com.harana.datagrid.utils.Utils;
+import com.harana.datagrid.DatagridBufferCache;
+import com.harana.datagrid.DatagridStatistics;
+import com.harana.datagrid.client.datanode.DatanodeEndpoint;
+import com.harana.datagrid.conf.DatagridConfiguration;
+import com.harana.datagrid.datanode.DatanodeServer;
+import com.harana.datagrid.datanode.DatanodeTier;
 import com.harana.datagrid.datanode.object.client.ObjectStoreDataNodeEndpoint;
 import com.harana.datagrid.datanode.object.client.ObjectStoreMetadataClientGroup;
 import com.harana.datagrid.datanode.object.server.ObjectStoreServer;
-import com.harana.datagrid.BufferCache;
-import com.harana.datagrid.Statistics;
-import com.harana.datagrid.conf.Configuration;
 import com.harana.datagrid.metadata.DatanodeInfo;
-import com.harana.datagrid.client.datanode.DatanodeEndpoint;
-import com.harana.datagrid.datanode.DatanodeServer;
-import com.harana.datagrid.datanode.DatanodeTier;
+import com.harana.datagrid.utils.Utils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -22,17 +22,16 @@ public class ObjectStorageTier implements DatanodeTier {
 	private static final Logger logger = LogManager.getLogger();
 
 	private ObjectStoreMetadataClientGroup metadataClientGroup = null;
-	private ObjectStoreServer storageServer = null;
-	private boolean initialized = false;
-	private Statistics statistics;
-	private BufferCache bufferCache;
+	private final ObjectStoreServer storageServer = null;
+	private DatagridStatistics statistics;
+	private DatagridBufferCache bufferCache;
 
 	@Override
-	public void init(Statistics stats, BufferCache cache, Configuration conf, String[] args) {
+	public void init(DatagridStatistics stats, DatagridBufferCache cache, DatagridConfiguration conf, String[] args) {
 		logger.debug("Initializing ObjectStorageTier");
 		com.harana.datagrid.datanode.object.ObjectStoreConstants.updateConstants(conf);
 		metadataClientGroup = new ObjectStoreMetadataClientGroup();
-		this.initialized = true;
+		boolean initialized = true;
 	}
 
 	@Override

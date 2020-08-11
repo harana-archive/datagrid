@@ -1,12 +1,11 @@
-package com.harana.datagrid.namenode.storage;
+package com.harana.datagrid.namenode.metadata;
 
-import com.harana.datagrid.conf.Constants;
+import com.harana.datagrid.DatagridStorageClass;
+import com.harana.datagrid.conf.DatagridConstants;
 import com.harana.datagrid.metadata.BlockInfo;
 import com.harana.datagrid.metadata.DatanodeInfo;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import java.net.UnknownHostException;
 
 public class BlockStore {
 	private static final Logger logger = LogManager.getLogger();
@@ -14,13 +13,13 @@ public class BlockStore {
 	private final StorageClass[] storageClasses;
 	
 	public BlockStore() {
-		storageClasses = new StorageClass[Constants.STORAGE_CLASSES];
-		for (int i = 0; i < Constants.STORAGE_CLASSES; i++) {
+		storageClasses = new StorageClass[DatagridConstants.STORAGE_CLASSES];
+		for (int i = 0; i < DatagridConstants.STORAGE_CLASSES; i++) {
 			this.storageClasses[i] = new StorageClass(i);
 		}		
 	}
 
-	public short addBlock(NameNodeBlockInfo blockInfo) throws UnknownHostException {
+	public short addBlock(NameNodeBlockInfo blockInfo) {
 		int storageClass = blockInfo.getDnInfo().getStorageClass();
 		return storageClasses[storageClass].addBlock(blockInfo);
 	}
@@ -35,7 +34,7 @@ public class BlockStore {
 		return storageClasses[storageClass].updateRegion(region);
 	}
 
-	public NameNodeBlockInfo getBlock(int storageClass, int locationAffinity) throws InterruptedException {
+	public NameNodeBlockInfo getBlock(int storageClass, int locationAffinity) {
 		NameNodeBlockInfo block = null;
 		if (storageClass > 0) {
 			if (storageClass < storageClasses.length) {

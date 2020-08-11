@@ -2,7 +2,7 @@ package com.harana.datagrid.namenode.rdma;
 
 import java.io.IOException;
 
-import com.harana.datagrid.conf.Configuration;
+import com.harana.datagrid.conf.DatagridConfiguration;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -39,7 +39,7 @@ public class RdmaConstants {
 	public static final String NAMENODE_RDMA_CONNECTTIMEOUT_KEY = "crail.namenode.rdma.connecttimeout";
 	public static int NAMENODE_RDMA_CONNECTTIMEOUT = 1000;
 	
-	public static void updateConstants(Configuration conf) {
+	public static void updateConstants(DatagridConfiguration conf) {
 		if (conf.get(NAMENODE_RDMA_POLLING_KEY) != null) {
 			NAMENODE_RDMA_POLLING = conf.getBoolean(NAMENODE_RDMA_POLLING_KEY, false);
 		}			

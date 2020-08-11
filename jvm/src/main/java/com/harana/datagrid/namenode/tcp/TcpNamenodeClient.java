@@ -6,7 +6,7 @@ import java.util.LinkedList;
 
 import com.harana.datagrid.client.namenode.NamenodeClient;
 import com.harana.datagrid.client.namenode.NamenodeConnection;
-import com.harana.datagrid.conf.Configuration;
+import com.harana.datagrid.conf.DatagridConfiguration;
 import com.harana.datagrid.rpc.narpc.NaRPCClientGroup;
 import com.harana.datagrid.rpc.narpc.NaRPCEndpoint;
 import org.apache.logging.log4j.Logger;
@@ -18,7 +18,7 @@ public class TcpNamenodeClient implements NamenodeClient {
 	private NaRPCClientGroup<TcpNamenodeRequest, TcpNamenodeResponse> clientGroup;
 	private LinkedList<TcpNamenodeConnection> allConnections;
 	
-    public void init(Configuration conf, String[] strings) throws IOException {
+    public void init(DatagridConfiguration conf, String[] strings) throws IOException {
     	try {
     		updateConstants(conf);
     		verify();

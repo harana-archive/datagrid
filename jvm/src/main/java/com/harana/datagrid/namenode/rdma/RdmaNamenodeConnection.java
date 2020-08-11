@@ -2,12 +2,12 @@ package com.harana.datagrid.namenode.rdma;
 
 import java.io.IOException;
 
-import com.harana.datagrid.DataType;
+import com.harana.datagrid.DatagridDataType;
 import com.harana.datagrid.client.namenode.NamenodeConnection;
 import com.harana.datagrid.client.namenode.NamenodeFuture;
 import com.harana.datagrid.client.namenode.NamenodeVoid;
 import com.harana.datagrid.client.namenode.responses.*;
-import com.harana.datagrid.conf.Constants;
+import com.harana.datagrid.conf.DatagridConstants;
 import com.harana.datagrid.metadata.BlockInfo;
 import com.harana.datagrid.metadata.DatanodeInfo;
 import com.harana.datagrid.metadata.FileInfo;
@@ -33,8 +33,8 @@ public class RdmaNamenodeConnection implements NamenodeConnection {
 	}	
 	
 	@Override
-	public NamenodeFuture<CreateFileResponse> createFile(FileName filename, DataType type, int storageClass, int locationClass, boolean enumerable) throws IOException {
-		if (Constants.DEBUG) {
+	public NamenodeFuture<CreateFileResponse> createFile(FileName filename, DatagridDataType type, int storageClass, int locationClass, boolean enumerable) throws IOException {
+		if (DatagridConstants.DEBUG) {
 			logger.debug("RPC: createFile, fileType " + type + ", storageClass " + storageClass + ", locationClass " + locationClass);
 		}
 		
@@ -51,7 +51,7 @@ public class RdmaNamenodeConnection implements NamenodeConnection {
 	
 	@Override
 	public NamenodeFuture<GetFileResponse> getFile(FileName filename, boolean writeable) throws IOException {
-		if (Constants.DEBUG) {
+		if (DatagridConstants.DEBUG) {
 			logger.debug("RPC: getFile, writeable " + writeable);
 		}
 		
@@ -68,7 +68,7 @@ public class RdmaNamenodeConnection implements NamenodeConnection {
 	
 	@Override
 	public RdmaNamenodeFuture<NamenodeVoid> setFile(FileInfo fileInfo, boolean close) throws IOException {
-		if (Constants.DEBUG) {
+		if (DatagridConstants.DEBUG) {
 			logger.debug("RPC: setFile, id " + fileInfo.getFd() + ", close " + close);
 		}
 		
@@ -85,7 +85,7 @@ public class RdmaNamenodeConnection implements NamenodeConnection {
 	
 	@Override
 	public RdmaNamenodeFuture<DeleteFileResponse> removeFile(FileName filename, boolean recursive) throws IOException {
-		if (Constants.DEBUG) {
+		if (DatagridConstants.DEBUG) {
 			logger.debug("RPC: removeFile");
 		}
 		
@@ -102,7 +102,7 @@ public class RdmaNamenodeConnection implements NamenodeConnection {
 	
 	@Override
 	public RdmaNamenodeFuture<RenameFileResponse> renameFile(FileName srcHash, FileName dstHash) throws IOException {
-		if (Constants.DEBUG) {
+		if (DatagridConstants.DEBUG) {
 			logger.debug("RPC: renameFile");
 		}
 		
@@ -119,7 +119,7 @@ public class RdmaNamenodeConnection implements NamenodeConnection {
 	
 	@Override
 	public RdmaNamenodeFuture<GetBlockResponse> getBlock(long fd, long token, long position, long capacity) throws IOException {
-		if (Constants.DEBUG) {
+		if (DatagridConstants.DEBUG) {
 			logger.debug("RPC: getBlock, fd " + fd + ", token " + token + ", position " + position + ", capacity " + capacity);
 		}
 		
@@ -136,7 +136,7 @@ public class RdmaNamenodeConnection implements NamenodeConnection {
 	
 	@Override
 	public RdmaNamenodeFuture<GetLocationResponse> getLocation(FileName fileName, long position) throws IOException {
-		if (Constants.DEBUG) {
+		if (DatagridConstants.DEBUG) {
 			logger.debug("RPC: getLocation, position " + position);
 		}		
 		
@@ -153,7 +153,7 @@ public class RdmaNamenodeConnection implements NamenodeConnection {
 	
 	@Override
 	public RdmaNamenodeFuture<NamenodeVoid> setBlock(BlockInfo blockInfo) throws Exception {
-		if (Constants.DEBUG) {
+		if (DatagridConstants.DEBUG) {
 			logger.debug("RPC: setBlock, ");
 		}		
 		

@@ -2,7 +2,7 @@ package com.harana.datagrid.datanode.tcp;
 
 import java.nio.ByteBuffer;
 
-import com.harana.datagrid.conf.Constants;
+import com.harana.datagrid.conf.DatagridConstants;
 import com.harana.datagrid.rpc.narpc.NaRPCMessage;
 import com.harana.datagrid.datanode.tcp.TcpDatanodeRequest.ReadRequest;
 import com.harana.datagrid.datanode.tcp.TcpDatanodeRequest.WriteRequest;
@@ -86,7 +86,7 @@ public class TcpDatanodeResponse implements NaRPCMessage {
 	}
 	
 	public static class ReadResponse {
-		public static final int CSIZE = Integer.BYTES + (int) Constants.BLOCK_SIZE;
+		public static final int CSIZE = Integer.BYTES + (int) DatagridConstants.BLOCK_SIZE;
 		
 		private final ByteBuffer data;
 		

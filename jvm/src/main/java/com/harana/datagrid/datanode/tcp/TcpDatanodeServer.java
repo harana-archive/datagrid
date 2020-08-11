@@ -7,9 +7,8 @@ import java.nio.channels.FileChannel;
 import java.nio.channels.FileChannel.MapMode;
 import java.nio.file.Paths;
 import java.util.concurrent.ConcurrentHashMap;
-
-import com.harana.datagrid.conf.Configuration;
-import com.harana.datagrid.conf.Constants;
+import com.harana.datagrid.conf.DatagridConfiguration;
+import com.harana.datagrid.conf.DatagridConstants;
 import com.harana.datagrid.rpc.narpc.NaRPCServerChannel;
 import com.harana.datagrid.rpc.narpc.NaRPCServerEndpoint;
 import com.harana.datagrid.rpc.narpc.NaRPCServerGroup;
@@ -23,7 +22,7 @@ import org.apache.logging.log4j.Logger;
 
 public class TcpDatanodeServer implements Runnable, DatanodeServer, NaRPCService<TcpDatanodeRequest, TcpDatanodeResponse> {
 	private static final Logger logger = LogManager.getLogger();
-	
+
 	private NaRPCServerGroup<TcpDatanodeRequest, TcpDatanodeResponse> serverGroup;
 	private NaRPCServerEndpoint<TcpDatanodeRequest, TcpDatanodeResponse> serverEndpoint;
 	private InetSocketAddress address;
@@ -34,10 +33,10 @@ public class TcpDatanodeServer implements Runnable, DatanodeServer, NaRPCService
 	private String dataDirPath;
 	
 	@Override
-	public void init(Configuration conf, String[] args) throws Exception {
+	public void init(DatagridConfiguration conf, String[] args) throws Exception {
 		TcpDatanodeConstants.init(conf, args);
-		
-		this.serverGroup = new NaRPCServerGroup<>(this, TcpDatanodeConstants.STORAGE_TCP_QUEUE_DEPTH, (int) Constants.BLOCK_SIZE * 2, false, TcpDatanodeConstants.STORAGE_TCP_CORES);
+
+		this.serverGroup = new NaRPCServerGroup<>(this, TcpDatanodeConstants.STORAGE_TCP_QUEUE_DEPTH, (int) DatagridConstants.BLOCK_SIZE * 2, false, TcpDatanodeConstants.STORAGE_TCP_CORES);
 		this.serverEndpoint = serverGroup.createServerEndpoint();
 		this.address = DatanodeUtils.getDataNodeAddress(TcpDatanodeConstants.STORAGE_TCP_INTERFACE, TcpDatanodeConstants.STORAGE_TCP_PORT);
 		serverEndpoint.bind(address);

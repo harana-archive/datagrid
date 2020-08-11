@@ -4,7 +4,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.io.IOException;
 
 import com.harana.datagrid.client.namenode.NamenodeErrors;
-import com.harana.datagrid.namenode.RpcNameNodeService;
+import com.harana.datagrid.namenode.NamenodeService;
 import com.harana.datagrid.namenode.NamenodeState;
 import com.harana.datagrid.namenode.NamenodeProtocol;
 import com.harana.datagrid.namenode.NamenodeRequest;
@@ -18,7 +18,7 @@ import org.apache.logging.log4j.Logger;
 public class RdmaNamenodeDispatcher extends RdmaNamenodeProtocol implements DaRPCService<RdmaNamenodeRequest, RdmaNamenodeResponse> {
 	private static final Logger logger = LogManager.getLogger();
 	
-	private final RpcNameNodeService service;
+	private final NamenodeService service;
 	
 	private final AtomicLong totalOps;
 	private final AtomicLong createOps;
@@ -30,7 +30,7 @@ public class RdmaNamenodeDispatcher extends RdmaNamenodeProtocol implements DaRP
 	private final AtomicLong locationOps;
 	private final AtomicLong errorOps;
 	
-	public RdmaNamenodeDispatcher(RpcNameNodeService service) {
+	public RdmaNamenodeDispatcher(NamenodeService service) {
 		this.service = service;
 		
 		this.totalOps = new AtomicLong(0);
