@@ -5,7 +5,6 @@ import java.util.Arrays;
 
 import com.harana.datagrid.conf.DatagridConfiguration;
 import com.harana.datagrid.conf.DatagridConstants;
-import com.harana.datagrid.namenode.metadata.LogDispatcher;
 import com.harana.datagrid.namenode.tcp.TcpNamenodeServer;
 import com.harana.datagrid.utils.Utils;
 import org.apache.commons.cli.CommandLine;
@@ -23,7 +22,7 @@ public class Namenode {
 	
 	public static void main(String[] args) throws Exception {
 		logger.info("initalizing namenode ");		
-		DatagridConfiguration conf = DatagridConfiguration.createConfigurationFromFile();
+		DatagridConfiguration conf = DatagridConfiguration.createEmptyConfiguration();
 		DatagridConstants.updateConstants(conf);
 		
 		URI uri = Utils.getPrimaryNameNode();
@@ -57,7 +56,7 @@ public class Namenode {
 		long serviceId = Utils.getServiceId(namenode);
 		long serviceSize = Utils.getServiceSize();
 		if (!Utils.verifyNamenode(namenode)) {
-			throw new Exception("Namenode address/port [" + namenode + "] has to be listed in crail.namenode.address " + DatagridConstants.NAMENODE_ADDRESS);
+			throw new Exception("Namenode address/port [" + namenode + "] has to be listed in namenode.address " + DatagridConstants.NAMENODE_ADDRESS);
 		}
 
 		DatagridConstants.NAMENODE_ADDRESS = namenode + "?id=" + serviceId + "&size=" + serviceSize;
@@ -71,6 +70,6 @@ public class Namenode {
 		namenodeServer.init(conf, null);
 		namenodeServer.printConf(logger);
 		namenodeServer.run();
-		System.exit(0);;
+		System.exit(0);
 	}
 }

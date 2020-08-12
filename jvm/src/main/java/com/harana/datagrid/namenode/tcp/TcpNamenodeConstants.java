@@ -7,13 +7,13 @@ import org.apache.logging.log4j.Logger;
 public class TcpNamenodeConstants {
 	private static final Logger logger = LogManager.getLogger();
 	
-	public static final String NAMENODE_TCP_QUEUEDEPTH_KEY = "crail.namenode.tcp.queueDepth";
+	public static final String NAMENODE_TCP_QUEUEDEPTH_KEY = "namenode.tcp.queueDepth";
 	public static int NAMENODE_TCP_QUEUEDEPTH = 32;
 	
-	public static final String NAMENODE_TCP_MESSAGESIZE_KEY = "crail.namenode.tcp.messageSize";
+	public static final String NAMENODE_TCP_MESSAGESIZE_KEY = "namenode.tcp.messageSize";
 	public static int NAMENODE_TCP_MESSAGESIZE = 512;	
 	
-	public static final String NAMENODE_TCP_CORES_KEY = "crail.namenode.tcp.cores";
+	public static final String NAMENODE_TCP_CORES_KEY = "namenode.tcp.cores";
 	public static int NAMENODE_TCP_CORES = 1;	
 	
 	public static void updateConstants(DatagridConfiguration conf) {

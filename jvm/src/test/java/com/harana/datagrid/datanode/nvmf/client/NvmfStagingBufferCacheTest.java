@@ -2,8 +2,8 @@ package com.harana.datagrid.datanode.nvmf.client;
 
 import com.harana.datagrid.DatagridBuffer;
 import com.harana.datagrid.DatagridBufferCache;
-import com.harana.datagrid.conf.Configuration;
-import com.harana.datagrid.conf.Constants;
+import com.harana.datagrid.conf.DatagridConfiguration;
+import com.harana.datagrid.conf.DatagridConstants;
 import com.harana.datagrid.memory.MappedBufferCache;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -18,7 +18,7 @@ public class NvmfStagingBufferCacheTest {
 
 	@BeforeClass
 	public static void init() throws IOException {
-		Constants.updateConstants(Configuration.createConfigurationFromFile());
+		DatagridConstants.updateConstants(DatagridConfiguration.createConfigurationFromFile());
 	}
 
 	private static DatagridBufferCache bufferCache;

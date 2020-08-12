@@ -12,7 +12,7 @@ import java.lang.reflect.Field;
 public class ObjectStoreConstants {
 	static private final Logger logger = LogManager.getLogger();
 
-	private final static String PREFIX = "crail.storage.object";
+	private final static String PREFIX = "storage.object";
 
 	/* General object storage options */
 	private static final String STORAGE_LIMIT_KEY = "storagelimit";

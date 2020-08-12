@@ -40,7 +40,7 @@ lazy val crossProject = haranaCrossProject("datagrid").in(file("."))
 		npmDependencies in Compile ++= Seq()
   ).jvmSettings(
 		libraryDependencies ++= Seq(
-			"datagrid-common"		%%   "datagrid-common"		% "0.0.12",
+			"datagrid-common"		%%   "datagrid-common"		% "0.0.13",
 			"org.junit.jupiter" % "junit-jupiter" % "5.6.2" % "test"
 		)
 	)

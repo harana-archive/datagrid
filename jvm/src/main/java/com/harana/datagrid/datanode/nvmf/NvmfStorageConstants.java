@@ -2,8 +2,8 @@ package com.harana.datagrid.datanode.nvmf;
 
 import com.harana.datagrid.conf.DatagridConfiguration;
 import com.harana.datagrid.conf.DatagridConstants;
-import com.harana.datagrid.datanode.nvmf.jvnmf.NamespaceIdentifier;
-import com.harana.datagrid.datanode.nvmf.jvnmf.NvmeQualifiedName;
+import com.harana.datagrid.datanode.nvmf.jnvmf.NamespaceIdentifier;
+import com.harana.datagrid.datanode.nvmf.jnvmf.NvmeQualifiedName;
 import org.apache.commons.cli.*;
 import org.apache.logging.log4j.Logger;
 
@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit;
 
 public class NvmfStorageConstants {
 
-	private final static String PREFIX = "crail.storage.nvmf";
+	private final static String PREFIX = "storage.nvmf";
 
 	public static final String IP_ADDR_KEY = "ip";
 	public static InetAddress IP_ADDR;
@@ -91,7 +91,7 @@ public class NvmfStorageConstants {
 	public static void verify() {
 		if (ALLOCATION_SIZE % DatagridConstants.BLOCK_SIZE != 0) {
 			throw new IllegalArgumentException(fullKey(ALLOCATION_SIZE_KEY) + " (" + ALLOCATION_SIZE +
-					") must be multiple of crail.blocksize (" + DatagridConstants.BLOCK_SIZE + ")");
+					") must be multiple of blocksize (" + DatagridConstants.BLOCK_SIZE + ")");
 		}
 		if (QUEUE_SIZE < 0) {
 			throw new IllegalArgumentException("Queue size negative");

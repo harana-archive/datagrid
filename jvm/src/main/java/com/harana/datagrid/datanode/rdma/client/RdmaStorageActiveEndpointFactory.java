@@ -6,7 +6,7 @@ import com.harana.datagrid.rdma.verbs.RdmaCmId;
 import java.io.IOException;
 
 public class RdmaStorageActiveEndpointFactory implements RdmaEndpointFactory<RdmaStorageActiveEndpoint> {
-	private RdmaStorageActiveGroup group;
+	private final RdmaStorageActiveGroup group;
 	
 	public RdmaStorageActiveEndpointFactory(RdmaStorageActiveGroup group) {
 		this.group = group;

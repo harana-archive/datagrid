@@ -15,9 +15,9 @@ import com.harana.datagrid.namenode.NamenodeResponse.DeleteFile;
 import com.harana.datagrid.namenode.NamenodeResponse.RenameFile;
 import com.harana.datagrid.namenode.NamenodeResponse.Void;
 
-public class LogDispatcher implements NamenodeService {
-	private NamenodeService service;
-	private NamenodeLogService logService;
+public class LogDispatcher extends NamenodeService {
+	private final NamenodeService service;
+	private final NamenodeLogService logService;
 	
 	public LogDispatcher(NamenodeService service) throws Exception{
 		this.service = service;
@@ -25,7 +25,7 @@ public class LogDispatcher implements NamenodeService {
 		this.logService.replay(service);
 	}
 
-	@Override
+	
 	public short createFile(CreateFile request, NamenodeResponse.CreateFile response, NamenodeState errorState) throws Exception {
 		LogRecord record = new LogRecord(request);
 		record.setCommand(NamenodeProtocol.CMD_CREATE_FILE);
@@ -33,12 +33,12 @@ public class LogDispatcher implements NamenodeService {
 		return service.createFile(request, response, errorState);
 	}
 
-	@Override
+	
 	public short getFile(GetFile request, NamenodeResponse.GetFile response, NamenodeState errorState) throws Exception {
 		return service.getFile(request, response, errorState);
 	}
 
-	@Override
+	
 	public short setFile(SetFile request, Void response, NamenodeState errorState) throws Exception {
 		LogRecord record = new LogRecord(request);
 		record.setCommand(NamenodeProtocol.CMD_SET_FILE);
@@ -46,7 +46,7 @@ public class LogDispatcher implements NamenodeService {
 		return service.setFile(request, response, errorState);
 	}
 
-	@Override
+	
 	public short removeFile(RemoveFile request, DeleteFile response, NamenodeState errorState) throws Exception {
 		LogRecord record = new LogRecord(request);
 		record.setCommand(NamenodeProtocol.CMD_REMOVE_FILE);
@@ -54,7 +54,7 @@ public class LogDispatcher implements NamenodeService {
 		return service.removeFile(request, response, errorState);
 	}
 
-	@Override
+	
 	public short renameFile(NamenodeRequest.RenameFile request, RenameFile response, NamenodeState errorState) throws Exception {
 		LogRecord record = new LogRecord(request);
 		record.setCommand(NamenodeProtocol.CMD_RENAME_FILE);
@@ -62,12 +62,12 @@ public class LogDispatcher implements NamenodeService {
 		return service.renameFile(request, response, errorState);
 	}
 
-	@Override
+	
 	public short getDataNode(GetDataNode request, NamenodeResponse.GetDataNode response, NamenodeState errorState) throws Exception {
 		return service.getDataNode(request, response, errorState);
 	}
 
-	@Override
+	
 	public short setBlock(SetBlock request, Void response, NamenodeState errorState) throws Exception {
 		LogRecord record = new LogRecord(request);
 		record.setCommand(NamenodeProtocol.CMD_SET_BLOCK);
@@ -75,7 +75,7 @@ public class LogDispatcher implements NamenodeService {
 		return service.setBlock(request, response, errorState);
 	}
 
-	@Override
+	
 	public short getBlock(GetBlock request, NamenodeResponse.GetBlock response, NamenodeState errorState) throws Exception {
 		LogRecord record = new LogRecord(request);
 		record.setCommand(NamenodeProtocol.CMD_GET_BLOCK);
@@ -83,17 +83,17 @@ public class LogDispatcher implements NamenodeService {
 		return service.getBlock(request, response, errorState);
 	}
 
-	@Override
+	
 	public short getLocation(GetLocation request, NamenodeResponse.GetLocation response, NamenodeState errorState) throws Exception {
 		return service.getLocation(request, response, errorState);
 	}
 
-	@Override
+	
 	public short dump(DumpNameNode request, Void response, NamenodeState errorState) throws Exception {
 		return service.dump(request, response, errorState);
 	}
 
-	@Override
+	
 	public short ping(PingNameNode request, NamenodeResponse.PingNameNode response, NamenodeState errorState) throws Exception {
 		return service.ping(request, response, errorState);
 	}

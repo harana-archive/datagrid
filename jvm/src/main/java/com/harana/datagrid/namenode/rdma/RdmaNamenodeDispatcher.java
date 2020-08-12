@@ -47,7 +47,7 @@ public class RdmaNamenodeDispatcher extends RdmaNamenodeProtocol implements DaRP
 	public void processServerEvent(DaRPCServerEvent<RdmaNamenodeRequest, RdmaNamenodeResponse> event) {
 		RdmaNamenodeRequest request = event.getReceiveMessage();
 		RdmaNamenodeResponse response = event.getSendMessage();
-		short error = NamenodeErrors.ERR_OK;
+		short error;
 		try {
 			response.setType(NamenodeProtocol.responseTypes[request.getCmd()]);
 			response.setError((short) 0);

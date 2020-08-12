@@ -9,34 +9,34 @@ import org.apache.logging.log4j.Logger;
 public class RdmaConstants {
 	private static final Logger logger = LogManager.getLogger();
 	
-	public static final String NAMENODE_RDMA_POLLING_KEY = "crail.namenode.rdma.polling";
+	public static final String NAMENODE_RDMA_POLLING_KEY = "namenode.rdma.polling";
 	public static boolean NAMENODE_RDMA_POLLING = false;
 	
-	public static final String NAMENODE_RDMA_TYPE_KEY = "crail.namenode.rdma.type";
+	public static final String NAMENODE_RDMA_TYPE_KEY = "namenode.rdma.type";
 	public static String NAMENODE_RDMA_TYPE = "passive";
 	
-	public static final String NAMENODE_RDMA_AFFINITY_KEY = "crail.namenode.rdma.affinity";
+	public static final String NAMENODE_RDMA_AFFINITY_KEY = "namenode.rdma.affinity";
 	public static String NAMENODE_RDMA_AFFINITY = "1";
 	
-	public static final String NAMENODE_RDMA_MAXINLINE_KEY = "crail.namenode.rdma.maxinline";
+	public static final String NAMENODE_RDMA_MAXINLINE_KEY = "namenode.rdma.maxinline";
 	public static int NAMENODE_RDMA_MAXINLINE = 0;
 
-	public static final String NAMENODE_RDMA_RECVQUEUE_KEY = "crail.namenode.rdma.recvQueue";
+	public static final String NAMENODE_RDMA_RECVQUEUE_KEY = "namenode.rdma.recvQueue";
 	public static int NAMENODE_RDMA_RECVQUEUE = 32;
 	
-	public static final String NAMENODE_RDMA_SENDQUEUE_KEY = "crail.namenode.rdma.sendQueue";
+	public static final String NAMENODE_RDMA_SENDQUEUE_KEY = "namenode.rdma.sendQueue";
 	public static int NAMENODE_RDMA_SENDQUEUE = 32;
 	
-	public static final String NAMENODE_RDMA_POLLSIZE_KEY = "crail.namenode.rdma.pollsize";
+	public static final String NAMENODE_RDMA_POLLSIZE_KEY = "namenode.rdma.pollsize";
 	public static int NAMENODE_RDMA_POLLSIZE = NAMENODE_RDMA_RECVQUEUE;
 	
-	public static final String NAMENODE_RDMA_CLUSTERSIZE_KEY = "crail.namenode.rdma.clustersize";
+	public static final String NAMENODE_RDMA_CLUSTERSIZE_KEY = "namenode.rdma.clustersize";
 	public static int NAMENODE_RDMA_CLUSTERSIZE = 128;
 	
-	public static final String NAMENODE_RDMA_BACKLOG_KEY = "crail.namenode.rdma.backlog";
+	public static final String NAMENODE_RDMA_BACKLOG_KEY = "namenode.rdma.backlog";
 	public static int NAMENODE_RDMA_BACKLOG = 100;
 	
-	public static final String NAMENODE_RDMA_CONNECTTIMEOUT_KEY = "crail.namenode.rdma.connecttimeout";
+	public static final String NAMENODE_RDMA_CONNECTTIMEOUT_KEY = "namenode.rdma.connecttimeout";
 	public static int NAMENODE_RDMA_CONNECTTIMEOUT = 1000;
 	
 	public static void updateConstants(DatagridConfiguration conf) {
@@ -74,7 +74,7 @@ public class RdmaConstants {
 	
 	public static void verify() throws IOException {
 		if (!RdmaConstants.NAMENODE_RDMA_TYPE.equalsIgnoreCase("passive") && !RdmaConstants.NAMENODE_RDMA_TYPE.equalsIgnoreCase("active")) {
-			throw new IOException("crail.namenode.rdma.type must be either <active> or <passive>, found " + RdmaConstants.NAMENODE_RDMA_TYPE);
+			throw new IOException("namenode.rdma.type must be either <active> or <passive>, found " + RdmaConstants.NAMENODE_RDMA_TYPE);
 		}		
 	}
 

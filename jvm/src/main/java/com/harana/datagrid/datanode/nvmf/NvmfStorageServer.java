@@ -1,7 +1,7 @@
 package com.harana.datagrid.datanode.nvmf;
 
 import com.harana.datagrid.conf.DatagridConfiguration;
-import com.harana.datagrid.datanode.nvmf.jvnmf.*;
+import com.harana.datagrid.datanode.nvmf.jnvmf.*;
 import com.harana.datagrid.datanode.DatanodeResource;
 import com.harana.datagrid.datanode.DatanodeServer;
 import org.apache.logging.log4j.LogManager;

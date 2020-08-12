@@ -1,8 +1,8 @@
 package com.harana.datagrid.datanode.nvmf.client;
 
-import com.harana.datagrid.datanode.nvmf.jvnmf.Freeable;
-import com.harana.datagrid.datanode.nvmf.jvnmf.KeyedNativeBuffer;
-import com.harana.datagrid.datanode.nvmf.jvnmf.QueuePair;
+import com.harana.datagrid.datanode.nvmf.jnvmf.Freeable;
+import com.harana.datagrid.datanode.nvmf.jnvmf.KeyedNativeBuffer;
+import com.harana.datagrid.datanode.nvmf.jnvmf.QueuePair;
 import com.harana.datagrid.DatagridBuffer;
 
 import java.io.IOException;

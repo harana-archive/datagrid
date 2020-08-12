@@ -2,7 +2,7 @@ package com.harana.datagrid.datanode.nvmf.client;
 
 import com.harana.datagrid.client.datanode.DatanodeFuture;
 import com.harana.datagrid.client.datanode.DatanodeResult;
-import com.harana.datagrid.datanode.nvmf.jvnmf.*;
+import com.harana.datagrid.datanode.nvmf.jnvmf.*;
 
 import java.io.IOException;
 import java.util.Queue;

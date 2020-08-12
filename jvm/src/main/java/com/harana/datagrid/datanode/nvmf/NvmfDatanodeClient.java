@@ -7,7 +7,7 @@ import com.harana.datagrid.conf.DatagridConfiguration;
 import com.harana.datagrid.metadata.DatanodeInfo;
 import com.harana.datagrid.client.datanode.DatanodeEndpoint;
 import com.harana.datagrid.datanode.nvmf.client.NvmfDatanodeEndpoint;
-import com.harana.datagrid.datanode.nvmf.jvnmf.Nvme;
+import com.harana.datagrid.datanode.nvmf.jnvmf.Nvme;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

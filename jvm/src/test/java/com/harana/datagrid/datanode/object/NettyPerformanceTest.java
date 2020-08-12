@@ -1,11 +1,11 @@
 package com.harana.datagrid.datanode.object;
 
+import com.harana.datagrid.conf.DatagridConstants;
 import com.harana.datagrid.datanode.object.client.ObjectStoreMetadataClient;
 import com.harana.datagrid.datanode.object.client.ObjectStoreMetadataClientGroup;
 import com.harana.datagrid.datanode.object.rpc.ObjectStoreRPC;
 import com.harana.datagrid.datanode.object.rpc.RPCCall;
 import com.harana.datagrid.datanode.object.server.ObjectStoreMetadataServer;
-import com.harana.datagrid.conf.Constants;
 import com.harana.datagrid.metadata.BlockInfo;
 import com.harana.datagrid.metadata.DatanodeInfo;
 import org.apache.log4j.BasicConfigurator;

@@ -4,7 +4,7 @@ import com.harana.datagrid.DatagridStatistics;
 import com.harana.datagrid.client.datanode.DatanodeEndpoint;
 import com.harana.datagrid.client.datanode.DatanodeFuture;
 import com.harana.datagrid.conf.DatagridConstants;
-import com.harana.datagrid.datanode.nvmf.jvnmf.*;
+import com.harana.datagrid.datanode.nvmf.jnvmf.*;
 import com.harana.datagrid.DatagridBuffer;
 import com.harana.datagrid.DatagridBufferCache;
 import com.harana.datagrid.metadata.BlockInfo;

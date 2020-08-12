@@ -34,7 +34,7 @@ public class DatanodeUtils {
 			File dataDir = new File(path);
 			if (!dataDir.exists()) {
 				if (!dataDir.mkdirs()) {
-					throw new IOException("crail.datapath " + base + " either does not exist or has no write permissions");
+					throw new IOException("datapath " + base + " either does not exist or has no write permissions");
 				}
 			}
 			for (File child : Objects.requireNonNull(dataDir.listFiles())) {

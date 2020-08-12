@@ -50,8 +50,7 @@ public class RdmaStorageLocalEndpoint implements DatanodeEndpoint {
 	}
 
 	@Override
-	public DatanodeFuture write(DatagridBuffer buffer, BlockInfo remoteMr, long remoteOffset) throws IOException,
-			InterruptedException {
+	public DatanodeFuture write(DatagridBuffer buffer, BlockInfo remoteMr, long remoteOffset) throws IOException {
 		if (buffer.remaining() > DatagridConstants.BLOCK_SIZE) {
 			throw new IOException("write size too large " + buffer.remaining());
 		}
@@ -80,8 +79,7 @@ public class RdmaStorageLocalEndpoint implements DatanodeEndpoint {
 	}
 
 	@Override
-	public DatanodeFuture read(DatagridBuffer buffer, BlockInfo remoteMr, long remoteOffset) throws IOException,
-			InterruptedException {
+	public DatanodeFuture read(DatagridBuffer buffer, BlockInfo remoteMr, long remoteOffset) throws IOException {
 		if (buffer.remaining() > DatagridConstants.BLOCK_SIZE) {
 			throw new IOException("read size too large");
 		}	
@@ -168,5 +166,4 @@ public class RdmaStorageLocalEndpoint implements DatanodeEndpoint {
 	public boolean isLocal() {
 		return true;
 	}
-
 }

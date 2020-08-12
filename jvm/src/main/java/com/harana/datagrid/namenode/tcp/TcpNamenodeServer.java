@@ -35,7 +35,7 @@ public class TcpNamenodeServer implements NamenodeServer {
 
 	@Override
 	public void printConf(Logger logger) {
-		printConf(logger);
+		//printConf(logger);
 	}
 
 	public void run() {

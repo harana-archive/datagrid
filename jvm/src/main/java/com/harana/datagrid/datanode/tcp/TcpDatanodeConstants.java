@@ -17,25 +17,25 @@ import java.util.Arrays;
 public class TcpDatanodeConstants {
 	private static final Logger logger = LogManager.getLogger();
 	
-	public static final String STORAGE_TCP_INTERFACE_KEY = "crail.storage.tcp.interface";
+	public static final String STORAGE_TCP_INTERFACE_KEY = "storage.tcp.interface";
 	public static String STORAGE_TCP_INTERFACE = "eth0";
 	
-	public static final String STORAGE_TCP_PORT_KEY = "crail.storage.tcp.port";
+	public static final String STORAGE_TCP_PORT_KEY = "storage.tcp.port";
 	public static int STORAGE_TCP_PORT = 50020;
 	
-	public static final String STORAGE_TCP_STORAGE_LIMIT_KEY = "crail.storage.tcp.storagelimit";
+	public static final String STORAGE_TCP_STORAGE_LIMIT_KEY = "storage.tcp.storagelimit";
 	public static long STORAGE_TCP_STORAGE_LIMIT = 1073741824;
 
-	public static final String STORAGE_TCP_ALLOCATION_SIZE_KEY = "crail.storage.tcp.allocationsize";
+	public static final String STORAGE_TCP_ALLOCATION_SIZE_KEY = "storage.tcp.allocationsize";
 	public static long STORAGE_TCP_ALLOCATION_SIZE = DatagridConstants.REGION_SIZE;
 	
-	public static final String STORAGE_TCP_DATA_PATH_KEY = "crail.storage.tcp.datapath";
+	public static final String STORAGE_TCP_DATA_PATH_KEY = "storage.tcp.datapath";
 	public static String STORAGE_TCP_DATA_PATH = "/dev/hugepages/data";
 	
-	public static final String STORAGE_TCP_QUEUE_DEPTH_KEY = "crail.storage.tcp.queuedepth";
+	public static final String STORAGE_TCP_QUEUE_DEPTH_KEY = "storage.tcp.queuedepth";
 	public static int STORAGE_TCP_QUEUE_DEPTH = 16;	
 	
-	public static final String STORAGE_TCP_CORES_KEY = "crail.storage.tcp.cores";
+	public static final String STORAGE_TCP_CORES_KEY = "storage.tcp.cores";
 	public static int STORAGE_TCP_CORES = 1;		
 	
     public static void init(DatagridConfiguration conf, String[] args) throws Exception {

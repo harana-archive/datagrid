@@ -9,10 +9,10 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 public class RdmaLocalFuture implements DatanodeFuture, DatanodeResult {
-	private Unsafe unsafe;
-	private long srcAddr;
-	private long dstAddr;
-	private int remaining;
+	private final Unsafe unsafe;
+	private final long srcAddr;
+	private final long dstAddr;
+	private final int remaining;
 	
 	private int len;
 	private boolean isDone;
